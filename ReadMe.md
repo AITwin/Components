@@ -93,15 +93,3 @@ Each component can be configured in the TOML files in the configuration director
 after the data provider they configure. For example, the configuration for the `stib_gtfs` handler is stored in
 `config/stib.toml`.
 
-## Notes
-
-Running multiple processes concurrently requires a compatible environment.
-
-This project provides a framework for processing data, but the specific implementation of handlers, collectors, and
-harvesters is not included in this example. You should modify and extend the run_handlers, run_collector, and
-run_harvester functions to suit your data processing needs.
-
-Ensure you have the required permissions and resources for the project components to function properly.
-
-This README provides a basic overview. Consider adding more detailed instructions, troubleshooting steps, and deployment
-information for production environments.
