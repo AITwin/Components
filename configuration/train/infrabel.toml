@@ -1,0 +1,33 @@
+[collectors]
+
+[collectors.line_sections]
+
+PATH = "train.infrabel.collectors.line_sections.InfrabelLineSectionCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:00"
+
+[collectors.operational_points]
+
+PATH = "train.infrabel.collectors.operational_points.InfrabelOperationalPointsCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:15"
+
+[collectors.punctuality]
+
+PATH = "train.infrabel.collectors.punctuality.InfrabelPunctualityCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "01:30"
+
+[collectors.segments]
+
+PATH = "train.infrabel.collectors.segments.InfrabelSegmentsCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:45"
+
+
+
+

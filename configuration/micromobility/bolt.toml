@@ -1,0 +1,25 @@
+[collectors]
+
+[collectors.geofence]
+
+PATH = "micromobility.bolt.collectors.geofence.BoltGeofenceCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:00"
+
+
+[collectors.vehicles_position]
+
+PATH = "micromobility.bolt.collectors.vehicle_position.BoltVehiclePositionCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+
+
+[collectors.vehicle_type]
+
+PATH = "micromobility.bolt.collectors.vehicle_type.BoltVehicleTypeCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:00"
+

@@ -1,0 +1,17 @@
+[collectors]
+
+[collectors.vehicles_position]
+
+PATH = "micromobility.lime.collectors.vehicle_position.LimeVehiclePositionCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+
+
+[collectors.vehicle_type]
+
+PATH = "micromobility.lime.collectors.vehicle_type.LimeVehicleTypeCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:00"
+

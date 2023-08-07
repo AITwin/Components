@@ -1,0 +1,23 @@
+[collectors]
+
+[collectors.traffic_devices]
+
+PATH = "brussels_mobility.collectors.location.BrusselsMobilityTrafficDevicesCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:00"
+
+[collectors.traffic_counts]
+
+PATH = "brussels_mobility.collectors.traffic.BrusselsMobilityTrafficCountsCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "1m"
+
+[collectors.public_parkings]
+
+PATH = "brussels_mobility.collectors.public_parking.BrusselsMobilityPublicParkingCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+

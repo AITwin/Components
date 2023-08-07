@@ -1,0 +1,9 @@
+[collectors]
+
+[collectors.sos]
+
+PATH = "telraam.collectors.traffic.TelraamTrafficCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+

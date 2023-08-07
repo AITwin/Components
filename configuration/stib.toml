@@ -1,0 +1,84 @@
+[collectors]
+
+[collectors.gtfs]
+
+PATH = "stib.collectors.gtfs.STIBGTFSCollector"
+DATA_FORMAT = "gtfs"
+DATA_TYPE = "binary"
+SCHEDULE = "01:00"
+
+[collectors.shapefile]
+
+PATH = "stib.collectors.shapefile.STIBShapeFilesCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:00"
+
+[collectors.stops]
+
+PATH = "stib.collectors.stops.STIBStopsCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:00"
+
+[collectors.vehicle_positions]
+
+PATH = "stib.collectors.vehicle_positions.STIBVehiclePositionsCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "20s"
+
+
+[harvesters]
+
+[harvesters.gtfs_json]
+
+PATH = "stib.harvesters.gtfs_json.STIBGTFSJSONHarvester"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SOURCE = "stib.gtfs"
+
+[harvesters.segments]
+
+PATH = "stib.harvesters.segments.STIBSegmentsHarvester"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SOURCE = "stib.shapefile"
+DEPENDENCIES = ["stops"]
+
+[harvesters.vehicle_position_geometry]
+
+PATH = "stib.harvesters.vehicle_position_geometry.STIBVehiclePositionGeometryHarvester"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SOURCE = "stib.vehicle_positions"
+DEPENDENCIES = ["segments", "stops"]
+
+[harvesters.vehicle_identify]
+
+PATH = "stib.harvesters.identify_vehicle.identify_vehicle.STIBVehicleIdentifyHarvester"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SOURCE = "stib.vehicle_position_geometry"
+SOURCE_RANGE = 20
+SOURCE_RANGE_STRICT = false
+MULTIPLE_RESULTS = true
+DEPENDENCIES = ["vehicle_identify", "shapefile"]
+DEPENDENCIES_LIMIT = [10, 1]
+
+[handlers]
+
+[handlers.vehicle_schedule]
+
+PATH = "stib.handlers.vehicle_schedule.STIBVehicleScheduleHandler"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }
+
+
+[handlers.trips]
+
+PATH = "stib.handlers.trips.STIBTripsHandler"
+DATA_FORMAT = "mf-json"
+DATA_TYPE = "json"
+QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }

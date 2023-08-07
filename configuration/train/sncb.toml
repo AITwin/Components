@@ -1,0 +1,49 @@
+[collectors]
+
+[collectors.gtfs]
+
+PATH = "train.sncb.collectors.gtfs.SNCBGTFSStaticCollector"
+DATA_FORMAT = "gtfs"
+DATA_TYPE = "binary"
+SCHEDULE = "01:00"
+
+[collectors.gtfs_realtime]
+
+PATH = "train.sncb.collectors.gtfs_realtime.SNCBGTFSRealtimeCollector"
+DATA_FORMAT = "gtfs_realtime"
+DATA_TYPE = "binary"
+SCHEDULE = "20s"
+
+[harvesters]
+
+[harvesters.gtfs_json]
+
+PATH = "train.sncb.harvesters.gtfs_json.SNCBGTFSJSONHarvester"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SOURCE = "sncb.gtfs"
+
+[harvesters.vehicle_position_geometry]
+
+PATH = "train.sncb.harvesters.vehicle_position_geometry.SNCBVehiclePositionGeometryHarvester"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SOURCE = "sncb.gtfs_realtime"
+DEPENDENCIES = ["sncb.gtfs", "infrabel.segments", "infrabel.operational_points"]
+
+[handlers]
+
+[handlers.vehicle_schedule]
+
+PATH = "train.sncb.handlers.vehicle_schedule.SNCBVehicleScheduleHandler"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }
+
+
+[handlers.trips]
+
+PATH = "train.sncb.handlers.trips.SNCBTripsHandler"
+DATA_FORMAT = "mf-json"
+DATA_TYPE = "json"
+QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }

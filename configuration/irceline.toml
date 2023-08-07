@@ -1,0 +1,9 @@
+[collectors]
+
+[collectors.sos]
+
+PATH = "irceline.collectors.irceline_sos.IrcelineSOSCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+

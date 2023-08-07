@@ -1,0 +1,25 @@
+[collectors]
+
+[collectors.geofence]
+
+PATH = "micromobility.pony.collectors.geofence.PonyGeofenceCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:00"
+
+
+[collectors.vehicles_position]
+
+PATH = "micromobility.pony.collectors.vehicle_position.PonyVehiclePositionCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+
+
+[collectors.vehicle_type]
+
+PATH = "micromobility.pony.collectors.vehicle_type.PonyVehicleTypeCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:00"
+

@@ -1,0 +1,30 @@
+# Environment variables management system
+python-dotenv==1.0.0
+
+# Requests library
+requests==2.31.0
+
+# Scientific computing library
+numpy==1.25.2
+pandas==2.0.3
+geopandas==0.13.2
+shapely==2.0.1
+matplotlib==3.7.2
+scipy==1.11.1
+scikit-learn==1.3.0
+
+# Geo data library
+gtfs-kit==5.2.8
+gtfs-realtime-bindings==1.0.0
+
+# Data scraping library
+beautifulsoup4==4.12.2
+
+
+# Database utilities
+SQLAlchemy==2.0.19
+
+# Python utilities
+schedule==1.2.0
+pysftp
+

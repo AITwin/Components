@@ -1,0 +1,7 @@
+venv/
+*.env
+db.sqlite3
+__pycache__/
+dev.py
+configuration/dev.toml
+.idea/
