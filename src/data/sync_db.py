@@ -9,7 +9,9 @@ from src.data.engine import lazy_engine
 from src.data.table import load_table_from_configuration
 
 
-def sync_db_from_configuration(components_configuration: ComponentsConfiguration) -> Dict[str, Table]:
+def sync_db_from_configuration(
+    components_configuration: ComponentsConfiguration,
+) -> Dict[str, Table]:
     """
     Sync the database from the components configuration.
     :param components_configuration: The components configuration
@@ -19,8 +21,9 @@ def sync_db_from_configuration(components_configuration: ComponentsConfiguration
     tables = {}
 
     for name, component_configuration in chain(
-            components_configuration.harvesters.items(),
-            components_configuration.collectors.items()):
+        components_configuration.harvesters.items(),
+        components_configuration.collectors.items(),
+    ):
         table = load_table_from_configuration(component_configuration, metadata_obj)
         tables[name] = table
 

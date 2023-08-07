@@ -1,6 +1,16 @@
 import os
 
-from sqlalchemy import BINARY, Column, TEXT, DATETIME, UniqueConstraint, INTEGER, Table, MetaData, JSON
+from sqlalchemy import (
+    BINARY,
+    Column,
+    TEXT,
+    DATETIME,
+    UniqueConstraint,
+    INTEGER,
+    Table,
+    MetaData,
+    JSON,
+)
 from sqlalchemy.dialects.postgresql import JSONB
 
 from src.configuration.model import ComponentConfiguration
@@ -20,13 +30,19 @@ def get_data_type_from_configuration(component_configuration: ComponentConfigura
     raise ValueError(f"Unknown data type {component_configuration.data_type}")
 
 
-def load_table_from_configuration(component_configuration: ComponentConfiguration, metadata_obj: MetaData):
+def load_table_from_configuration(
+    component_configuration: ComponentConfiguration, metadata_obj: MetaData
+):
     return Table(
         component_configuration.name,
         metadata_obj,
         Column("id", INTEGER, primary_key=True, autoincrement=True),
         Column("date", DATETIME),
-        Column("data", get_data_type_from_configuration(component_configuration), nullable=True),
+        Column(
+            "data",
+            get_data_type_from_configuration(component_configuration),
+            nullable=True,
+        ),
         Column("copy_id", INTEGER),
         UniqueConstraint("date"),
         UniqueConstraint("data"),

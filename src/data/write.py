@@ -16,7 +16,9 @@ def write_result(table: Table, data, date: datetime):
     """
 
     # Check if data is already in the database
-    same_data_row = connection().execute(table.select().where(table.c.data == data)).fetchone()
+    same_data_row = (
+        connection().execute(table.select().where(table.c.data == data)).fetchone()
+    )
 
     if same_data_row is not None:
         # Insert with copy_id
