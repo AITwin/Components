@@ -128,7 +128,7 @@ def run_handlers(
     allowed_hosts: List[str] = None,
 ):
     if allowed_hosts is None:
-        allowed_hosts = ["localhost"]
+        allowed_hosts = ["localhost", "127.0.0.1"]
 
     server_address = (ip, port)
 

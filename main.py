@@ -46,8 +46,8 @@ def parse_arguments():
 
     parser.add_argument(
         "--allowed-hosts",
-        type=list,
-        default=["localhost"],
+        nargs="*",
+        default=["localhost", "127.0.0.1"],
         help="Allowed hosts for the handlers server (default: *)",
     )
 
