@@ -1,5 +1,6 @@
 import os
 import tomllib
+from typing import List, Dict
 
 from src.components import ComponentClass
 from src.configuration.model import ComponentsConfiguration, ComponentConfiguration
@@ -128,6 +129,30 @@ def _extract_components(
             dependencies_hydration[component_configuration] = list(
                 map(lambda x: _treat_name(file_name, x), dependencies)
             )
+
+
+def get_optimal_dependencies_wise_order(
+    harvesters: Dict[str, ComponentConfiguration]
+) -> List[ComponentConfiguration]:
+    """
+    Get the optimal order to run the harvesters in.
+    :param harvesters:  The harvesters to order
+    :return:  The optimal order to run the harvesters in
+    """
+
+    harvesters = list(harvesters.values())
+    harvesters.sort(key=lambda x: len(x.dependencies), reverse=True)
+
+    order = []
+
+    for harvester in harvesters:
+        if harvester not in order:
+            order.append(harvester)
+            for dependency in harvester.dependencies:
+                if dependency.name not in order:
+                    order.append(harvester)
+
+    return order
 
 
 def _treat_name(file_name, source):

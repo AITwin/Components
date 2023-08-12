@@ -1,0 +1,9 @@
+[collectors]
+
+[collectors.weather]
+
+PATH = "open_weather.collectors.weather.OpenWeatherCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+

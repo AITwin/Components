@@ -21,9 +21,9 @@ DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "01:00"
 
-[collectors.vehicle_positions]
+[collectors.vehicle_distance]
 
-PATH = "stib.collectors.vehicle_positions.STIBVehiclePositionsCollector"
+PATH = "stib.collectors.vehicle_distance.STIBVehiclePositionsCollector"
 DATA_FORMAT = "json"
 DATA_TYPE = "json"
 SCHEDULE = "20s"
@@ -51,7 +51,7 @@ DEPENDENCIES = ["stops"]
 PATH = "stib.harvesters.vehicle_position_geometry.STIBVehiclePositionGeometryHarvester"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
-SOURCE = "stib.vehicle_positions"
+SOURCE = "stib.vehicle_distance"
 DEPENDENCIES = ["segments", "stops"]
 
 [harvesters.vehicle_identify]

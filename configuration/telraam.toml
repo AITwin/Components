@@ -1,6 +1,6 @@
 [collectors]
 
-[collectors.sos]
+[collectors.traffic]
 
 PATH = "telraam.collectors.traffic.TelraamTrafficCollector"
 DATA_FORMAT = "geojson"
