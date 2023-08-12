@@ -5,14 +5,13 @@ from src.components import Collector
 from src.configuration.load import (
     class_from_path,
     load_all_components,
-    extract_components,
     get_optimal_dependencies_wise_order,
     _treat_name,
 )
 from src.configuration.model import ComponentConfiguration
 
 
-class TestYourModule(unittest.TestCase):
+class TestConfiguration(unittest.TestCase):
     def test_class_from_path(self):
         class_p = class_from_path(
             "stib.collectors.vehicle_distance.STIBVehiclePositionsCollector"
