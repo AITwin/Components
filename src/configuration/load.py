@@ -43,7 +43,7 @@ def load_all_components(config_path: str = "configuration") -> ComponentsConfigu
 
                     file_name = file.split(".")[0]
 
-                    _extract_components(
+                    extract_components(
                         collectors,
                         config,
                         file_name,
@@ -51,7 +51,7 @@ def load_all_components(config_path: str = "configuration") -> ComponentsConfigu
                         source_hydration,
                         dependencies_hydration,
                     )
-                    _extract_components(
+                    extract_components(
                         harvesters,
                         config,
                         file_name,
@@ -59,7 +59,7 @@ def load_all_components(config_path: str = "configuration") -> ComponentsConfigu
                         source_hydration,
                         dependencies_hydration,
                     )
-                    _extract_components(
+                    extract_components(
                         handlers,
                         config,
                         file_name,
@@ -89,7 +89,7 @@ def load_all_components(config_path: str = "configuration") -> ComponentsConfigu
     )
 
 
-def _extract_components(
+def extract_components(
     target_list: dict,
     config: dict,
     file_name: str,
@@ -141,16 +141,23 @@ def get_optimal_dependencies_wise_order(
     """
 
     harvesters = list(harvesters.values())
-    harvesters.sort(key=lambda x: len(x.dependencies), reverse=True)
 
     order = []
 
-    for harvester in harvesters:
-        if harvester not in order:
-            order.append(harvester)
-            for dependency in harvester.dependencies:
-                if dependency.name not in order:
-                    order.append(harvester)
+    MAX_ITERATIONS = 1000
+    iterations = 0
+
+    while harvesters:
+        for harvester in harvesters:
+            if all(dependency in order for dependency in harvester.dependencies):
+                order.append(harvester)
+                harvesters.remove(harvester)
+                break
+
+        iterations += 1
+
+        if iterations > MAX_ITERATIONS:
+            raise ValueError("Could not find an order to run the harvesters in.")
 
     return order
 
