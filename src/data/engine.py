@@ -12,7 +12,9 @@ class LazyEngineVariable:
         self._engine = None
         self.connection.close()
         self.engine.dispose()
-        self.connection.dispose()
+        self.connection.close()
+        self._connection.cache_clear()
+        self.engine.cache_clear()
 
     @property
     @lru_cache(maxsize=1)
@@ -27,8 +29,11 @@ class LazyEngineVariable:
         return self._engine
 
     @property
-    @lru_cache(maxsize=1)
     def connection(self):
+        return self._connection()
+
+    @lru_cache(maxsize=1)
+    def _connection(self):
         return self.engine.connect()
 
     def __del__(self):
