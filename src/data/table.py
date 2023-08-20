@@ -11,16 +11,21 @@ from sqlalchemy import (
     MetaData,
     JSON,
 )
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import JSONB, BYTEA
 
 from src.configuration.model import ComponentConfiguration
 
 
 def get_data_type_from_configuration(component_configuration: ComponentConfiguration):
+    is_postgres = "postgres" in os.environ.get("DATABASE_URL", "")
+
     if component_configuration.data_type == "binary":
-        return BINARY
+        if is_postgres:
+            return BYTEA
+        else:
+            return BINARY
     elif component_configuration.data_type == "json":
-        if "postgres" in os.environ.get("DATABASE_URL", ""):
+        if is_postgres:
             return JSONB
         else:
             return JSON
