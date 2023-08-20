@@ -14,11 +14,14 @@ class LazyEngineVariable:
         self.engine.dispose()
         self.connection.close()
         self._connection.cache_clear()
-        self.engine.cache_clear()
+        self._cached_engine .cache_clear()
 
     @property
-    @lru_cache(maxsize=1)
     def engine(self):
+        return self._cached_engine()
+
+    @lru_cache(maxsize=1)
+    def _cached_engine(self):
         if self._engine is None:
             args = {}
             if "postgres" in os.environ.get("DATABASE_URL", ""):
