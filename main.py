@@ -29,13 +29,13 @@ def parse_arguments():
         help="Runs all harvesters in the order that maximizes the number of dependencies that are satisfied",
     )
     parser.add_argument(
-        "--handlers", nargs="all", default=[], help="List of handler names to run"
+        "--handlers", nargs="*", default=[], help="List of handler names to run"
     )
     parser.add_argument(
-        "--collectors", nargs="all", default=[], help="List of collector names to run"
+        "--collectors", nargs="*", default=[], help="List of collector names to run"
     )
     parser.add_argument(
-        "--harvesters", nargs="all", default=[], help="List of harvester names to run"
+        "--harvesters", nargs="*", default=[], help="List of harvester names to run"
     )
     parser.add_argument(
         "--now", action="store_true", help="Run harvesters or collectors once and exit"
@@ -54,7 +54,7 @@ def parse_arguments():
     )
     parser.add_argument(
         "--allowed-hosts",
-        nargs="all",
+        nargs="*",
         default=["localhost", "127.0.0.1"],
         help="Allowed hosts for the handlers server (default: *)",
     )
@@ -79,10 +79,9 @@ def launch_collectors(args, config, processes, tables):
     collector_names_to_run = (
         args.collectors if "all" not in args.collectors else config.collectors.keys()
     )
-    print(collector_names_to_run)
+
     for name, collector_config in config.collectors.items():
         if name in collector_names_to_run:
-            print("Launching collector", name)
             process = Process(
                 target=run_collector if args.now else run_collector_on_schedule,
                 args=(collector_config, tables[name]),
