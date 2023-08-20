@@ -26,7 +26,7 @@ def base_query(table: Table):
     """
 
     t2 = aliased(table)
-    # TODO: make sure indexes HASH comparison for BINARY and JSONB
+
     query = (
         select(
             table.c.id,

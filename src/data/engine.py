@@ -8,6 +8,11 @@ class LazyEngineVariable:
     def __init__(self):
         self._engine = None
 
+    def reset(self):
+        self._engine = None
+        self.connection.close()
+        self.engine.dispose()
+
     @property
     @lru_cache(maxsize=1)
     def engine(self):

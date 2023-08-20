@@ -29,5 +29,6 @@ def sync_db_from_configuration(
 
     engine = lazy_engine.engine
     metadata_obj.create_all(engine)
+    lazy_engine.reset()
 
     return tables
