@@ -4,8 +4,8 @@ from sqlalchemy import (
     BINARY,
     Column,
     TEXT,
-    DATETIME,
     UniqueConstraint,
+    TIMESTAMP,
     INTEGER,
     Table,
     MetaData,
@@ -37,7 +37,7 @@ def load_table_from_configuration(
         component_configuration.name,
         metadata_obj,
         Column("id", INTEGER, primary_key=True, autoincrement=True),
-        Column("date", DATETIME),
+        Column("date", TIMESTAMP),
         Column(
             "data",
             get_data_type_from_configuration(component_configuration),
