@@ -12,11 +12,14 @@ from src.runners._utils import schedule_string_to_function
 logger = logging.getLogger("Collector")
 
 
-def run_collector_on_schedule(collector_config: ComponentConfiguration, table: Table):
+def run_collector_on_schedule(
+    collector_config: ComponentConfiguration, table: Table, fail_on_error: bool = True
+):
     """
     Run a collector on a schedule.
     :param collector_config: The collector configuration
     :param table: The table to insert the data into
+    :param fail_on_error: Whether to fail on error
     """
 
     logger.info(
@@ -25,24 +28,35 @@ def run_collector_on_schedule(collector_config: ComponentConfiguration, table: T
 
     job = schedule_string_to_function(collector_config.schedule)
 
-    job.do(run_collector, collector_config, table)
+    job.do(run_collector, collector_config, table, fail_on_error)
 
     while True:
         schedule.run_pending()
         time.sleep(1)
 
 
-def run_collector(collector_config: ComponentConfiguration, table: Table):
+def run_collector(
+    collector_config: ComponentConfiguration, table: Table, fail_on_error: bool = True
+):
     """
     Run a collector.
     :param collector_config: The collector configuration
+    :param table: The table to insert the data into
+    :param fail_on_error: Whether to fail on error
     """
     logger.debug(f"Running collector {collector_config.name}")
 
-    collector = collector_config.component()
-    result = collector.run()
+    try:
+        collector = collector_config.component()
+        result = collector.run()
 
-    if result is not None:
-        write_result(table, result, datetime.now())
+        if result is not None:
+            write_result(table, result, datetime.now())
 
-    return result
+        return result
+    except Exception as e:
+        logger.exception(f"Error running collector {collector_config.name}")
+        if fail_on_error:
+            raise e
+
+

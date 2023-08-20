@@ -85,6 +85,7 @@ def launch_collectors(args, config, processes, tables):
             process = Process(
                 target=run_collector if args.now else run_collector_on_schedule,
                 args=(collector_config, tables[name]),
+                kwargs=dict(fail_on_error=False)
             )
             process.start()
             processes.append(process)
