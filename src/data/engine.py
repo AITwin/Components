@@ -12,6 +12,7 @@ class LazyEngineVariable:
         self._engine = None
         self.connection.close()
         self.engine.dispose()
+        self.connection.dispose()
 
     @property
     @lru_cache(maxsize=1)
