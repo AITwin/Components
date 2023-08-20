@@ -43,14 +43,14 @@ def load_table_from_configuration(
         component_configuration.name,
         metadata_obj,
         Column("id", INTEGER, primary_key=True, autoincrement=True),
-        Column("date", TIMESTAMP),
+        Column("date", TIMESTAMP, nullable=False),
         Column(
             "data",
             get_data_type_from_configuration(component_configuration),
             nullable=True,
         ),
-        Column("hash", CHAR(32)),
-        Column("copy_id", INTEGER),
+        Column("hash", CHAR(32), nullable=True),
+        Column("copy_id", INTEGER, nullable=True),
         UniqueConstraint("date"),
         UniqueConstraint("hash"),
     )
