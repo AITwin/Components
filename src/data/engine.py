@@ -12,7 +12,7 @@ class LazyEngineVariable:
     @lru_cache(maxsize=1)
     def engine(self):
         if self._engine is None:
-            self._engine = create_engine(os.environ.get("DATABASE_URL", ""))
+            self._engine = create_engine(os.environ.get("DATABASE_URL", ""), echo=True)
         return self._engine
 
     @property
