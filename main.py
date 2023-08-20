@@ -29,13 +29,13 @@ def parse_arguments():
         help="Runs all harvesters in the order that maximizes the number of dependencies that are satisfied",
     )
     parser.add_argument(
-        "--handlers", nargs="*", default=[], help="List of handler names to run"
+        "--handlers", nargs="all", default=[], help="List of handler names to run"
     )
     parser.add_argument(
-        "--collectors", nargs="*", default=[], help="List of collector names to run"
+        "--collectors", nargs="all", default=[], help="List of collector names to run"
     )
     parser.add_argument(
-        "--harvesters", nargs="*", default=[], help="List of harvester names to run"
+        "--harvesters", nargs="all", default=[], help="List of harvester names to run"
     )
     parser.add_argument(
         "--now", action="store_true", help="Run harvesters or collectors once and exit"
@@ -54,7 +54,7 @@ def parse_arguments():
     )
     parser.add_argument(
         "--allowed-hosts",
-        nargs="*",
+        nargs="all",
         default=["localhost", "127.0.0.1"],
         help="Allowed hosts for the handlers server (default: *)",
     )
@@ -63,7 +63,7 @@ def parse_arguments():
 
 def launch_harvesters(args, config, processes, tables):
     harvester_names_to_run = (
-        args.harvesters if "*" not in args.harvesters else config.harvesters.keys()
+        args.harvesters if "all" not in args.harvesters else config.harvesters.keys()
     )
     for name, harvester_config in config.harvesters.items():
         if name in harvester_names_to_run:
@@ -77,10 +77,12 @@ def launch_harvesters(args, config, processes, tables):
 
 def launch_collectors(args, config, processes, tables):
     collector_names_to_run = (
-        args.collectors if "*" not in args.collectors else config.collectors.keys()
+        args.collectors if "all" not in args.collectors else config.collectors.keys()
     )
+    print(collector_names_to_run)
     for name, collector_config in config.collectors.items():
         if name in collector_names_to_run:
+            print("Launching collector", name)
             process = Process(
                 target=run_collector if args.now else run_collector_on_schedule,
                 args=(collector_config, tables[name]),
@@ -91,7 +93,7 @@ def launch_collectors(args, config, processes, tables):
 
 def launch_handlers(args, config, processes, tables):
     handlers_names_to_run = (
-        args.handlers if "*" not in args.handlers else config.handlers.keys()
+        args.handlers if "all" not in args.handlers else config.handlers.keys()
     )
 
     handlers_to_run = {
