@@ -63,7 +63,7 @@ def parse_arguments():
 
 def launch_harvesters(args, config, processes, tables):
     harvester_names_to_run = (
-        args.harvesters if args.harvesters else config.harvesters.keys()
+        args.harvesters if "*" not in args.harvesters else config.harvesters.keys()
     )
     for name, harvester_config in config.harvesters.items():
         if name in harvester_names_to_run:
@@ -77,7 +77,7 @@ def launch_harvesters(args, config, processes, tables):
 
 def launch_collectors(args, config, processes, tables):
     collector_names_to_run = (
-        args.collectors if args.collectors else config.collectors.keys()
+        args.collectors if "*" not in args.collectors else config.collectors.keys()
     )
     for name, collector_config in config.collectors.items():
         if name in collector_names_to_run:
@@ -90,12 +90,21 @@ def launch_collectors(args, config, processes, tables):
 
 
 def launch_handlers(args, config, processes, tables):
+    handlers_names_to_run = (
+        args.handlers if "*" not in args.handlers else config.handlers.keys()
+    )
+
+    handlers_to_run = {
+        name: config.handlers[name]
+        for name in handlers_names_to_run
+    }
+
     if args.handlers:
         if args.now:
             raise ValueError("Cannot run handlers with --now flag")
         handlers = Process(
             target=run_handlers,
-            args=(config.handlers, tables, args.host, args.port, args.allowed_hosts),
+            args=(handlers_to_run, tables, args.host, args.port, args.allowed_hosts),
         )
         handlers.start()
         processes.append(handlers)
