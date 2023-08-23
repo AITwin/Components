@@ -35,3 +35,14 @@ SOURCE = "bolt.vehicles_position"
 DEPENDENCIES = ["micromobility.area"]
 DEPENDENCIES_LIMIT = [1]
 
+
+
+[harvesters.daily_prediction]
+PATH = "micromobility.harvesters.daily_predictor.DailyPredictorHarvester"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "00:00"
+SOURCE = "bolt.count"
+SOURCE_RANGE = "5d"
+DEPENDENCIES = ["bolt.count"]
+DEPENDENCIES_LIMIT = [100]
