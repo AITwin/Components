@@ -23,3 +23,15 @@ DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "01:00"
 
+
+
+[harvesters]
+
+[harvesters.count]
+PATH = "micromobility.bolt.harvesters.count.CountHarvester"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "15m"
+SOURCE = "pony.vehicles_position"
+DEPENDENCIES = ["micromobility.area"]
+DEPENDENCIES_LIMIT = [1]

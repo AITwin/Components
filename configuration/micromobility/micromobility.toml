@@ -1,0 +1,7 @@
+[collectors]
+
+[collectors.area]
+PATH = "micromobility.harvesters.location.LocationCreator"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:00"
