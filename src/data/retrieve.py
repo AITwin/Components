@@ -49,6 +49,15 @@ def retrieve_latest_row(table: Table) -> Data:
     return _(base_query(table).order_by(table.c.date.desc()).limit(1)).fetchone()
 
 
+def retrieve_first_row(table: Table) -> Data:
+    """
+    Get the first row from a table.
+    :param table: The table
+    :return: The first row
+    """
+    return _(base_query(table).order_by(table.c.date.asc()).limit(1)).fetchone()
+
+
 def retrieve_after_datetime(table: Table, date: datetime, limit: int) -> List[Data]:
     return _(
         base_query(table)

@@ -11,6 +11,7 @@ from src.data.retrieve import (
     retrieve_after_datetime,
     retrieve_between_datetime,
     retrieve_latest_rows_before_datetime,
+    retrieve_first_row,
 )
 from src.data.write import write_result
 
@@ -91,7 +92,10 @@ def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Ta
     latest_row = retrieve_latest_row(table)
 
     if latest_row is None:
-        latest_date = ZERO_DATE
+        # In case the harvester has never been run, get the first row from the source table
+        row = retrieve_first_row(source_table)
+        # Minus one second to make sure we include the first row
+        latest_date = (row and (row.date - timedelta(seconds=1))) or ZERO_DATE
     else:
         latest_date = latest_row.date
 
@@ -130,6 +134,7 @@ def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Ta
         if dependency_limit == 1:
             if not dependency_data:
                 raise ValueError(f"Dependency {dependency.name} not found")
+
             dependency_data = dependency_data[0]
         dependencies_data[dependency.name] = dependency_data
 
