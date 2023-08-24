@@ -1,3 +1,4 @@
+import logging
 import os
 import tomllib
 from typing import List, Dict
@@ -5,6 +6,7 @@ from typing import List, Dict
 from src.components import ComponentClass
 from src.configuration.model import ComponentsConfiguration, ComponentConfiguration
 
+logger = logging.getLogger("Load")
 
 def class_from_path(path: str) -> ComponentClass:
     """
@@ -149,7 +151,10 @@ def get_optimal_dependencies_wise_order(
 
     while harvesters:
         for harvester in harvesters:
-            if all(dependency in order for dependency in harvester.dependencies):
+            for dependency in harvester.dependencies:
+                if dependency.source is None:
+                    continue
+            if all(dependency in order for dependency in harvester.dependencies if dependency.source is not None):
                 order.append(harvester)
                 harvesters.remove(harvester)
                 break
@@ -157,7 +162,12 @@ def get_optimal_dependencies_wise_order(
         iterations += 1
 
         if iterations > MAX_ITERATIONS:
-            raise ValueError("Could not find an order to run the harvesters in.")
+            # Add the remaining harvesters in any order
+            order.extend(harvesters)
+            logger.warning(
+                f"Could not find optimal order for harvesters: {' '.join([harvester.name for harvester in harvesters])}"
+            )
+            break
 
     return order
 

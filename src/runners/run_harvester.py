@@ -134,6 +134,7 @@ def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Ta
         if dependency_limit == 1:
             if not dependency_data:
                 raise ValueError(f"Dependency {dependency.name} not found")
+
             dependency_data = dependency_data[0]
         dependencies_data[dependency.name] = dependency_data
 
