@@ -7,13 +7,13 @@ DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "01:00"
 
-
+ 
 [collectors.vehicles_position]
 
 PATH = "micromobility.bolt.collectors.vehicle_position.BoltVehiclePositionCollector"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
-SCHEDULE = "5m"
+SCHEDULE = "51m"
 
 
 [collectors.vehicle_type]
@@ -32,6 +32,7 @@ DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "15m"
 SOURCE = "bolt.vehicles_position"
+SOURCE_RANGE = "15m"
 DEPENDENCIES = ["micromobility.area"]
 DEPENDENCIES_LIMIT = [1]
 
@@ -43,6 +44,6 @@ DATA_FORMAT = "json"
 DATA_TYPE = "json"
 SCHEDULE = "00:00"
 SOURCE = "bolt.count"
-SOURCE_RANGE = "5d"
+SOURCE_RANGE = "24h"
 DEPENDENCIES = ["bolt.count"]
 DEPENDENCIES_LIMIT = [100]

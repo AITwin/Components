@@ -5,12 +5,12 @@ from shapely.geometry import Point
 from src.components import Harvester
 
 class CountHarvester(Harvester):
-   def run(self, sources, micromobility_micromobility_area):
+   def run(self, sources, micromobility_area):
       # Load the GeoDataFrame directly from the JSON data
-      shapefile = gpd.GeoDataFrame.from_features(json.loads(micromobility_micromobility_area.data)["features"])
+      shapefile = gpd.GeoDataFrame.from_features(json.loads(micromobility_area.data)["features"],crs="EPSG:4326")
       
       # Convert sources data to GeoDataFrame
-      df = pd.json_normalize(sources.data["features"])
+      df = pd.json_normalize(sources[-1].data["features"])
       df['geometry_point'] = df['geometry.coordinates'].apply(Point)
       gdf = gpd.GeoDataFrame(df, geometry="geometry_point", crs="EPSG:4326")
       
@@ -25,5 +25,3 @@ class CountHarvester(Harvester):
       result = df2.set_index('poly_id').to_dict(orient='index')
       
       return result
-   
-   def detect_Anomaly()
