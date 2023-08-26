@@ -5,21 +5,21 @@
 PATH = "stib.collectors.gtfs.STIBGTFSCollector"
 DATA_FORMAT = "gtfs"
 DATA_TYPE = "binary"
-SCHEDULE = "01:00"
+SCHEDULE = "04:20"
 
 [collectors.shapefile]
 
 PATH = "stib.collectors.shapefile.STIBShapeFilesCollector"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
-SCHEDULE = "01:00"
+SCHEDULE = "03:20"
 
 [collectors.stops]
 
 PATH = "stib.collectors.stops.STIBStopsCollector"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
-SCHEDULE = "01:00"
+SCHEDULE = "00:20"
 
 [collectors.vehicle_distance]
 

@@ -5,7 +5,7 @@
 PATH = "tec.collectors.gtfs.TECGTFSStaticCollector"
 DATA_FORMAT = "gtfs"
 DATA_TYPE = "binary"
-SCHEDULE = "01:00"
+SCHEDULE = "03:45"
 
 [collectors.gtfs_realtime]
 

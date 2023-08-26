@@ -5,7 +5,7 @@
 PATH = "micromobility.dott.collectors.geofence.DottGeofenceCollector"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
-SCHEDULE = "01:00"
+SCHEDULE = "01:30"
 
 
 [collectors.vehicles_position]
@@ -21,5 +21,5 @@ SCHEDULE = "5m"
 PATH = "micromobility.dott.collectors.vehicle_type.DottVehicleTypeCollector"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
-SCHEDULE = "01:00"
+SCHEDULE = "01:40"
 

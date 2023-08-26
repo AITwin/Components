@@ -5,7 +5,7 @@
 PATH = "de_lijn.collectors.gtfs.DeLijnGTFSStaticCollector"
 DATA_FORMAT = "gtfs"
 DATA_TYPE = "binary"
-SCHEDULE = "01:00"
+SCHEDULE = "05:00"
 
 [collectors.gtfs_realtime]
 

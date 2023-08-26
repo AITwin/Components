@@ -5,7 +5,7 @@
 PATH = "train.sncb.collectors.gtfs.SNCBGTFSStaticCollector"
 DATA_FORMAT = "gtfs"
 DATA_TYPE = "binary"
-SCHEDULE = "01:00"
+SCHEDULE = "00:10"
 
 [collectors.gtfs_realtime]
 

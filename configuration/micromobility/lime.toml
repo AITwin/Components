@@ -13,5 +13,5 @@ SCHEDULE = "5m"
 PATH = "micromobility.lime.collectors.vehicle_type.LimeVehicleTypeCollector"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
-SCHEDULE = "01:00"
+SCHEDULE = "02:30"
 
