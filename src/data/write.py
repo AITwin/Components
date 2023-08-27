@@ -35,7 +35,7 @@ def write_result(table: Table, data, date: datetime):
         .fetchone()
     )
 
-    if same_data_row is not None:
+    if same_data_row is not None and md5_digest is not None:
         # Insert with copy_id
         connection().execute(table.insert().values(date=date, copy_id=same_data_row.id))
     else:
