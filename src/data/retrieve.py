@@ -37,8 +37,8 @@ def base_query(table: Table):
         .outerjoin(t2, table.c.copy_id == t2.c.id)
         .where(
             table.c.copy_id.isnot(None)
-            | table.c.data.isnot(None)
-            | t2.c.data.isnot(None)
+            | table.c.hash.isnot(None)
+            | t2.c.hash.isnot(None)
         )
     )
 
