@@ -28,7 +28,7 @@ def run_harvester_on_schedule(
     while True:
         logger.debug(f"Running harvester {harvester_config.name}")
         if not run_harvester(harvester_config, tables):
-            time.sleep(0.3)
+            time.sleep(5)
 
 
 def source_range_to_period_and_limit(
@@ -80,11 +80,12 @@ def source_range_to_period_and_limit(
         return latest_date, latest_date + timedelta(seconds=seconds), None
 
 
-def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Table]):
+def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Table]) -> bool:
     """
     Run a harvester.
     :param harvester_config: The harvester configuration
     :param tables: The tables to use for the harvester (table name to table object (SQLAlchemy))
+    :return: Whether the harvester ran successfully
     """
     table = tables[harvester_config.name]
     source_table = tables[harvester_config.source.name]
@@ -104,16 +105,16 @@ def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Ta
     start_date, end_date, limit = source_range_to_period_and_limit(
         latest_date, harvester_config.source_range
     )
-    source_data = retrieve_between_datetime(source_table, start_date, end_date, limit)
 
+    source_data = retrieve_between_datetime(source_table, start_date, end_date, limit)
     if not source_data:
-        return  # No new data to harvest
+        return False  # No new data to harvest
 
     if limit and harvester_config.source_range_strict and len(source_data) < limit:
-        return  # No new data to harvest, still building the amount of data specified by the limit
+        return False  # No new data to harvest, still building the amount of data specified by the limit
 
     if end_date and not retrieve_after_datetime(table, latest_date, 1):
-        return  # No new data to harvest, still building the same period
+        return False  # No new data to harvest, still building the same period
 
     storage_date = end_date or source_data[-1].date
 
@@ -156,4 +157,4 @@ def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Ta
         )
         write_result(table, None, storage_date)
 
-    return result
+    return True
