@@ -1,4 +1,5 @@
 import json
+from functools import lru_cache
 
 import geopandas as gpd
 import pandas as pd
@@ -10,6 +11,21 @@ from src.utilities.gtfs import (
 )
 
 
+class _CachedStopTimes:
+    stop_times = None
+    date = None
+
+
+def _cached_stop_times(gtfs_static: gpd.GeoDataFrame, date: str):
+    if _CachedStopTimes.stop_times is None or _CachedStopTimes.date != date:
+        _CachedStopTimes.stop_times = gtfs_static.get_stop_times(date)[
+            ["trip_id", "stop_id", "stop_sequence", "arrival_time", "departure_time"]
+        ].copy()
+        _CachedStopTimes.date = date
+
+    return _CachedStopTimes.stop_times
+
+
 class SNCBVehiclePositionGeometryHarvester(Harvester):
     def run(self, source, sncb_gtfs, infrabel_segments, infrabel_operational_points):
         operational_points = gpd.GeoDataFrame.from_features(
@@ -19,14 +35,11 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
         segments = gpd.GeoDataFrame.from_features(infrabel_segments.data["features"])
 
         gtfs_static = load_gtfs_kit_from_zip_string(sncb_gtfs.data)
-
         gtfs_rt = load_gtfs_realtime_from_bytes_to_df(source.data)
 
         current_date = source.date.strftime("%Y%m%d")
 
-        stop_times = gtfs_static.get_stop_times(current_date)[
-            ["trip_id", "stop_id", "stop_sequence", "arrival_time", "departure_time"]
-        ].copy()
+        stop_times = _cached_stop_times(gtfs_static, current_date)
 
         stop_times["arrival_delay"] = 0
 
@@ -119,6 +132,7 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
                     "ptcarid": row["ptcarid"],
                 }
             )
+        print("yo3")
 
         stop_names_clean = pd.DataFrame(rows).drop_duplicates()
 
@@ -165,6 +179,7 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
 
         if final.empty:
             return
+        print("yo4")
 
         # Interpolate point using geometry (linestring) and percentage
         final["geometry"] = final.apply(

@@ -18,6 +18,8 @@ def load_gtfs_kit_from_zip_string(zip_bytes: bytes):
     @param zip_bytes: A zip file in bytes
     @return: GTFS feed
     """
+    print("Loading GTFS feed from zip string", hash(zip_bytes))
+
     tmp = NamedTemporaryFile(delete=False)
     tmp.write(zip_bytes)
 
