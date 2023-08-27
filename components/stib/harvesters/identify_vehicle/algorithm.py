@@ -45,9 +45,9 @@ class Point:
 
     def __eq__(self, other):
         return (
-                self.timestamp == other.timestamp
-                and self.distance == other.distance
-                and self.line == other.line
+            self.timestamp == other.timestamp
+            and self.distance == other.distance
+            and self.line == other.line
         )
 
 
@@ -103,22 +103,24 @@ class IdentifyVehicleAlgorithm:
         self.min_distance = dataframe["distance"].min()
 
         self.timestamp_normalized_scale = (
-                dataframe["timestamp"].max() - dataframe["timestamp"].min()
+            dataframe["timestamp"].max() - dataframe["timestamp"].min()
         )
 
         self.distance_normalized_scale = (
-                dataframe["distance"].max() - dataframe["distance"].min()
+            dataframe["distance"].max() - dataframe["distance"].min()
         )
 
         # Normalize the timestamps on a 0-1 scale
         dataframe["timestamp"] = (
-                                         dataframe["timestamp"] - self.min_timestamp
-                                 ) / self.timestamp_normalized_scale
+            dataframe["timestamp"] - self.min_timestamp
+        ) / self.timestamp_normalized_scale if self.timestamp_normalized_scale else 0
 
         # Normalize the distance on a 0-1 scale
         dataframe["distance"] = (
-                                        dataframe["distance"] - self.min_distance
-                                ) / self.distance_normalized_scale
+            ((dataframe["distance"] - self.min_distance) / self.distance_normalized_scale)
+            if self.distance_normalized_scale
+            else 0
+        )
 
         # Available points are point without uuid
         self.available_points = [
@@ -140,8 +142,6 @@ class IdentifyVehicleAlgorithm:
                 self.trips[-1].add_point(vehicle_point_from_row(row))
 
     def match_iter(self):
-        # print(f"Starting with {len(self.available_points)} available points")
-
         usable_points = list(copy.deepcopy(self.available_points))
 
         if len(self.trips) == 0:
@@ -211,7 +211,7 @@ class IdentifyVehicleAlgorithm:
 
         # Check if the timestamp is not too far in the future
         if (
-                point.timestamp - trip.points[-1].timestamp
+            point.timestamp - trip.points[-1].timestamp
         ) * self.timestamp_normalized_scale > trip.points[
             -1
         ].timestamp + MAXIMUM_GAP_TIME:
@@ -219,22 +219,22 @@ class IdentifyVehicleAlgorithm:
 
         # Ensure not too much backward movement
         if (
-                point.distance - trip.points[-1].distance
-                < -MAXIMUM_BACKWARD_DISTANCE / self.distance_normalized_scale
+            point.distance - trip.points[-1].distance
+            < -MAXIMUM_BACKWARD_DISTANCE / (self.distance_normalized_scale or 1)
         ):
             can_be_matched = False
 
         time_diff = (
-                            point.timestamp - trip.points[-1].timestamp
-                    ) * self.timestamp_normalized_scale
+            point.timestamp - trip.points[-1].timestamp
+        ) * self.timestamp_normalized_scale
         distance_diff = (
-                                point.distance - trip.points[-1].distance
-                        ) * self.distance_normalized_scale
+            point.distance - trip.points[-1].distance
+        ) * self.distance_normalized_scale
 
         if time_diff == 0:
             return False
 
-        speed_between_points = distance_diff / time_diff
+        speed_between_points = distance_diff / time_diff if time_diff > 0 else 0
 
         if speed_between_points > get_max_speed_for_line(self.line):
             can_be_matched = False
@@ -250,11 +250,11 @@ class IdentifyVehicleAlgorithm:
             # Compute average speed between each point
             for point1, point2 in zip(trip.points[:-1], trip.points[1:]):
                 time_diff = (
-                                    point2.timestamp - point1.timestamp
-                            ) * self.timestamp_normalized_scale
+                    point2.timestamp - point1.timestamp
+                ) * self.timestamp_normalized_scale
                 distance_diff = (
-                                        point2.distance - point1.distance
-                                ) * self.distance_normalized_scale
+                    point2.distance - point1.distance
+                ) * self.distance_normalized_scale
 
                 points.append(point2)
 
@@ -306,9 +306,9 @@ class IdentifyVehicleAlgorithm:
                 key: value
                 for key, value in trips_to_merge.items()
                 if key[0] != trip1
-                   and key[0] != trip2
-                   and key[1] != trip1
-                   and key[1] != trip2
+                and key[0] != trip2
+                and key[1] != trip1
+                and key[1] != trip2
             }
 
     @staticmethod
@@ -326,18 +326,18 @@ class IdentifyVehicleAlgorithm:
 
         # If last point is close enough to the first point of the next trip, merge them
         time_delta = (
-                             trip2.points[0].timestamp - trip1.points[-1].timestamp
-                     ) * self.timestamp_normalized_scale
+            trip2.points[0].timestamp - trip1.points[-1].timestamp
+        ) * self.timestamp_normalized_scale
         distance_delta = (
-                                 trip2.points[0].distance - trip1.points[-1].distance
-                         ) * self.distance_normalized_scale
+            trip2.points[0].distance - trip1.points[-1].distance
+        ) * self.distance_normalized_scale
 
         if distance_delta < -MAXIMUM_BACKWARD_DISTANCE:
             return False
 
         if (
-                time_delta < MAXIMUM_GAP_TIME
-                and distance_delta / time_delta < get_max_speed_for_line(self.line)
+            time_delta < MAXIMUM_GAP_TIME
+            and distance_delta / (time_delta or 1) < get_max_speed_for_line(self.line)
         ):
             return True
 
@@ -365,13 +365,13 @@ class IdentifyVehicleAlgorithm:
 
         # Calculate the confidence intervals
         ci = (
-                t
-                * se_residuals
-                * np.sqrt(
-            1 / len(y1)
-            + (np.array(x2) - np.mean(x1)) ** 2
-            / np.sum((np.array(x1) - np.mean(x1)) ** 2)
-        )
+            t
+            * se_residuals
+            * np.sqrt(
+                1 / len(y1)
+                + (np.array(x2) - np.mean(x1)) ** 2
+                / np.sum((np.array(x1) - np.mean(x1)) ** 2)
+            )
         )
 
         # Check if the actual y values of x2 fall within the confidence intervals
@@ -392,7 +392,6 @@ class IdentifyVehicleAlgorithm:
         return linear_regression.coef_[0], linear_regression.intercept_
 
     def get_score_for_point_for_trip(self, point, trip):
-
         distance_to_line = abs(trip.points[-1].distance - point.distance)
 
         # Add timestamp penalty
@@ -411,11 +410,11 @@ class IdentifyVehicleAlgorithm:
                 rows.append(point.row)
                 # Convert back normalized timestamp to original timestamp and distance
                 point.row["timestamp"] = (
-                        point.timestamp * self.timestamp_normalized_scale
-                        + self.min_timestamp
+                    point.timestamp * self.timestamp_normalized_scale
+                    + self.min_timestamp
                 )
                 point.row["distance"] = (
-                        point.distance * self.distance_normalized_scale + self.min_distance
+                    point.distance * self.distance_normalized_scale + self.min_distance
                 )
 
         output_df = pd.DataFrame(rows).copy().sort_values(by=["timestamp"])
