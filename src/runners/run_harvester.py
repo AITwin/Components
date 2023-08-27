@@ -28,7 +28,7 @@ def run_harvester_on_schedule(
     while True:
         logger.debug(f"Running harvester {harvester_config.name}")
         if not run_harvester(harvester_config, tables):
-            time.sleep(1)
+            time.sleep(.3)
 
 
 def source_range_to_period_and_limit(
@@ -84,6 +84,7 @@ def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Ta
     """
     Run a harvester.
     :param harvester_config: The harvester configuration
+    :param tables: The tables to use for the harvester (table name to table object (SQLAlchemy))
     """
     table = tables[harvester_config.name]
     source_table = tables[harvester_config.source.name]
