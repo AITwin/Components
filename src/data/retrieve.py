@@ -35,6 +35,11 @@ def base_query(table: Table):
         )
         .select_from(table)
         .outerjoin(t2, table.c.copy_id == t2.c.id)
+        .where(
+            table.c.copy_id.isnot(None)
+            | table.c.data.isnot(None)
+            | t2.c.data.isnot(None)
+        )
     )
 
     return query
