@@ -8,6 +8,7 @@ from src.configuration.model import ComponentsConfiguration, ComponentConfigurat
 
 logger = logging.getLogger("Load")
 
+
 def class_from_path(path: str) -> ComponentClass:
     """
     Import a class from a path.
@@ -154,7 +155,11 @@ def get_optimal_dependencies_wise_order(
             for dependency in harvester.dependencies:
                 if dependency.source is None:
                     continue
-            if all(dependency in order for dependency in harvester.dependencies if dependency.source is not None):
+            if all(
+                dependency in order
+                for dependency in harvester.dependencies
+                if dependency.source is not None
+            ):
                 order.append(harvester)
                 harvesters.remove(harvester)
                 break

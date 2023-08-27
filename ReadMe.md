@@ -67,7 +67,6 @@ Run all handlers on a specific host and port and allowed hosts:
 
 `python main.py --handlers * --host 192.12.12.1 --port 5242 --allowed-hosts localhost`
 
-
 Run specific collectors:
 
 `python main.py --collectors collector_name1 collector_name2`

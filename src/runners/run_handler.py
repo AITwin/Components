@@ -8,7 +8,6 @@ from sqlalchemy import Table
 
 from src.configuration.model import ComponentConfiguration
 
-
 logger = logging.getLogger("Handler")
 
 

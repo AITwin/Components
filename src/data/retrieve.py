@@ -35,9 +35,7 @@ def base_query(table: Table, with_null: bool = False):
     )
 
     if not with_null:
-        query = query.where(
-            (table.c.copy_id.isnot(None)) | (table.c.hash.isnot(None))
-        )
+        query = query.where((table.c.copy_id.isnot(None)) | (table.c.hash.isnot(None)))
 
     query = query.select_from(table).outerjoin(t2, table.c.copy_id == t2.c.id)
 

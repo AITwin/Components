@@ -19,8 +19,6 @@ def convert_dataframe_column_stop_to_generic(series: pd.Series):
     return series.str.replace("[FGHCBP]", "", regex=True).astype(int)
 
 
-
-
 def convert_shapefile_line_to_num(shapefile_line: str) -> int:
     return int(
         shapefile_line.lstrip("0").replace("b", "").replace("m", "").replace("t", "")

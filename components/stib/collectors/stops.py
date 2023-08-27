@@ -18,7 +18,7 @@ class STIBStopsCollector(Collector):
 
         with_lat_and_long = data[
             data["stop_lat"].notnull() & data["stop_lon"].notnull()
-            ]
+        ]
 
         response_gdf = gpd.GeoDataFrame(
             with_lat_and_long,

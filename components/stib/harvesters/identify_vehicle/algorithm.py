@@ -112,12 +112,18 @@ class IdentifyVehicleAlgorithm:
 
         # Normalize the timestamps on a 0-1 scale
         dataframe["timestamp"] = (
-            dataframe["timestamp"] - self.min_timestamp
-        ) / self.timestamp_normalized_scale if self.timestamp_normalized_scale else 0
+            (dataframe["timestamp"] - self.min_timestamp)
+            / self.timestamp_normalized_scale
+            if self.timestamp_normalized_scale
+            else 0
+        )
 
         # Normalize the distance on a 0-1 scale
         dataframe["distance"] = (
-            ((dataframe["distance"] - self.min_distance) / self.distance_normalized_scale)
+            (
+                (dataframe["distance"] - self.min_distance)
+                / self.distance_normalized_scale
+            )
             if self.distance_normalized_scale
             else 0
         )
@@ -218,9 +224,8 @@ class IdentifyVehicleAlgorithm:
             can_be_matched = False
 
         # Ensure not too much backward movement
-        if (
-            point.distance - trip.points[-1].distance
-            < -MAXIMUM_BACKWARD_DISTANCE / (self.distance_normalized_scale or 1)
+        if point.distance - trip.points[-1].distance < -MAXIMUM_BACKWARD_DISTANCE / (
+            self.distance_normalized_scale or 1
         ):
             can_be_matched = False
 
@@ -335,10 +340,9 @@ class IdentifyVehicleAlgorithm:
         if distance_delta < -MAXIMUM_BACKWARD_DISTANCE:
             return False
 
-        if (
-            time_delta < MAXIMUM_GAP_TIME
-            and distance_delta / (time_delta or 1) < get_max_speed_for_line(self.line)
-        ):
+        if time_delta < MAXIMUM_GAP_TIME and distance_delta / (
+            time_delta or 1
+        ) < get_max_speed_for_line(self.line):
             return True
 
         x1 = [point.timestamp for point in trip1.points]
