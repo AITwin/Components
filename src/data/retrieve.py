@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Protocol, Union, List
 
-from sqlalchemy import Table, select
+from sqlalchemy import Table, select, and_
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql.functions import coalesce
 
@@ -29,16 +29,19 @@ def base_query(table: Table):
 
     query = (
         select(
-            table.c.id,
-            table.c.date,
-            coalesce(t2.c.data, table.c.data).label("data"),
+            [
+                table.c.id,
+                table.c.date,
+                coalesce(t2.c.data, table.c.data).label("data"),
+            ]
         )
         .select_from(table)
         .outerjoin(t2, table.c.copy_id == t2.c.id)
         .where(
-            table.c.copy_id.isnot(None)
-            | table.c.hash.isnot(None)
-            | t2.c.hash.isnot(None)
+            and_(
+                table.c.id.isnot(None),  # Assuming id cannot be null
+                coalesce(t2.c.data, table.c.data).isnot(None),
+            )
         )
     )
 
