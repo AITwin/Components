@@ -23,7 +23,10 @@ def write_result(table: Table, data, date: datetime):
     else:
         data_bytes = data
 
-    md5_digest = hashlib.md5(data_bytes).hexdigest()
+    if data_bytes is None:
+        md5_digest = None
+    else:
+        md5_digest = hashlib.md5(data_bytes).hexdigest()
 
     # Check if data is already in the database
     same_data_row = (
