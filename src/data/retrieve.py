@@ -28,32 +28,31 @@ def base_query(table: Table, with_null: bool = False):
 
     t2 = aliased(table)
 
-    query = (
-        select(
-            table.c.id,
-            table.c.date,
-            coalesce(t2.c.data, table.c.data).label("data"),
-        )
-        .where(
-            *((table.c.copy_id.isnot(None)) | (table.c.hash.isnot(None)))
-            if with_null
-            else ()
-        )
-        .select_from(table)
-        .outerjoin(t2, table.c.copy_id == t2.c.id)
+    query = select(
+        table.c.id,
+        table.c.date,
+        coalesce(t2.c.data, table.c.data).label("data"),
     )
+
+    if not with_null:
+        query = query.where(
+            *((table.c.copy_id.isnot(None)) | (table.c.hash.isnot(None)))
+        )
+
+    query = query.select_from(table).outerjoin(t2, table.c.copy_id == t2.c.id)
 
     return query
 
 
-def retrieve_latest_row(table: Table) -> Data:
+def retrieve_latest_row(table: Table, with_null: bool = False) -> Data:
     """
     Get the latest row from a table.
     :param table: The table
+    :param with_null: Whether to include rows with null data
     :return: The latest row
     """
     return _(
-        base_query(table, with_null=True).order_by(table.c.date.desc()).limit(1)
+        base_query(table, with_null=with_null).order_by(table.c.date.desc()).limit(1)
     ).fetchone()
 
 

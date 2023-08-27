@@ -28,7 +28,7 @@ def run_harvester_on_schedule(
     while True:
         logger.debug(f"Running harvester {harvester_config.name}")
         if not run_harvester(harvester_config, tables):
-            time.sleep(.3)
+            time.sleep(0.3)
 
 
 def source_range_to_period_and_limit(
@@ -90,7 +90,7 @@ def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Ta
     source_table = tables[harvester_config.source.name]
 
     # Get latest date harvested
-    latest_row = retrieve_latest_row(table)
+    latest_row = retrieve_latest_row(table, with_null=True)
 
     if latest_row is None:
         # In case the harvester has never been run, get the first row from the source table
