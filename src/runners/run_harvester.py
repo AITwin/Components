@@ -37,7 +37,7 @@ def source_range_to_period_and_limit(
     """
     Convert a source range to a period and limit.
 
-    This function takes a latest date and a source range, which can be either a time period or a limit (count).
+    This function takes the latest date and a source range, which can be either a time period or a limit (count).
     If the source range represents a time period, the function calculates the start and end dates of the period,
     rounded to the previous period based on the given time unit. If the source range represents a limit, it returns
     the latest date and the specified limit.

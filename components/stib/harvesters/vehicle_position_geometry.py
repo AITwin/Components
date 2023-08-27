@@ -12,7 +12,6 @@ from src.components import Harvester
 
 
 class STIBVehiclePositionGeometryHarvester(Harvester):
-
     def run(self, source, stib_segments, stib_stops):
         # Load the data from the collection result
         dataframe = pd.json_normalize(source.data)
@@ -20,11 +19,12 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
         if len(dataframe) == 0:
             return
 
-        segments_gdf = gpd.GeoDataFrame.from_features(stib_segments.data["features"], crs="epsg:4326")
+        segments_gdf = gpd.GeoDataFrame.from_features(
+            stib_segments.data["features"], crs="epsg:4326"
+        )
         segments_gdf_be_crs = segments_gdf.to_crs(epsg=31370).copy()
 
         stib_stops_gdf = gpd.GeoDataFrame.from_features(stib_stops.data["features"])
-        stib_stops_gdf["stop_id"] = stib_stops_gdf["stop_id"]
 
         cleaned_data = self.clean_realtime_data_with_merged_data(
             dataframe, stib_stops_gdf
@@ -82,11 +82,8 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
         segment_be_filtered = segments_with_be_crs[
             (segments_with_be_crs["start"] == row_to_interpolate["pointId"])
             & (segments_with_be_crs["line_id"] == row_to_interpolate["line_id"])
-            & (
-                    segments_with_be_crs["direction"]
-                    == row_to_interpolate["direction"]
-            )
-            ]
+            & (segments_with_be_crs["direction"] == row_to_interpolate["direction"])
+        ]
 
         if len(segment_be_filtered) == 0:
             return None
@@ -99,7 +96,7 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
             (segments["start"] == row_to_interpolate["pointId"])
             & (segments["line_id"] == row_to_interpolate["line_id"])
             & (segments["direction"] == row_to_interpolate["direction"])
-            ].iloc[0]["geometry"]
+        ].iloc[0]["geometry"]
 
         point_on_segment = segment.interpolate(percentage, normalized=True)
 
@@ -193,7 +190,7 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
 
     @staticmethod
     def merge_on_both_direction_and_point(
-            merged, realtime_data
+        merged, realtime_data
     ) -> Tuple[pd.DataFrame, pd.DataFrame]:
         # Insert direction in realtime_data based on wether the directionId stop sequence matching in merged stop is 0
         realtime_data = realtime_data.merge(
@@ -280,12 +277,12 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
         matched_data = data_to_match[
             data_to_match["stop_id"].notna()
             & ~data_to_match["uuid"].isin(duplicated_uuid)
-            ].copy()
+        ].copy()
 
         unmatched_data = data_to_match[
             data_to_match["stop_id"].isna()
             | data_to_match["uuid"].isin(duplicated_uuid)
-            ].copy()
+        ].copy()
 
         return (
             matched_data,

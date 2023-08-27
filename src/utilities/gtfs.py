@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime, timedelta
+from functools import lru_cache
 from tempfile import NamedTemporaryFile
 
 import geopandas as gpd
@@ -10,13 +11,13 @@ from google.transit import gtfs_realtime_pb2
 from pytz import timezone
 
 
+@lru_cache(maxsize=32)
 def load_gtfs_kit_from_zip_string(zip_bytes: bytes):
     """
     Load GTFS feed from zip string
     @param zip_bytes: A zip file in bytes
     @return: GTFS feed
     """
-
     tmp = NamedTemporaryFile(delete=False)
     tmp.write(zip_bytes)
 
