@@ -17,12 +17,13 @@ def _(statement):
     return connection().execute(statement)
 
 
-def base_query(table: Table):
+def base_query(table: Table, with_null: bool = False):
     """
     Returns a base query for a table. But replace the value of the date column
     when it is None with the value of the row with the id matching the copy_id.
-    :param table:
-    :return:
+    :param table: The table
+    :param with_null: Whether to include rows with null data
+    :return: The base query to use for all subsequent queries
     """
 
     t2 = aliased(table)
@@ -34,7 +35,9 @@ def base_query(table: Table):
             coalesce(t2.c.data, table.c.data).label("data"),
         )
         .where(
-            (table.c.copy_id.isnot(None)) | (table.c.hash.isnot(None))
+            *((table.c.copy_id.isnot(None)) | (table.c.hash.isnot(None)))
+            if with_null
+            else ()
         )
         .select_from(table)
         .outerjoin(t2, table.c.copy_id == t2.c.id)
@@ -49,7 +52,9 @@ def retrieve_latest_row(table: Table) -> Data:
     :param table: The table
     :return: The latest row
     """
-    return _(base_query(table).order_by(table.c.date.desc()).limit(1)).fetchone()
+    return _(
+        base_query(table, with_null=True).order_by(table.c.date.desc()).limit(1)
+    ).fetchone()
 
 
 def retrieve_first_row(table: Table) -> Data:
