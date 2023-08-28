@@ -13,7 +13,7 @@ SCHEDULE = "01:00"
 PATH = "micromobility.bolt.collectors.vehicle_position.BoltVehiclePositionCollector"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
-SCHEDULE = "51m"
+SCHEDULE = "5m"
 
 
 [collectors.vehicle_type]
@@ -27,19 +27,19 @@ SCHEDULE = "01:00"
 [harvesters]
 
 [harvesters.count]
-PATH = "micromobility.bolt.harvesters.count.CountHarvester"
+PATH = "micromobility.bolt.harvesters.anomaly_detector.AnomalyHarvester"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "15m"
 SOURCE = "bolt.vehicles_position"
 SOURCE_RANGE = "15m"
-DEPENDENCIES = ["micromobility.area"]
-DEPENDENCIES_LIMIT = [1]
+DEPENDENCIES = ["micromobility.area", "bolt.daily_prediction"]
+DEPENDENCIES_LIMIT = [1, 1]
 
 
 
 [harvesters.daily_prediction]
-PATH = "micromobility.harvesters.daily_predictor.DailyPredictorHarvester"
+PATH = "micromobility.bolt.harvesters.daily_predictor.DailyPredictorHarvester"
 DATA_FORMAT = "json"
 DATA_TYPE = "json"
 SCHEDULE = "00:00"
@@ -47,3 +47,4 @@ SOURCE = "bolt.count"
 SOURCE_RANGE = "24h"
 DEPENDENCIES = ["bolt.count"]
 DEPENDENCIES_LIMIT = [100]
+STORAGE_DATE = true

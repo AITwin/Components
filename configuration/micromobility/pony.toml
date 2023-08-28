@@ -28,10 +28,25 @@ SCHEDULE = "01:00"
 [harvesters]
 
 [harvesters.count]
-PATH = "micromobility.bolt.harvesters.count.CountHarvester"
+PATH = "micromobility.pony.harvesters.anomaly_detector.AnomalyHarvester"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "15m"
 SOURCE = "pony.vehicles_position"
-DEPENDENCIES = ["micromobility.area"]
-DEPENDENCIES_LIMIT = [1]
+SOURCE_RANGE = "15m"
+DEPENDENCIES = ["micromobility.area", "pony.daily_prediction"]
+DEPENDENCIES_LIMIT = [1, 1]
+
+
+
+[harvesters.daily_prediction]
+PATH = "micromobility.pony.harvesters.daily_predictor.DailyPredictorHarvester"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "00:00"
+SOURCE = "pony.count"
+SOURCE_RANGE = "24h"
+DEPENDENCIES = ["pony.count"]
+DEPENDENCIES_LIMIT = [100]
+STORAGE_DATE = true
+

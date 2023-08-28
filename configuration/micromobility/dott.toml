@@ -23,3 +23,30 @@ DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "01:00"
 
+
+[harvesters]
+
+[harvesters.count]
+PATH = "micromobility.dott.harvesters.anomaly_detector.AnomalyHarvester"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "15m"
+SOURCE = "dott.vehicles_position"
+SOURCE_RANGE = "15m"
+DEPENDENCIES = ["micromobility.area", "dott.daily_prediction"]
+DEPENDENCIES_LIMIT = [1, 1]
+
+
+
+[harvesters.daily_prediction]
+PATH = "micromobility.dott.harvesters.daily_predictor.DailyPredictorHarvester"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "00:00"
+SOURCE = "dott.count"
+SOURCE_RANGE = "24h"
+DEPENDENCIES = ["dott.count"]
+DEPENDENCIES_LIMIT = [100]
+STORAGE_DATE = true
+
+
