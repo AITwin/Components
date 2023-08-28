@@ -38,31 +38,16 @@ class _SegmentCache:
             ).copy()
 
     def get_segment_be(self, start, line_id, direction):
-        key = f"{start}_{line_id}_{direction}"
-
-        if key in _SegmentCache.be_cache:
-            return _SegmentCache.be_cache[key]
-
-        segment_be_filtered = self.segments_gdf_be_crs[
-            (self.segments_gdf_be_crs["start"] == start)
-            & (self.segments_gdf_be_crs["line_id"] == line_id)
-            & (self.segments_gdf_be_crs["direction"] == direction)
-        ]
-
-        if len(segment_be_filtered) == 0:
-            return None
-
-        segment_be: LineString = segment_be_filtered.iloc[0]["geometry"]
-
-        _SegmentCache.be_cache[key] = segment_be
-
-        return segment_be
+        return self._get_segment_from_cache(self.be_cache, start, line_id, direction)
 
     def get_segment(self, start, line_id, direction):
+        return self._get_segment_from_cache(self.cache, start, line_id, direction)
+
+    def _get_segment_from_cache(self, cache, start, line_id, direction):
         key = f"{start}_{line_id}_{direction}"
 
-        if key in _SegmentCache.cache:
-            return _SegmentCache.cache[key]
+        if key in cache:
+            return cache[key]
 
         segment_filtered = self.segments_gdf[
             (self.segments_gdf["start"] == start)
@@ -75,10 +60,9 @@ class _SegmentCache:
 
         segment: LineString = segment_filtered.iloc[0]["geometry"]
 
-        _SegmentCache.cache[key] = segment
+        cache[key] = segment
 
         return segment
-
 
 class STIBVehiclePositionGeometryHarvester(Harvester):
     def run(self, source, stib_segments, stib_stops):
