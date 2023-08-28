@@ -27,9 +27,12 @@ def run_harvester_on_schedule(
     logger.info(f"Running harvester {harvester_config.name} on schedule")
     while True:
         logger.debug(f"Running harvester {harvester_config.name}")
-        if not run_harvester(harvester_config, tables):
-            time.sleep(5)
-
+        try:
+            if not run_harvester(harvester_config, tables):
+                time.sleep(5)
+        except Exception as e:
+            logger.exception(f"Harvester {harvester_config.name} failed: {e}")
+            time.sleep(60)
 
 def source_range_to_period_and_limit(
     latest_date: datetime, source_range: str | int
