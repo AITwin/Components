@@ -111,7 +111,7 @@ def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Ta
     if limit and harvester_config.source_range_strict and len(source_data) < limit:
         return  # No new data to harvest, still building the amount of data specified by the limit
 
-    if end_date and not retrieve_after_datetime(table, latest_date, 1):
+    if end_date and not retrieve_after_datetime(source_table, latest_date, 1):
         return  # No new data to harvest, still building the same period
 
     storage_date = end_date or source_data[-1].date
@@ -137,6 +137,8 @@ def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Ta
 
             dependency_data = dependency_data[0]
         dependencies_data[dependency.name] = dependency_data
+    if harvester_config.storage_date:
+        dependencies_data["storage_date"] = storage_date
 
     # Harvest data
     harvester = harvester_config.component()
