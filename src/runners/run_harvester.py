@@ -34,6 +34,7 @@ def run_harvester_on_schedule(
             logger.exception(f"Harvester {harvester_config.name} failed: {e}")
             time.sleep(60)
 
+
 def source_range_to_period_and_limit(
     latest_date: datetime, source_range: str | int
 ) -> (datetime, datetime, int):
@@ -83,7 +84,9 @@ def source_range_to_period_and_limit(
         return latest_date, latest_date + timedelta(seconds=seconds), None
 
 
-def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Table]) -> bool:
+def run_harvester(
+    harvester_config: ComponentConfiguration, tables: Dict[str, Table]
+) -> bool:
     """
     Run a harvester.
     :param harvester_config: The harvester configuration

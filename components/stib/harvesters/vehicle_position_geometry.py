@@ -1,7 +1,7 @@
 import json
 import uuid
 from functools import partial
-from typing import Tuple
+from typing import Tuple, Dict, Any
 
 import geopandas as gpd
 import pandas as pd
@@ -9,6 +9,75 @@ from shapely import LineString
 
 from components.stib.utils.converter import convert_dataframe_column_stop_to_generic
 from src.components import Harvester
+
+
+class _SegmentCache:
+    be_cache: Dict[str, Any] = {}
+    cache: Dict[str, Any] = {}
+
+    segments_gdf: gpd.GeoDataFrame = None
+    segments_gdf_be_crs: gpd.GeoDataFrame = None
+    init_count = 0
+
+    def __init__(self, segments):
+        _SegmentCache.init_count += 1
+        self.segments = segments
+
+        if _SegmentCache.init_count > 1e4:
+            _SegmentCache.init_count = 0
+            _SegmentCache.be_cache = {}
+            _SegmentCache.segments_gdf = None
+            _SegmentCache.segments_gdf_be_crs = None
+
+        if _SegmentCache.segments_gdf is None:
+            _SegmentCache.segments_gdf = gpd.GeoDataFrame.from_features(
+                segments.data["features"], crs="epsg:4326"
+            )
+            _SegmentCache.segments_gdf_be_crs = _SegmentCache.segments_gdf.to_crs(
+                epsg=31370
+            ).copy()
+
+    def get_segment_be(self, start, line_id, direction):
+        key = f"{start}_{line_id}_{direction}"
+
+        if key in _SegmentCache.be_cache:
+            return _SegmentCache.be_cache[key]
+
+        segment_be_filtered = self.segments_gdf_be_crs[
+            (self.segments_gdf_be_crs["start"] == start)
+            & (self.segments_gdf_be_crs["line_id"] == line_id)
+            & (self.segments_gdf_be_crs["direction"] == direction)
+        ]
+
+        if len(segment_be_filtered) == 0:
+            return None
+
+        segment_be: LineString = segment_be_filtered.iloc[0]["geometry"]
+
+        _SegmentCache.be_cache[key] = segment_be
+
+        return segment_be
+
+    def get_segment(self, start, line_id, direction):
+        key = f"{start}_{line_id}_{direction}"
+
+        if key in _SegmentCache.cache:
+            return _SegmentCache.cache[key]
+
+        segment_filtered = self.segments_gdf[
+            (self.segments_gdf["start"] == start)
+            & (self.segments_gdf["line_id"] == line_id)
+            & (self.segments_gdf["direction"] == direction)
+        ]
+
+        if len(segment_filtered) == 0:
+            return None
+
+        segment: LineString = segment_filtered.iloc[0]["geometry"]
+
+        _SegmentCache.cache[key] = segment
+
+        return segment
 
 
 class STIBVehiclePositionGeometryHarvester(Harvester):
@@ -19,10 +88,7 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
         if len(dataframe) == 0:
             return
 
-        segments_gdf = gpd.GeoDataFrame.from_features(
-            stib_segments.data["features"], crs="epsg:4326"
-        )
-        segments_gdf_be_crs = segments_gdf.to_crs(epsg=31370).copy()
+        segments = _SegmentCache(stib_segments)
 
         stib_stops_gdf = gpd.GeoDataFrame.from_features(stib_stops.data["features"])
 
@@ -35,8 +101,7 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
 
         interpolator = partial(
             self.interpolate_position,
-            segments=segments_gdf,
-            segments_with_be_crs=segments_gdf_be_crs,
+            segments=segments,
         )
 
         cleaned_data["position"] = cleaned_data.apply(interpolator, axis=1)
@@ -55,7 +120,7 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
         line_to_color = {}
 
         # Extract color dict from segments
-        for (line_id, color), _ in segments_gdf.groupby(["line_id", "color"]):
+        for (line_id, color), _ in segments.segments_gdf.groupby(["line_id", "color"]):
             line_to_color[line_id] = color
 
         for index, row in cleaned_data.iterrows():
@@ -78,25 +143,23 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
 
         return json.loads(geo_dataframes.to_json())
 
-    def interpolate_position(self, row_to_interpolate, segments, segments_with_be_crs):
-        segment_be_filtered = segments_with_be_crs[
-            (segments_with_be_crs["start"] == row_to_interpolate["pointId"])
-            & (segments_with_be_crs["line_id"] == row_to_interpolate["line_id"])
-            & (segments_with_be_crs["direction"] == row_to_interpolate["direction"])
-        ]
+    @staticmethod
+    def interpolate_position(row_to_interpolate, segments):
+        segment_be: LineString = segments.get_segment_be(
+            row_to_interpolate["pointId"],
+            row_to_interpolate["line_id"],
+            row_to_interpolate["direction"],
+        )
 
-        if len(segment_be_filtered) == 0:
+        if segment_be is None:
             return None
-
-        segment_be: LineString = segment_be_filtered.iloc[0]["geometry"]
-
         percentage = row_to_interpolate["distanceFromPoint"] / segment_be.length
 
-        segment = segments[
-            (segments["start"] == row_to_interpolate["pointId"])
-            & (segments["line_id"] == row_to_interpolate["line_id"])
-            & (segments["direction"] == row_to_interpolate["direction"])
-        ].iloc[0]["geometry"]
+        segment = segments.get_segment(
+            row_to_interpolate["pointId"],
+            row_to_interpolate["line_id"],
+            row_to_interpolate["direction"],
+        )
 
         point_on_segment = segment.interpolate(percentage, normalized=True)
 
