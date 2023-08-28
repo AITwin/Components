@@ -131,7 +131,6 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
                     "ptcarid": row["ptcarid"],
                 }
             )
-        print("yo3")
 
         stop_names_clean = pd.DataFrame(rows).drop_duplicates()
 
@@ -178,9 +177,8 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
 
         if final.empty:
             return
-        print("yo4")
 
-        # Interpolate point using geometry (linestring) and percentage
+        # Interp    olate point using geometry (linestring) and percentage
         final["geometry"] = final.apply(
             lambda row: row["geometry"].interpolate(row["percentage"], normalized=True),
             axis=1,

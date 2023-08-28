@@ -151,7 +151,7 @@ def run_harvester(harvester_config: ComponentConfiguration, tables: Dict[str, Ta
     elif result is not None:
         write_result(table, result, storage_date)
     else:
-        logger.warning(
+        logger.debug(
             f"Harvester {harvester_config.name} returned None, writing empty result to database since "
             "harvester should always yield consistent results on the same input."
         )
