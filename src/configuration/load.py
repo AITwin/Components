@@ -117,6 +117,7 @@ def extract_components(
             source_range_strict=component.get("SOURCE_RANGE_STRICT", True),
             multiple_results=component.get("MULTIPLE_RESULTS", False),
             query_parameters=component.get("QUERY_PARAMETERS", None),
+            storage_date = component.get("STORAGE_DATE", False),
         )
 
         target_list[name] = component_configuration
