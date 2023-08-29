@@ -9,11 +9,10 @@ import pytz
 import warnings
 from datetime import datetime, timedelta
 
-warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 class DailyPredictorHarvester(Harvester):
-    def run(self, source, bolt_count, storage_date, **kwargs):
-        final_dataframe = self.create_dataframe(bolt_count)
+    def run(self, source, dott_count, storage_date, **kwargs):
+        final_dataframe = self.create_dataframe(dott_count)
         test_dataframe = self.create_test_dataframe(storage_date)
         final_test_dataframe = pd.DataFrame()
         
@@ -27,27 +26,24 @@ class DailyPredictorHarvester(Harvester):
             final_test_dataframe = pd.concat([final_test_dataframe, temporary_df])
         
         final_test_dataframe["ds"] = final_test_dataframe["ds"].dt.strftime("%Y/%m/%d %H:%M:%S")
+        result = final_test_dataframe.groupby('ds').agg(
+            area_id=pd.NamedAgg(column='area_id', aggfunc=list),
+            pred_upper=pd.NamedAgg(column='pred_upper', aggfunc=list),
+            pred_lower=pd.NamedAgg(column='pred_lower', aggfunc=list),
+            pred=pd.NamedAgg(column='pred', aggfunc=list)
+            ).reset_index()
+
+            # Convert to a dictionary with 'ds' as keys
+        result_dict = {}
+        for index, row in result.iterrows():
+            result_dict[row['ds']] = {
+                'area_id': row['area_id'],
+                'pred_upper': row['pred_upper'],
+                'pred_lower': row['pred_lower'],
+                'pred': row['pred'],
+            }
         
-        result = (
-            final_test_dataframe.groupby(["ds", "area_id"])
-            .agg(
-                pred=("pred", "first"),
-                pred_upper=("pred_upper", "first"),
-                pred_lower=("pred_lower", "first"),
-            )
-            .reset_index()
-            .groupby("ds")
-            .apply(
-                lambda group: {
-                    str(area_id): group.set_index("area_id")
-                    .drop(columns=["ds"])
-                    .to_dict(orient="index")
-                }
-            )
-            .to_dict()
-        )
-        
-        return result
+        return result_dict
 
     def create_dataframe(self, aggregates):
         source_dataframe = pd.DataFrame()

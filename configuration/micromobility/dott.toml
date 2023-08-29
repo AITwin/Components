@@ -33,8 +33,8 @@ DATA_TYPE = "json"
 SCHEDULE = "15m"
 SOURCE = "dott.vehicles_position"
 SOURCE_RANGE = "15m"
-DEPENDENCIES = ["micromobility.area", "dott.daily_prediction"]
-DEPENDENCIES_LIMIT = [1, 1]
+DEPENDENCIES = ["micromobility.area", "dott.daily_prediction", "dott.count"]
+DEPENDENCIES_LIMIT = [1, 1, 100]
 
 
 

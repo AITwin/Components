@@ -34,8 +34,8 @@ DATA_TYPE = "json"
 SCHEDULE = "15m"
 SOURCE = "pony.vehicles_position"
 SOURCE_RANGE = "15m"
-DEPENDENCIES = ["micromobility.area", "pony.daily_prediction"]
-DEPENDENCIES_LIMIT = [1, 1]
+DEPENDENCIES = ["micromobility.area", "pony.daily_prediction", "pony.count"]
+DEPENDENCIES_LIMIT = [1, 1, 100]
 
 
 
