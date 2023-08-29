@@ -19,6 +19,7 @@ class ComponentConfiguration:
     source_range_strict: bool = True
     multiple_results: bool = False
     query_parameters: Optional[Dict[str, str]] = None
+    storage_date: Optional[bool] = False
 
     def __hash__(self):
         return hash(self.name)
