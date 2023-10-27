@@ -20,6 +20,10 @@ class StibSegmentsSpeedHarvester(Harvester):
         df1 = pd.DataFrame(source.data)
         df2 = pd.DataFrame(previous.data)
 
+        # Make sure pointId is in both dataframes
+        if "pointId" not in df1.columns or "pointId" not in df2.columns:
+            return
+
         # Merge on point_id, line_id and direction
         df = df1.merge(
             df2, on=["pointId", "lineId", "directionId"], suffixes=("", "_previous")
