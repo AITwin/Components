@@ -10,6 +10,10 @@ class StibSegmentsSpeedHarvester(Harvester):
 
         previous = stib_vehicle_distance[0]
 
+        # Make sure both source and previous are not empty
+        if not source or not previous:
+            return
+
         time_delta = source.date - previous.date
 
         # Read both json into pandas
@@ -17,7 +21,9 @@ class StibSegmentsSpeedHarvester(Harvester):
         df2 = pd.DataFrame(previous.data)
 
         # Merge on point_id, line_id and direction
-        df = df1.merge(df2, on=["pointId", "lineId", "directionId"], suffixes=("", "_previous"))
+        df = df1.merge(
+            df2, on=["pointId", "lineId", "directionId"], suffixes=("", "_previous")
+        )
         # Get duplicate rows (same point_id, line_id and direction)
         df = df.drop_duplicates(subset=["pointId", "lineId", "directionId"], keep=False)
 
@@ -25,12 +31,14 @@ class StibSegmentsSpeedHarvester(Harvester):
         df = df[df["distanceFromPoint_previous"] < df["distanceFromPoint"]]
 
         # Compute speed
-        df["speed"] = (df["distanceFromPoint"] - df["distanceFromPoint_previous"]) / time_delta.total_seconds()
+        df["speed"] = (
+            df["distanceFromPoint"] - df["distanceFromPoint_previous"]
+        ) / time_delta.total_seconds()
 
         # Keep only relevant columns
         df = df[["pointId", "lineId", "directionId", "speed"]]
 
         # Transform speed from m/s to km/h
-        df["speed"] = round(df["speed"] * 3.6,2)
+        df["speed"] = round(df["speed"] * 3.6, 2)
 
         return df.to_dict(orient="records")
