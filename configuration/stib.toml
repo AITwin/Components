@@ -43,7 +43,7 @@ SOURCE = "stib.gtfs"
 PATH = "stib.harvesters.segments.STIBSegmentsHarvester"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
-SOURCE = "stib.vehicle_identify"
+SOURCE = "stib.shapefile"
 DEPENDENCIES = ["stops"]
 
 [harvesters.speed]
