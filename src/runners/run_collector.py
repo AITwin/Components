@@ -13,7 +13,7 @@ logger = logging.getLogger("Collector")
 
 
 def run_collector_on_schedule(
-    collector_config: ComponentConfiguration, table: Table, fail_on_error: bool = True
+    collector_config: ComponentConfiguration, table: Table, fail_on_error: bool = False
 ):
     """
     Run a collector on a schedule.
