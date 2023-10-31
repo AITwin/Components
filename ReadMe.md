@@ -1,6 +1,6 @@
-# MobilityTwin.Brussels - Components
+<img src="https://mobilitytwin.brussels/static/logo.png" alt="Logo de MobilityTwin.Brussels" height=100>
 
-<img src="https://mobilitytwin.brussels/static/logo.png" alt="Logo de MobilityTwin.Brussels">
+# Components
 
 ## Overview
 
@@ -94,3 +94,8 @@ Each component can be configured in the TOML files in the configuration director
 after the data provider they configure. For example, the configuration for the `stib_gtfs` handler is stored in
 `config/stib.toml`.
 
+## Contributing
+
+We welcome contributions from the community to improve and enhance the MobilityTwin.Brussels project. Whether you are interested in fixing bugs, adding new features, or improving documentation, your help is valuable. 
+
+You can learn more about how to contribute by reading the Contribute.md file.
