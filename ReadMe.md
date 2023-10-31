@@ -1,5 +1,7 @@
 # MobilityTwin.Brussels - Components
 
+<img src="https://mobilitytwin.brussels/static/logo.png" alt="Logo de MobilityTwin.Brussels">
+
 ## Overview
 
 This project implements all the components of the MobilityTwin.Brussels
