@@ -48,11 +48,20 @@ DEPENDENCIES = ["stops"]
 
 [harvesters.speed]
 PATH = "stib.harvesters.speed.StibSegmentsSpeedHarvester"
-DATA_FORMAT = "geojson"
+DATA_FORMAT = "json"
 DATA_TYPE = "json"
 SOURCE = "stib.vehicle_distance"
 DEPENDENCIES = ["vehicle_distance"]
 DEPENDENCIES_LIMIT = [2, 1]
+
+[harvesters.aggregated_speed]
+PATH = "stib.harvesters.aggregated_speed.StibSegmentsAggregatedSpeedHarvester"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SOURCE = "stib.speed"
+SOURCE_RANGE = 30
+SOURCE_RANGE_STRICT = false
+MULTIPLE_RESULTS = false
 
 [harvesters.vehicle_position_geometry]
 
@@ -61,6 +70,7 @@ DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SOURCE = "stib.vehicle_distance"
 DEPENDENCIES = ["segments", "stops"]
+
 
 [harvesters.vehicle_identify]
 
