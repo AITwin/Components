@@ -16,13 +16,6 @@ SCHEDULE = "20s"
 
 [harvesters]
 
-[harvesters.gtfs_json]
-
-PATH = "train.sncb.harvesters.gtfs_json.SNCBGTFSJSONHarvester"
-DATA_FORMAT = "json"
-DATA_TYPE = "json"
-SOURCE = "sncb.gtfs"
-
 [harvesters.vehicle_position_geometry]
 
 PATH = "train.sncb.harvesters.vehicle_position_geometry.SNCBVehiclePositionGeometryHarvester"

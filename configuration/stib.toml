@@ -31,12 +31,6 @@ SCHEDULE = "20s"
 
 [harvesters]
 
-[harvesters.gtfs_json]
-
-PATH = "stib.harvesters.gtfs_json.STIBGTFSJSONHarvester"
-DATA_FORMAT = "json"
-DATA_TYPE = "json"
-SOURCE = "stib.gtfs"
 
 [harvesters.segments]
 
