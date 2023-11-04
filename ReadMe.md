@@ -1,4 +1,4 @@
-<img src="https://mobilitytwin.brussels/static/logo.png" alt="Logo de MobilityTwin.Brussels" height=100>
+<img src="https://avatars.githubusercontent.com/u/125973400?s=150&v=4" alt="Logo de MobilityTwin.Brussels" height=150>
 
 # Components
 
