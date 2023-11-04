@@ -54,8 +54,9 @@ def run_collector(
             write_result(table, result, datetime.now())
 
         return result
+    # catch traceback and log it
     except Exception as e:
-        logger.exception(f"Error running collector {collector_config.name}")
+        logger.exception(f"Error running collector {collector_config.name}, stopped with error: {e}")
         if fail_on_error:
             raise e
 
