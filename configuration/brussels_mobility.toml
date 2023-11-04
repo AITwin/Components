@@ -21,3 +21,18 @@ DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "5m"
 
+
+[collectors.bike_counts]
+
+PATH = "brussels_mobility.collectors.bike_counts.BrusselsMobilityBikeCountsCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "1m"
+
+[collectors.bike_counters]
+
+PATH = "brussels_mobility.collectors.bike_counters.BrusselsMobilityBikeCountersCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "04:00"
+
