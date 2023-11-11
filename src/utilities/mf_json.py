@@ -136,6 +136,10 @@ def fetch_geojsons_and_return_mf_json(
     if columns_to_drop:
         df.drop(columns=columns_to_drop, inplace=True)
 
+    # Drop where only one row for id_column
+    df = df.groupby(id_column).filter(lambda x: len(x) > 1)
+    df = df.reset_index(drop=True)
+
     if len(df) == 0:
         return {
             "features": [],
