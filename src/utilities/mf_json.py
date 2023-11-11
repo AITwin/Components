@@ -128,7 +128,7 @@ def fetch_geojsons_and_return_mf_json(
         table,
         datetime.utcfromtimestamp(int(start_timestamp)),
         datetime.utcfromtimestamp(int(end_timestamp)),
-        limit=1000,
+        limit=2000,
     )
 
     if not datas:

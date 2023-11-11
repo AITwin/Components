@@ -84,8 +84,6 @@ def retrieve_before_datetime(table: Table, date: datetime, limit: int) -> List[D
 def retrieve_between_datetime(
     table: Table, start_date: datetime, end_date: datetime, limit: int
 ) -> List[Data]:
-    print(start_date, end_date)
-    print(table)
     if start_date is None:
         return _(
             base_query(table)
