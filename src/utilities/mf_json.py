@@ -130,7 +130,11 @@ def fetch_geojsons_and_return_mf_json(
         datetime.utcfromtimestamp(end_timestamp),
         limit=1000,
     )
-
+    raise Exception(("datas", {
+        "datas": datas,
+        "start_timestamp": start_timestamp,
+        "end_timestamp": end_timestamp,
+    }))
     print("datas", datas)
 
     if not datas:
