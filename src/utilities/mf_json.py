@@ -126,16 +126,10 @@ def fetch_geojsons_and_return_mf_json(
 
     datas = retrieve_between_datetime(
         table,
-        datetime.utcfromtimestamp(start_timestamp),
-        datetime.utcfromtimestamp(end_timestamp),
+        datetime.utcfromtimestamp(int(start_timestamp)),
+        datetime.utcfromtimestamp(int(end_timestamp)),
         limit=1000,
     )
-    raise Exception(("datas", {
-        "datas": datas,
-        "start_timestamp": start_timestamp,
-        "end_timestamp": end_timestamp,
-    }))
-    print("datas", datas)
 
     if not datas:
         return
