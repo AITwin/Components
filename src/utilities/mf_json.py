@@ -120,7 +120,7 @@ def fetch_geojsons_and_return_mf_json(
         end_timestamp = start_timestamp + 60 * 60
     elif start_timestamp is None and end_timestamp is not None:
         start_timestamp = end_timestamp - 60 * 60
-    else:
+    elif start_timestamp is None and end_timestamp is None:
         start_timestamp = datetime.utcnow().timestamp() - 60 * 60
         end_timestamp = datetime.utcnow().timestamp()
 
