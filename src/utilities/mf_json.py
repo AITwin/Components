@@ -131,6 +131,8 @@ def fetch_geojsons_and_return_mf_json(
         limit=1000,
     )
 
+    print("datas", datas)
+
     if not datas:
         return
 
