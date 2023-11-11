@@ -138,7 +138,7 @@ def fetch_geojsons_and_return_mf_json(
 
     for item in datas:
         gdf_for_one_time = GeoDataFrame.from_features(item.data["features"])
-        gdf_for_one_time["timestamp"] = int(item.date.timestamp())
+        gdf_for_one_time["timestamp"] = int(item.date.timestamp()) * 1000
         df = pd.concat([df, gdf_for_one_time])
 
     if columns_to_drop:
@@ -153,5 +153,6 @@ def fetch_geojsons_and_return_mf_json(
             "features": [],
             "type": "FeatureCollection",
         }
+
 
     return gdf_to_mf_json(df, id_column, "timestamp")
