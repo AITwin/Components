@@ -111,11 +111,19 @@ def _encode_temporal_properties(
 
 def fetch_geojsons_and_return_mf_json(
     table: Table,
-    start_timestamp: int,
-    end_timestamp: int,
     id_column: str,
+    start_timestamp: int = None,
+    end_timestamp: int = None,
     columns_to_drop: list = None,
 ):
+    if end_timestamp is None and start_timestamp is not None:
+        end_timestamp = start_timestamp + 60 * 60
+    elif start_timestamp is None and end_timestamp is not None:
+        start_timestamp = end_timestamp - 60 * 60
+    else:
+        start_timestamp = datetime.utcnow().timestamp() - 60 * 60
+        end_timestamp = datetime.utcnow().timestamp()
+
     datas = retrieve_between_datetime(
         table,
         datetime.utcfromtimestamp(start_timestamp),

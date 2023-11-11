@@ -17,17 +17,15 @@ def _treat_query_parameters(
     result = {}
 
     for key, value in component.query_parameters.items():
-        if key not in query_parameters:
-            return False, None
+        if key in query_parameters:
+            # Parse query parameter
+            try:
+                # noinspection PyUnresolvedReferences
+                value = __builtins__[value](query_parameters[key])
+            except ValueError:
+                return False, None
 
-        # Parse query parameter
-        try:
-            # noinspection PyUnresolvedReferences
-            value = __builtins__[value](query_parameters[key])
-        except ValueError:
-            return False, None
-
-        result[key] = value
+            result[key] = value
 
     return True, result
 
