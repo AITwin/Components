@@ -4,7 +4,6 @@ import logging
 from socketserver import ThreadingMixIn
 from typing import Dict, List
 
-from sqlalchemy import Table
 
 from src.configuration.model import ComponentConfiguration
 
@@ -40,7 +39,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         *args,
         allowed_hosts: List[str],
         handlers: Dict[str, ComponentConfiguration],
-        tables: Dict[str, Table],
+        tables: Dict[str, ComponentConfiguration],
         **kwargs,
     ):
         self.allowed_hosts = allowed_hosts
@@ -119,7 +118,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 def run_handlers(
     handler_configurations: Dict[str, ComponentConfiguration],
-    tables: Dict[str, Table],
+    tables: Dict[str, ComponentConfiguration],
     ip: str = "localhost",
     port: int = 8888,
     allowed_hosts: List[str] = None,

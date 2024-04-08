@@ -15,7 +15,6 @@ from src.components import Collector
 class STIBStopsCollector(Collector):
     def run(self):
         data = self.merge_unofficial_and_official_stops_data()
-
         with_lat_and_long = data[
             data["stop_lat"].notnull() & data["stop_lon"].notnull()
         ]
@@ -30,14 +29,12 @@ class STIBStopsCollector(Collector):
                 )
             ],
         )
-
         return json.loads(response_gdf.to_json())
 
     @staticmethod
     def merge_unofficial_and_official_stops_data():
         stops_per_line = pd.read_csv(
-            "https://stibmivb.opendatasoft.com/explore/dataset/gtfs-files-production/files"
-            "/7068c8d492df76c5125fac081b5e09e9/download/"
+            "https://stibmivb.opendatasoft.com/explore/dataset/gtfs-files-production/files/7068c8d492df76c5125fac081b5e09e9/download/"
         )
 
         stops_per_line["stop_id"] = convert_dataframe_column_stop_to_generic(

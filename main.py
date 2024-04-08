@@ -8,7 +8,6 @@ from src.configuration.load import (
     load_all_components,
     get_optimal_dependencies_wise_order,
 )
-from src.data.sync_db import sync_db_from_configuration
 from src.runners.run_collector import run_collector, run_collector_on_schedule
 from src.runners.run_handler import run_handlers
 from src.runners.run_harvester import run_harvester_on_schedule, run_harvester
@@ -86,7 +85,7 @@ def launch_collectors(args, config, processes, tables):
         if name in collector_names_to_run:
             process = Process(
                 target=run_collector if args.now else run_collector_on_schedule,
-                args=(collector_config, tables[name]),
+                args=(collector_config,),
                 kwargs=dict(fail_on_error=False)
             )
             process.start()
@@ -117,7 +116,6 @@ def launch_handlers(args, config, processes, tables):
 def main():
     load_dotenv()
     config = load_all_components()
-    tables = sync_db_from_configuration(config)
     args = parse_arguments()
 
     setup_logging(logging.INFO)
@@ -127,19 +125,19 @@ def main():
         logging.info("Running harvesters in optimal order")
         harvesters = get_optimal_dependencies_wise_order(config.harvesters)
         for harvester in harvesters:
-            run_harvester(harvester, tables)
+            run_harvester(harvester, config.components)
         exit(0)
 
     processes = []
 
     # Launch handlers server
-    launch_handlers(args, config, processes, tables)
+    launch_handlers(args, config, processes, config.components)
 
     # Launch collectors
-    launch_collectors(args, config, processes, tables)
+    launch_collectors(args, config, processes, config.components)
 
     # Launch harvesters
-    launch_harvesters(args, config, processes, tables)
+    launch_harvesters(args, config, processes, config.components)
 
     for process in processes:
         process.join()

@@ -51,7 +51,6 @@ class STIBVehicleIdentifyHarvester(Harvester):
             # If uuid is not present, add it
             if "uuid" not in data_df.columns:
                 data_df["uuid"] = [None for _ in range(len(data_df))]
-
             # set general crs to 4326
             data_df.set_crs(epsg=4326, inplace=True)
 

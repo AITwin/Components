@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5428:5432"
+    volumes:
+      - PG_DATA:/var/lib/postgresql/data
+
+  server:
+    image: gaspardmerten/motion-lake:v4
+    container_name: MotionLake4
+    environment:
+      DB_URL: "postgresql://postgres:postgres@postgres:5432/postgres"
+      THREADS: 4
+      HOST_IP: "0.0.0.0"
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    volumes:
+      - SERVER_DATA:/app/storage
+
+volumes:
+  PG_DATA:
+  SERVER_DATA:
+
+

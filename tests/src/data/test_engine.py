@@ -3,7 +3,7 @@ from unittest.mock import Mock, patch
 
 from sqlalchemy.engine.base import Engine
 
-from src.data.engine import LazyEngineVariable, lazy_engine
+from src.data.client import LazyEngineVariable, lazy_engine
 
 
 class TestLazyEngineVariable(unittest.TestCase):

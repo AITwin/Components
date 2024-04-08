@@ -1,119 +1,114 @@
+import dataclasses
+import json
 from datetime import datetime
 from typing import Protocol, Union, List
 
-from sqlalchemy import Table, select
-from sqlalchemy.orm import aliased
-from sqlalchemy.sql.functions import coalesce
+from motion_lake_client import Item
 
-from src.data.engine import connection
+from src.configuration.model import ComponentConfiguration
+from src.data.client import client
 
 
-class Data(Protocol):
+@dataclasses.dataclass
+class Data:
     date: datetime
     data: Union[dict, list, str, bytes]
 
 
-def _(statement):
-    return connection().execute(statement)
+def convert_result(component_configuration: ComponentConfiguration, data: Item) -> Data:
+    if data is None:
+        return None
 
+    if component_configuration.data_type == "json":
+        return Data(
+            date=data.timestamp,
+            data=json.loads(data.data.decode("utf-8"))
+        )
 
-def base_query(table: Table, with_null: bool = False):
-    """
-    Returns a base query for a table. But replace the value of the date column
-    when it is None with the value of the row with the id matching the copy_id.
-    :param table: The table
-    :param with_null: Whether to include rows with null data
-    :return: The base query to use for all subsequent queries
-    """
-
-    t2 = aliased(table)
-
-    query = select(
-        table.c.id,
-        table.c.date,
-        coalesce(t2.c.data, table.c.data).label("data"),
+    return Data(
+        data.timestamp,
+        data.data
     )
 
-    if not with_null:
-        query = query.where((table.c.copy_id.isnot(None)) | (table.c.hash.isnot(None)))
 
-    query = query.select_from(table).outerjoin(t2, table.c.copy_id == t2.c.id)
+def _results_wrapper(func):
+    def wrapper(component_configuration: ComponentConfiguration, *args, **kwargs) -> List[Data] or Data:
+        results = func(component_configuration, *args, **kwargs)
+        if not isinstance(results, list):
+            return convert_result(component_configuration, results)
+        return [convert_result(component_configuration, result) for result in results]
 
-    return query
+    return wrapper
 
 
-def retrieve_latest_row(table: Table, with_null: bool = False) -> Data:
+@_results_wrapper
+def retrieve_latest_row(component_configuration: ComponentConfiguration) -> Data:
     """
     Get the latest row from a table.
-    :param table: The table
-    :param with_null: Whether to include rows with null data
+    :param component_configuration: The name of the collection
     :return: The latest row
     """
-    return _(
-        base_query(table, with_null=with_null).order_by(table.c.date.desc()).limit(1)
-    ).fetchone()
+    return client.get_last_item(component_configuration.name)
 
 
-def retrieve_first_row(table: Table) -> Data:
+@_results_wrapper
+def retrieve_first_row(component_configuration: ComponentConfiguration) -> Data:
     """
     Get the first row from a table.
-    :param table: The table
+    :param component_configuration: The name of the collection
     :return: The first row
     """
-    return _(base_query(table).order_by(table.c.date.asc()).limit(1)).fetchone()
+    return client.get_first_item(component_configuration.name)
 
 
-def retrieve_after_datetime(table: Table, date: datetime, limit: int) -> List[Data]:
-    return _(
-        base_query(table)
-        .where(table.c.date > date)
-        .order_by(table.c.date.desc())
-        .limit(limit)
-    ).fetchall()
+@_results_wrapper
+def retrieve_after_datetime(component_configuration: ComponentConfiguration, date: datetime, limit: int) -> List[Data]:
+    """
+    Get rows after a certain date.
+    :param component_configuration: The name of the collection
+    :param date: The date to get rows after
+    :param limit: The maximum number of rows to return
+    :return: A list of rows
+    """
+    return client.get_items_after(component_configuration.name, date, limit)
 
 
-def retrieve_before_datetime(table: Table, date: datetime, limit: int) -> List[Data]:
-    return _(
-        base_query(table)
-        .where(table.c.date < date)
-        .order_by(table.c.date.desc())
-        .limit(limit)
-    ).fetchall()
+@_results_wrapper
+def retrieve_before_datetime(component_configuration: ComponentConfiguration, date: datetime, limit: int) -> List[Data]:
+    """
+    Get rows before a certain date.
+    :param component_configuration: The name of the collection
+    :param date: The date to get rows before
+    :param limit: The maximum number of rows to return
+    :return: A list of rows
+    """
+    return client.get_items_before(component_configuration.name, date, limit)
 
 
+@_results_wrapper
 def retrieve_between_datetime(
-    table: Table, start_date: datetime, end_date: datetime, limit: int
+        component_configuration: ComponentConfiguration, start_date: datetime, end_date: datetime, limit: int
 ) -> List[Data]:
-    if start_date is None:
-        return _(
-            base_query(table)
-            .where(table.c.date < end_date)
-            .order_by(table.c.date.asc())
-            .limit(limit)
-        ).fetchall()
-    elif end_date is None:
-        return _(
-            base_query(table)
-            .where(table.c.date > start_date)
-            .order_by(table.c.date.asc())
-            .limit(limit)
-        ).fetchall()
-    else:
-        return _(
-            base_query(table)
-            .where(table.c.date > start_date)
-            .where(table.c.date < end_date)
-            .order_by(table.c.date.asc())
-            .limit(limit)
-        ).fetchall()
+    """
+    Get rows between two dates.
+    :param component_configuration: The name of the collection
+    :param start_date: The start date
+    :param end_date: The end date
+    :param limit: The maximum number of rows to return
+    :return: A list of rows
+    """
+    return client.get_items_between(component_configuration.name, start_date, end_date, True, limit)
 
 
+@_results_wrapper
 def retrieve_latest_rows_before_datetime(
-    table: Table, date: datetime, limit: int
+        component_configuration: ComponentConfiguration, date: datetime, limit: int
 ) -> List[Data]:
-    return _(
-        base_query(table)
-        .where(table.c.date < date)
-        .order_by(table.c.date.desc())
-        .limit(limit)
-    ).fetchall()
+    """
+    Get the latest rows before a certain date.
+    :param component_configuration: The name of the collection
+    :param date: The date to get rows before
+    :param limit: The maximum number of rows to return
+    :return: A list of rows
+    """
+    return client.get_items_before(component_configuration.name, date, limit)

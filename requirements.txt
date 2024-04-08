@@ -29,3 +29,6 @@ psycopg2-binary
 schedule==1.2.0
 pysftp
 
+# Data storage
+motion-lake-client==0.0.3
+

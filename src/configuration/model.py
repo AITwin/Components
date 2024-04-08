@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from functools import lru_cache
 from typing import List, Optional, Dict, Self
 
 from src.components import ComponentClass
@@ -24,8 +25,18 @@ class ComponentConfiguration:
         return hash(self.name)
 
 
-@dataclass
 class ComponentsConfiguration:
     handlers: Dict[str, ComponentConfiguration]
     harvesters: Dict[str, ComponentConfiguration]
     collectors: Dict[str, ComponentConfiguration]
+
+    def __init__(self,collectors: Dict[str, ComponentConfiguration], harvesters: Dict[str, ComponentConfiguration], handlers: Dict[str, ComponentConfiguration]):
+        self.collectors = collectors
+        self.harvesters = harvesters
+        self.handlers = handlers
+
+        self.components = {
+            **collectors,
+            **harvesters,
+            **handlers
+        }

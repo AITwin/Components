@@ -1,14 +1,13 @@
 import abc
 from typing import Type, Dict
 
-from sqlalchemy import Table
 
 
 class Handler(abc.ABC):
-    def __init__(self, tables: Dict[str, Table]):
+    def __init__(self, tables: Dict[str, "ComponentConfiguration"]):
         self._tables = tables
 
-    def get_table_by_name(self, name: str) -> Table:
+    def get_table_by_name(self, name: str) -> "ComponentConfiguration":
         return self._tables[name]
 
     @abc.abstractmethod

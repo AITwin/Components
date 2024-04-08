@@ -3,7 +3,6 @@ import time
 from datetime import datetime
 
 import schedule
-from sqlalchemy import Table
 
 from src.configuration.model import ComponentConfiguration
 from src.data.write import write_result
@@ -13,12 +12,12 @@ logger = logging.getLogger("Collector")
 
 
 def run_collector_on_schedule(
-    collector_config: ComponentConfiguration, table: Table, fail_on_error: bool = False
+        collector_config: ComponentConfiguration, fail_on_error: bool = False
 ):
     """
     Run a collector on a schedule.
     :param collector_config: The collector configuration
-    :param table: The table to insert the data into
+
     :param fail_on_error: Whether to fail on error
     """
 
@@ -28,7 +27,7 @@ def run_collector_on_schedule(
 
     job = schedule_string_to_function(collector_config.schedule)
 
-    job.do(run_collector, collector_config, table, fail_on_error)
+    job.do(run_collector, collector_config, fail_on_error)
 
     while True:
         schedule.run_pending()
@@ -36,7 +35,7 @@ def run_collector_on_schedule(
 
 
 def run_collector(
-    collector_config: ComponentConfiguration, table: Table, fail_on_error: bool = True
+        collector_config: ComponentConfiguration, fail_on_error: bool = True
 ):
     """
     Run a collector.
@@ -51,7 +50,7 @@ def run_collector(
         result = collector.run()
 
         if result is not None:
-            write_result(table, result, datetime.now())
+            write_result(collector_config, result)
 
         return result
     # catch traceback and log it
@@ -59,5 +58,3 @@ def run_collector(
         logger.exception(f"Error running collector {collector_config.name}, stopped with error: {e}")
         if fail_on_error:
             raise e
-
-

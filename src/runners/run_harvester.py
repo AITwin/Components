@@ -3,7 +3,6 @@ import time
 from datetime import datetime, timedelta
 from typing import Dict
 
-from sqlalchemy import Table
 
 from src.configuration.model import ComponentConfiguration
 from src.data.retrieve import (
@@ -22,7 +21,7 @@ logger = logging.getLogger("Harvester")
 
 
 def run_harvester_on_schedule(
-    harvester_config: ComponentConfiguration, tables: Dict[str, Table]
+    harvester_config: ComponentConfiguration, tables: Dict[str, ComponentConfiguration]
 ):
     logger.info(f"Running harvester {harvester_config.name} on schedule")
     while True:
@@ -85,8 +84,9 @@ def source_range_to_period_and_limit(
 
 
 def run_harvester(
-    harvester_config: ComponentConfiguration, tables: Dict[str, Table]
+    harvester_config: ComponentConfiguration, tables: Dict[str, ComponentConfiguration]
 ) -> bool:
+    print("Running harvester", harvester_config.name)
     """
     Run a harvester.
     :param harvester_config: The harvester configuration
@@ -97,7 +97,7 @@ def run_harvester(
     source_table = tables[harvester_config.source.name]
 
     # Get latest date harvested
-    latest_row = retrieve_latest_row(table, with_null=True)
+    latest_row = retrieve_latest_row(table)
 
     if latest_row is None:
         # In case the harvester has never been run, get the first row from the source table
@@ -112,7 +112,10 @@ def run_harvester(
         latest_date, harvester_config.source_range
     )
 
+    start_date += timedelta(seconds=1)
+    print(start_date)
     source_data = retrieve_between_datetime(source_table, start_date, end_date, limit)
+
     if not source_data:
         return False  # No new data to harvest
 
@@ -130,7 +133,6 @@ def run_harvester(
     dependencies = harvester_config.dependencies
 
     dependencies_data = {}
-
     for dependency, dependency_limit in zip(
         dependencies, harvester_config.dependencies_limit
     ):

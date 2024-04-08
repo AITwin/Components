@@ -3,8 +3,8 @@ from typing import Dict
 
 import pandas as pd
 from geopandas import GeoDataFrame
-from sqlalchemy import Table
 
+from src.configuration.model import ComponentConfiguration
 from src.data.retrieve import retrieve_between_datetime
 
 
@@ -110,7 +110,7 @@ def _encode_temporal_properties(
 
 
 def fetch_geojsons_and_return_mf_json(
-    table: Table,
+    table: ComponentConfiguration,
     id_column: str,
     start_timestamp: int = None,
     end_timestamp: int = None,
