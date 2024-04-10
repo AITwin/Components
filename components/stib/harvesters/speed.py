@@ -30,7 +30,6 @@ class StibSegmentsSpeedHarvester(Harvester):
         )
         # Get duplicate rows (same point_id, line_id and direction)
         df = df.drop_duplicates(subset=["pointId", "lineId", "directionId"], keep=False)
-
         # Keep only rows where distanceFromPoint_previous is < distanceFromPoint
         df = df[df["distanceFromPoint_previous"] < df["distanceFromPoint"]]
 
