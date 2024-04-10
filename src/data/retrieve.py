@@ -114,4 +114,4 @@ def retrieve_latest_rows_before_datetime(
     :param limit: The maximum number of rows to return
     :return: A list of rows
     """
-    return client.get_items_before(component_configuration.name, date, limit)
+    return client.get_items_before(component_configuration.name, date, limit)[::-1]
