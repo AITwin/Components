@@ -31,7 +31,8 @@ class STIBVehicleIdentifyHarvester(Harvester):
             data_df = gpd.GeoDataFrame()
             # Merge the latest 10 data with the current batch
             data_df = pd.concat([data_df, latest_10_data_with_uuid_df])
-            data_df.set_crs(epsg=4326, inplace=True)
+            if not data_df.empty:
+                data_df.set_crs(epsg=4326, inplace=True)
 
             # Load each to GeoDataFrame and concat
             for item in query[i: i + DATAPOINT_PER_BATCH]:

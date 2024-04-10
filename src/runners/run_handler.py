@@ -4,7 +4,6 @@ import logging
 from socketserver import ThreadingMixIn
 from typing import Dict, List
 
-
 from src.configuration.model import ComponentConfiguration
 
 logger = logging.getLogger("Handler")
@@ -75,11 +74,14 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         # Extract query parameters from path
         success, query_parameters = _treat_query_parameters(
-            dict(
-                parameter.split("=") for parameter in query_parameters_string.split("&")
-            )
-            if query_parameters_string
-            else {},
+            (
+                dict(
+                    parameter.split("=")
+                    for parameter in query_parameters_string.split("&")
+                )
+                if query_parameters_string
+                else {}
+            ),
             handler_config,
         )
 

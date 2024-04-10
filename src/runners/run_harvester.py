@@ -3,7 +3,6 @@ import time
 from datetime import datetime, timedelta
 from typing import Dict
 
-
 from src.configuration.model import ComponentConfiguration
 from src.data.retrieve import (
     retrieve_latest_row,
@@ -113,7 +112,7 @@ def run_harvester(
     )
 
     start_date += timedelta(seconds=1)
-    print(start_date)
+
     source_data = retrieve_between_datetime(source_table, start_date, end_date, limit)
 
     if not source_data:

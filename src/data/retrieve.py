@@ -1,7 +1,7 @@
 import dataclasses
 import json
 from datetime import datetime
-from typing import Protocol, Union, List
+from typing import Union, List
 
 from motion_lake_client import Item
 
@@ -20,10 +20,13 @@ def convert_result(component_configuration: ComponentConfiguration, data: Item) 
         return None
 
     if component_configuration.data_type == "json":
-        return Data(
-            date=data.timestamp,
-            data=json.loads(data.data.decode("utf-8"))
-        )
+        try:
+            return Data(
+                date=data.timestamp,
+                data=json.loads(data.data)
+            )
+        except json.JSONDecodeError:
+            print(data.data[:100])
 
     return Data(
         data.timestamp,

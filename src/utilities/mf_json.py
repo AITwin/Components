@@ -154,5 +154,4 @@ def fetch_geojsons_and_return_mf_json(
             "type": "FeatureCollection",
         }
 
-
     return gdf_to_mf_json(df, id_column, "datetimes")

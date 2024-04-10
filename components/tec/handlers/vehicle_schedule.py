@@ -8,7 +8,7 @@ from src.utilities.gtfs import schedule_from_gtfs, load_gtfs_kit_from_zip_string
 class TECVehicleScheduleHandler(Handler):
     def run(self, start_timestamp: int, end_timestamp: int):
         gtfs = retrieve_latest_rows_before_datetime(
-            table=self.get_table_by_name("tec_gtfs"),
+            self.get_table_by_name("tec_gtfs"),
             date=datetime.utcfromtimestamp(end_timestamp),
             limit=1,
         )

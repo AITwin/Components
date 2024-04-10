@@ -6,7 +6,11 @@ from src.data.client import client
 from src.data.utils import convert_local_data_type_to_motion_lake_data_type
 
 
-def write_result(component: ComponentConfiguration, data: bytes | dict | str | list, storage_date: datetime = None):
+def write_result(
+    component: ComponentConfiguration,
+    data: bytes | dict | str | list,
+    storage_date: datetime = None,
+):
     """
     Write a result to a collection.
     :param component: The component configuration
@@ -17,6 +21,10 @@ def write_result(component: ComponentConfiguration, data: bytes | dict | str | l
     if not isinstance(data, bytes):
         data = json.dumps(data).encode("utf-8")
 
-    client.store(component.name, data, int((storage_date or datetime.now()).timestamp()), create_collection=True,
-                 content_type=convert_local_data_type_to_motion_lake_data_type(component)
-                 )
+    client.store(
+        component.name,
+        data,
+        int((storage_date or datetime.now()).timestamp()),
+        create_collection=True,
+        content_type=convert_local_data_type_to_motion_lake_data_type(component),
+    )

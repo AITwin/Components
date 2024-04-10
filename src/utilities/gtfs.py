@@ -102,7 +102,7 @@ def schedule_from_gtfs(gtfs_feed, start_timestamp: int, end_timestamp: int):
             gtfs_feed,
             stops,
             midnight,
-            end_date - timedelta(seconds=1)  # We need the time just
+            end_date - timedelta(seconds=1),  # We need the time just
             # before midnight.
         )
         output_data += compute_data_for_one_date(gtfs_feed, stops, start_date, midnight)
@@ -110,7 +110,6 @@ def schedule_from_gtfs(gtfs_feed, start_timestamp: int, end_timestamp: int):
         output_data += compute_data_for_one_date(gtfs_feed, stops, start_date, end_date)
 
     output_df = pd.DataFrame(output_data)
-
     gdf = gpd.GeoDataFrame(
         output_df,
         geometry=gpd.points_from_xy(output_df.stop_lon, output_df.stop_lat),

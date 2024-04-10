@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from functools import lru_cache
 from typing import List, Optional, Dict, Self
 
 from src.components import ComponentClass
