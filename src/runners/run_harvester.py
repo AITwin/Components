@@ -96,11 +96,11 @@ def run_harvester(
     source_table = tables[harvester_config.source.name]
 
     # Get latest date harvested
-    latest_row = retrieve_latest_row(table)
+    latest_row = retrieve_latest_row(table, skip_data=True)
 
     if latest_row is None:
         # In case the harvester has never been run, get the first row from the source table
-        row = retrieve_first_row(source_table)
+        row = retrieve_first_row(source_table, skip_data=True)
         # Minus one second to make sure we include the first row
         latest_date = (row and (row.date - timedelta(seconds=1))) or ZERO_DATE
     else:
@@ -113,7 +113,9 @@ def run_harvester(
 
     start_date += timedelta(seconds=1)
 
-    source_data = retrieve_between_datetime(source_table, start_date, end_date, limit)
+    source_data = retrieve_between_datetime(
+        source_table, start_date, end_date, limit, skip_data=True
+    )
 
     if not source_data:
         return False  # No new data to harvest
@@ -121,8 +123,13 @@ def run_harvester(
     if limit and harvester_config.source_range_strict and len(source_data) < limit:
         return False  # No new data to harvest, still building the amount of data specified by the limit
 
-    if end_date and not retrieve_after_datetime(table, latest_date, 1):
+    if end_date and not retrieve_after_datetime(table, latest_date, 1, skip_data=True):
         return False  # No new data to harvest, still building the same period
+
+    # Now that we know we have data to harvest, we can retrieve it again with the data
+    source_data = retrieve_between_datetime(
+        source_table, start_date, end_date, limit, skip_data=False
+    )
 
     storage_date = end_date or source_data[-1].date
 

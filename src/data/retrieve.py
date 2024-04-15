@@ -23,7 +23,7 @@ def convert_result(component_configuration: ComponentConfiguration, data: Item) 
         try:
             return Data(
                 date=data.timestamp,
-                data=json.loads(data.data)
+                data=json.loads(data.data) if data.data else None
             )
         except json.JSONDecodeError:
             print(data.data[:100])
@@ -45,52 +45,57 @@ def _results_wrapper(func):
 
 
 @_results_wrapper
-def retrieve_latest_row(component_configuration: ComponentConfiguration) -> Data:
+def retrieve_latest_row(component_configuration: ComponentConfiguration, skip_data: bool = False) -> Data:
     """
     Get the latest row from a table.
     :param component_configuration: The name of the collection
+    :param skip_data: Whether to include the data in the results
     :return: The latest row
     """
-    return client.get_last_item(component_configuration.name)
+    return client.get_last_item(component_configuration.name, skip_data)
 
 
 @_results_wrapper
-def retrieve_first_row(component_configuration: ComponentConfiguration) -> Data:
+def retrieve_first_row(component_configuration: ComponentConfiguration, skip_data: bool = False) -> Data:
     """
     Get the first row from a table.
     :param component_configuration: The name of the collection
+    :param skip_data: Whether to include the data in the results
     :return: The first row
     """
-    return client.get_first_item(component_configuration.name)
+    return client.get_first_item(component_configuration.name, skip_data)
 
 
 @_results_wrapper
-def retrieve_after_datetime(component_configuration: ComponentConfiguration, date: datetime, limit: int) -> List[Data]:
+def retrieve_after_datetime(component_configuration: ComponentConfiguration, date: datetime, limit: int,skip_data: bool = False) -> List[Data]:
     """
     Get rows after a certain date.
     :param component_configuration: The name of the collection
     :param date: The date to get rows after
     :param limit: The maximum number of rows to return
+    :param skip_data: Whether to include the data in the results
     :return: A list of rows
     """
-    return client.get_items_after(component_configuration.name, date, limit)
+    return client.get_items_after(component_configuration.name, date, limit,skip_data)
 
 
 @_results_wrapper
-def retrieve_before_datetime(component_configuration: ComponentConfiguration, date: datetime, limit: int) -> List[Data]:
+def retrieve_before_datetime(component_configuration: ComponentConfiguration, date: datetime, limit: int,skip_data: bool = False) -> List[Data]:
     """
     Get rows before a certain date.
     :param component_configuration: The name of the collection
     :param date: The date to get rows before
     :param limit: The maximum number of rows to return
+    :param skip_data: Whether to include the data in the results
     :return: A list of rows
     """
-    return client.get_items_before(component_configuration.name, date, limit)
+    return client.get_items_before(component_configuration.name, date, limit,skip_data)
 
 
 @_results_wrapper
 def retrieve_between_datetime(
-        component_configuration: ComponentConfiguration, start_date: datetime, end_date: datetime, limit: int
+        component_configuration: ComponentConfiguration, start_date: datetime, end_date: datetime, limit: int,
+        skip_data: bool = False
 ) -> List[Data]:
     """
     Get rows between two dates.
@@ -98,20 +103,22 @@ def retrieve_between_datetime(
     :param start_date: The start date
     :param end_date: The end date
     :param limit: The maximum number of rows to return
+    :param skip_data: Whether to include the data in the results
     :return: A list of rows
     """
-    return client.get_items_between(component_configuration.name, start_date, end_date, True, limit)
+    return client.get_items_between(component_configuration.name, start_date, end_date, True, limit, skip_data)
 
 
 @_results_wrapper
 def retrieve_latest_rows_before_datetime(
-        component_configuration: ComponentConfiguration, date: datetime, limit: int
+        component_configuration: ComponentConfiguration, date: datetime, limit: int, skip_data: bool = False
 ) -> List[Data]:
     """
     Get the latest rows before a certain date.
     :param component_configuration: The name of the collection
     :param date: The date to get rows before
     :param limit: The maximum number of rows to return
+    :param skip_data: Whether to include the data in the results
     :return: A list of rows
     """
-    return client.get_items_before(component_configuration.name, date, limit)[::-1]
+    return client.get_items_before(component_configuration.name, date, limit, skip_data)[::-1]

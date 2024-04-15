@@ -24,7 +24,7 @@ def write_result(
     client.store(
         component.name,
         data,
-        int((storage_date or datetime.now()).timestamp()),
+        storage_date or datetime.now(),
         create_collection=True,
         content_type=convert_local_data_type_to_motion_lake_data_type(component),
     )
