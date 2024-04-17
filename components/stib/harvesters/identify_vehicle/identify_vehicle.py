@@ -14,6 +14,11 @@ DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sun
 class STIBVehicleIdentifyHarvester(Harvester):
 
     def run(self, sources, stib_vehicle_identify, stib_shapefile):
+        print(
+            [source.date for source in sources],
+            [source.date for source in stib_vehicle_identify],
+        )
+
         DATAPOINT_PER_BATCH = 25
 
         latest_10_data_with_uuid_df, query, shapefile_gdf = self.retrieve_data(

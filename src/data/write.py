@@ -25,6 +25,6 @@ def write_result(
         component.name,
         data,
         storage_date or datetime.now(),
-        create_collection=True,
         content_type=convert_local_data_type_to_motion_lake_data_type(component),
+        create_collection=True
     )

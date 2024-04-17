@@ -4,6 +4,9 @@ from multiprocessing import Process
 
 from dotenv import load_dotenv
 
+load_dotenv()
+
+
 from src.configuration.load import (
     load_all_components,
     get_optimal_dependencies_wise_order,
@@ -86,7 +89,7 @@ def launch_collectors(args, config, processes, tables):
             process = Process(
                 target=run_collector if args.now else run_collector_on_schedule,
                 args=(collector_config,),
-                kwargs=dict(fail_on_error=False)
+                kwargs=dict(fail_on_error=False),
             )
             process.start()
             processes.append(process)
@@ -97,10 +100,7 @@ def launch_handlers(args, config, processes, tables):
         args.handlers if "all" not in args.handlers else config.handlers.keys()
     )
 
-    handlers_to_run = {
-        name: config.handlers[name]
-        for name in handlers_names_to_run
-    }
+    handlers_to_run = {name: config.handlers[name] for name in handlers_names_to_run}
 
     if args.handlers:
         if args.now:

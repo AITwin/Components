@@ -102,7 +102,7 @@ def run_harvester(
         # In case the harvester has never been run, get the first row from the source table
         row = retrieve_first_row(source_table, skip_data=True)
         # Minus one second to make sure we include the first row
-        latest_date = (row and (row.date - timedelta(seconds=1))) or ZERO_DATE
+        latest_date = (row and (row.date - timedelta(seconds=2))) or ZERO_DATE
     else:
         latest_date = latest_row.date
 
@@ -112,7 +112,6 @@ def run_harvester(
     )
 
     start_date += timedelta(seconds=1)
-
     source_data = retrieve_between_datetime(
         source_table, start_date, end_date, limit, skip_data=True
     )
@@ -161,7 +160,10 @@ def run_harvester(
 
     if harvester_config.multiple_results:
         for item, source in zip(result, source_data):
-            write_result(table, item, source.date)
+            try:
+                write_result(table, item, source.date)
+            except Exception as e:
+                print(e)
     elif result is not None:
         write_result(table, result, storage_date)
     else:

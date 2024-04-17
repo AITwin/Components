@@ -13,12 +13,10 @@ class StibSegmentsAggregatedSpeedHarvester(Harvester):
 
         for source in sources:
             sources_flat.extend(source)
-
-        df = pd.DataFrame(sources_flat)
+        df = pd.DataFrame.from_records(sources_flat)
 
         if df.empty:
             return []
-
         # Merge on pointId, lineId and directionId and average speed
         df = df.groupby(["pointId", "lineId", "directionId"]).mean()
         # Reset index
