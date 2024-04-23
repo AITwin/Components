@@ -95,7 +95,7 @@ def retrieve_before_datetime(component_configuration: ComponentConfiguration, da
 @_results_wrapper
 def retrieve_between_datetime(
         component_configuration: ComponentConfiguration, start_date: datetime, end_date: datetime, limit: int,
-        skip_data: bool = False
+        ascending: bool = True, skip_data: bool = False
 ) -> List[Data]:
     """
     Get rows between two dates.
@@ -103,10 +103,11 @@ def retrieve_between_datetime(
     :param start_date: The start date
     :param end_date: The end date
     :param limit: The maximum number of rows to return
+    :param ascending: Whether to sort the data in ascending order
     :param skip_data: Whether to include the data in the results
     :return: A list of rows
     """
-    return client.get_items_between(component_configuration.name, start_date, end_date, True, limit, skip_data)
+    return client.get_items_between(component_configuration.name, start_date, end_date, ascending, limit, skip_data)
 
 
 @_results_wrapper
