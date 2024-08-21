@@ -4,6 +4,8 @@ from multiprocessing import Process
 
 from dotenv import load_dotenv
 
+load_dotenv()
+
 from src.configuration.load import (
     load_all_components,
     get_optimal_dependencies_wise_order,
@@ -12,6 +14,7 @@ from src.data.sync_db import sync_db_from_configuration
 from src.runners.run_collector import run_collector, run_collector_on_schedule
 from src.runners.run_handler import run_handlers
 from src.runners.run_harvester import run_harvester_on_schedule, run_harvester
+
 
 
 def setup_logging(level):
