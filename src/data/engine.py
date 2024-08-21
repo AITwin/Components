@@ -27,8 +27,6 @@ class LazyEngineVariable:
             if "postgres" in os.environ.get("DATABASE_URL", ""):
                 args["pool_pre_ping"] = True
                 args["client_encoding"] = "utf8"
-                # automatically rollback transactions that are not committed
-                args["pool_pre_ping"] = True
                 args["pool_size"] = 5
                 args["max_overflow"] = 10
                 # kill connections after 30 seconds of inactivity
