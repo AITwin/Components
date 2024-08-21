@@ -10,7 +10,7 @@ from sqlalchemy import (
     Table,
     MetaData,
     JSON,
-    CHAR,
+    VARCHAR,
 )
 from sqlalchemy.dialects.postgresql import JSONB, BYTEA
 
@@ -44,9 +44,9 @@ def load_table_from_configuration(
         metadata_obj,
         Column("id", INTEGER, primary_key=True, autoincrement=True),
         Column("date", TIMESTAMP, nullable=False),
-        Column("data", CHAR(512), nullable=True),
-        Column("type", CHAR(24), nullable=True),
-        Column("hash", CHAR(32), nullable=True),
+        Column("data", VARCHAR(512), nullable=True),
+        Column("type", VARCHAR(24), nullable=True),
+        Column("hash", VARCHAR(32), nullable=True),
         Column("copy_id", INTEGER, nullable=True),
         UniqueConstraint("date"),
         UniqueConstraint("hash"),
