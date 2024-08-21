@@ -30,6 +30,10 @@ class AzureBlobManager(StorageManager):
 
         :return: URL of the blob.
         """
+
+        if data is None:
+            data = b""
+
         blob_client = self.container_client.get_blob_client(file_name)
         blob_client.upload_blob(data, overwrite=True)
 
