@@ -80,29 +80,14 @@ class FileStorageManager(StorageManager):
             return file.read()
 
 
-class Lazy:
-    def __init__(self, func):
-        self.func = func
-        self._value = None
-
-    def __call__(self):
-        if self._value is None:
-            self._value = self.func()
-        return self._value
-
-def lazy(func):
-    return Lazy(func)
 
 
 if "AZURE_STORAGE_CONNECTION_STRING" in os.environ:
-    storage_manager = lazy(
-        lambda: AzureBlobManager(
+    storage_manager = AzureBlobManager(
             os.environ["AZURE_STORAGE_CONNECTION_STRING"],
             os.environ["AZURE_STORAGE_CONTAINER"],
         )
-    )
+
 
 else:
-    storage_manager = lazy(
-        lambda: FileStorageManager(os.environ["FILE_STORAGE_DIRECTORY"])
-    )
+    storage_manager = FileStorageManager(os.environ["FILE_STORAGE_DIRECTORY"])
