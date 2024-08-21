@@ -17,7 +17,7 @@ from src.runners.run_harvester import run_harvester_on_schedule, run_harvester
 
 
 
-def setup_logging(level):
+def setup_logging(  level):
     logging.basicConfig(level=level)
     logging.getLogger("Handler").setLevel(level)
     logging.getLogger("Collector").setLevel(level)
@@ -123,7 +123,7 @@ def main():
     tables = sync_db_from_configuration(config)
     args = parse_arguments()
 
-    setup_logging(logging.INFO)
+    setup_logging(logging.WARNING)
 
     # Run harvesters in optimal order which maximizes the number of dependencies that are satisfied.
     if args.init_dependencies:
