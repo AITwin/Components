@@ -2,26 +2,24 @@ import os
 from functools import lru_cache
 
 from sqlalchemy import create_engine
+from sqlalchemy.engine import Engine, Connection
 
 
-class LazyEngineVariable:
+class LazyEngine:
     def __init__(self):
         self._engine = None
 
     def reset(self):
-        self._engine = None
-        self.connection.close()
-        self.engine.dispose()
-        self.connection.close()
-        self._connection.cache_clear()
-        self._cached_engine .cache_clear()
+        if self._engine is not None:
+            self._engine.dispose()
+            self._cached_engine.cache_clear()
 
     @property
-    def engine(self):
+    def engine(self) -> Engine:
         return self._cached_engine()
 
     @lru_cache(maxsize=1)
-    def _cached_engine(self):
+    def _cached_engine(self) -> Engine:
         if self._engine is None:
             args = {}
             if "postgres" in os.environ.get("DATABASE_URL", ""):
@@ -29,28 +27,18 @@ class LazyEngineVariable:
                 args["client_encoding"] = "utf8"
                 args["pool_size"] = 5
                 args["max_overflow"] = 10
-                # kill connections after 30 seconds of inactivity
                 args["pool_recycle"] = 1800
-
 
             self._engine = create_engine(os.environ.get("DATABASE_URL", ""), **args)
         return self._engine
 
-    @property
-    def connection(self):
-        return self._connection()
-
-    @lru_cache(maxsize=1)
-    def _connection(self):
+    def get_connection(self) -> Connection:
         return self.engine.connect()
 
     def __del__(self):
-        if self._engine is not None:
-            self._engine.dispose()
+        self.reset()
 
+lazy_engine = LazyEngine()
 
-lazy_engine = LazyEngineVariable()
-
-
-def connection():
-    return lazy_engine.connection
+def connection() -> Connection:
+    return lazy_engine.get_connection()
