@@ -24,6 +24,8 @@ beautifulsoup4==4.12.2
 # Database utilities
 SQLAlchemy==2.0.19
 psycopg2-binary
+azure-storage-blob
+
 
 # Python utilities
 schedule==1.2.0

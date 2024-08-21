@@ -125,9 +125,13 @@ def main():
     # Run harvesters in optimal order which maximizes the number of dependencies that are satisfied.
     if args.init_dependencies:
         logging.info("Running harvesters in optimal order")
-        harvesters = get_optimal_dependencies_wise_order(config.harvesters)
-        for harvester in harvesters:
-            run_harvester(harvester, tables)
+        components = get_optimal_dependencies_wise_order(config.collectors, config.harvesters)
+        for component in components:
+            logging.info(f"Running {component.name}")
+            if component.source:
+                run_harvester(component, tables)
+            else:
+                run_collector(component, tables[component.name])
         exit(0)
 
     processes = []

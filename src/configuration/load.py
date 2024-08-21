@@ -135,46 +135,27 @@ def extract_components(
 
 
 def get_optimal_dependencies_wise_order(
+        collectors: Dict[str, ComponentConfiguration],
     harvesters: Dict[str, ComponentConfiguration]
 ) -> List[ComponentConfiguration]:
     """
     Get the optimal order to run the harvesters in.
+    :param collectors:  The collectors to order
     :param harvesters:  The harvesters to order
     :return:  The optimal order to run the harvesters in
     """
 
-    harvesters = list(harvesters.values())
+    order = [
+        "stib_stops",
+        "stib_shapefile",
+        "stib_segments"
+    ]
+    components = [harvesters.get(name, collectors.get(name, None)) for name in order]
 
-    order = []
 
-    MAX_ITERATIONS = 1000
-    iterations = 0
+    return components
 
-    while harvesters:
-        for harvester in harvesters:
-            for dependency in harvester.dependencies:
-                if dependency.source is None:
-                    continue
-            if all(
-                dependency in order
-                for dependency in harvester.dependencies
-                if dependency.source is not None
-            ):
-                order.append(harvester)
-                harvesters.remove(harvester)
-                break
 
-        iterations += 1
-
-        if iterations > MAX_ITERATIONS:
-            # Add the remaining harvesters in any order
-            order.extend(harvesters)
-            logger.warning(
-                f"Could not find optimal order for harvesters: {' '.join([harvester.name for harvester in harvesters])}"
-            )
-            break
-
-    return order
 
 
 def _treat_name(file_name, source):

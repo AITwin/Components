@@ -4,13 +4,18 @@ from datetime import datetime
 
 from sqlalchemy import Table
 
+from src.configuration.model import ComponentConfiguration
 from src.data.engine import connection
+from src.data.storage import storage_manager
 
 
-def write_result(table: Table, data, date: datetime):
+def write_result(
+    configuration: ComponentConfiguration, table: Table, data, date: datetime
+):
     """
     Write the result of a harvester to the database.
     If the data already exists, it will be overwritten.
+    :param configuration: The configuration of the component
     :param table:  The table to write to
     :param data:  The data to write
     :param date:  The date of the data
@@ -37,11 +42,25 @@ def write_result(table: Table, data, date: datetime):
 
     if same_data_row is not None and md5_digest is not None:
         # Insert with copy_id
-        connection().execute(table.insert().values(date=date, copy_id=same_data_row.id))
-    else:
-        # Insert without copy_id
         connection().execute(
-            table.insert().values(date=date, data=data, hash=md5_digest)
+            table.insert().values(
+                date=date,
+                data=same_data_row.data,
+                copy_id=same_data_row.id,
+                type=configuration.data_type,
+            )
+        )
+    else:
+        # Upload data to storage
+        url = storage_manager.write(
+            f"{configuration.name}/{date.strftime('%Y-%m-%d_%H-%M-%S')}.json",
+            data_bytes,
+        )
+        # Insert data to database
+        connection().execute(
+            table.insert().values(
+                date=date, data=url, hash=md5_digest, type=configuration.data_type
+            )
         )
 
     connection().commit()

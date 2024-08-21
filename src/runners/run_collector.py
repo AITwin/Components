@@ -51,7 +51,7 @@ def run_collector(
         result = collector.run()
 
         if result is not None:
-            write_result(table, result, datetime.now())
+            write_result(collector_config, table, result, datetime.now())
 
         return result
     # catch traceback and log it

@@ -113,6 +113,7 @@ def run_harvester(
     )
 
     source_data = retrieve_between_datetime(source_table, start_date, end_date, limit)
+
     if not source_data:
         return False  # No new data to harvest
 
@@ -153,14 +154,14 @@ def run_harvester(
 
     if harvester_config.multiple_results:
         for item, source in zip(result, source_data):
-            write_result(table, item, source.date)
+            write_result(harvester_config, table, item, source.date)
     elif result is not None:
-        write_result(table, result, storage_date)
+        write_result(harvester_config, table, result, storage_date)
     else:
         logger.debug(
             f"Harvester {harvester_config.name} returned None, writing empty result to database since "
             "harvester should always yield consistent results on the same input."
         )
-        write_result(table, None, storage_date)
+        write_result(harvester_config, table, None, storage_date)
 
     return True

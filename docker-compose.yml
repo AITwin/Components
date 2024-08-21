@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  postgresx:
+    image: postgres:14
+    container_name: postgresx
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5428:5432"
+    volumes:
+      - PG_DATA:/var/lib/postgresql/data
+
+  motion-lake:
+    image: gaspardmerten/motion-lake:v9
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_URL=postgresql://postgres:postgres@postgresx:5432/postgres
+      - PORT=8000
+      - HOST=0.0.0.0
+      - IO_MANAGER=azure_blob
+    depends_on:
+      - postgresx
+
+volumes:
+  PG_DATA:
+
