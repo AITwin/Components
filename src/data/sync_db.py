@@ -1,11 +1,10 @@
 from itertools import chain
 from typing import Dict
 
-from sqlalchemy import MetaData
-from sqlalchemy import Table
+from sqlalchemy import MetaData, Table
 
 from src.configuration.model import ComponentsConfiguration
-from src.data.engine import lazy_engine
+from src.data.engine import engine
 from src.data.table import load_table_from_configuration
 
 
@@ -27,8 +26,6 @@ def sync_db_from_configuration(
         table = load_table_from_configuration(component_configuration, metadata_obj)
         tables[name] = table
 
-    engine = lazy_engine.engine
     metadata_obj.create_all(engine)
-    lazy_engine.reset()
 
     return tables

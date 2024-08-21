@@ -7,7 +7,7 @@ from sqlalchemy import Table, select
 from sqlalchemy.orm import aliased
 from sqlalchemy.sql.functions import coalesce
 
-from src.data.engine import connection
+from src.data.engine import engine
 from src.data.storage import storage_manager
 
 
@@ -48,7 +48,8 @@ def data_result(func) -> Optional[Union[Data, List[Data]]]:
 
 
 def _(statement):
-    return connection().execute(statement)
+    with engine.connect() as connection:
+        return connection.execute(statement)
 
 
 def base_query(table: Table, with_null: bool = False):

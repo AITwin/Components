@@ -2,7 +2,7 @@ import os
 from functools import lru_cache
 
 from sqlalchemy import create_engine
-from sqlalchemy.engine import Engine, Connection
+from sqlalchemy.engine import Engine
 
 
 class LazyEngine:
@@ -32,13 +32,5 @@ class LazyEngine:
             self._engine = create_engine(os.environ.get("DATABASE_URL", ""), **args)
         return self._engine
 
-    def get_connection(self) -> Connection:
-        return self.engine.connect()
 
-    def __del__(self):
-        self.reset()
-
-lazy_engine = LazyEngine()
-
-def connection() -> Connection:
-    return lazy_engine.get_connection()
+engine = LazyEngine().engine
