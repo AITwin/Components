@@ -42,7 +42,9 @@ class AzureBlobManager(StorageManager):
         :param file_name: Name of the blob to read from.
         :return: Data read from the blob as bytes.
         """
-        blob_client = self.container_client.get_blob_client(file_name)
+        blob_client = self.container_client.get_blob_client(
+            file_name.split(self.container_client.container_name + "/")[1]
+        )
         blob_data = blob_client.download_blob().readall()
         return blob_data
 
