@@ -25,11 +25,12 @@ class LazyEngine:
             if "postgres" in os.environ.get("DATABASE_URL", ""):
                 args["pool_pre_ping"] = True
                 args["client_encoding"] = "utf8"
-                args["pool_size"] = 5
+                args["pool_size"] = NullPool
                 args["max_overflow"] = 10
                 args["pool_recycle"] = 1800
 
-            self._engine = create_engine(os.environ.get("DATABASE_URL", ""), **args,poolclass=NullPool)
+
+            self._engine = create_engine(os.environ.get("DATABASE_URL", ""), **args)
         return self._engine
 
 
