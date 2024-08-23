@@ -54,7 +54,7 @@ def write_result(
         else:
             # Upload data to storage
             url = storage_manager.write(
-                f"{configuration.name}/{date.strftime('%Y-%m-%d_%H-%M-%S')}.json",
+                f"{configuration.name}/{date.strftime('%Y-%m-%d_%H-%M-%S')}",
                 data_bytes,
             )
             # Insert data to database
