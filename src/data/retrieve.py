@@ -131,7 +131,7 @@ def retrieve_between_datetime(
         if start_date is None:
             return connection.execute(
                 base_query(table)
-                .where(table.c.date > start_date)
+                .where(table.c.date < end_date)
                 .order_by(table.c.date.asc())
                 .limit(limit)
             ).fetchall()
