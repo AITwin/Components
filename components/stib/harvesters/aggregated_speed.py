@@ -6,7 +6,7 @@ from src.components import Harvester
 class StibSegmentsAggregatedSpeedHarvester(Harvester):
     def run(self, sources):
         sources = list(([
-            row[2]
+            row.data
             for row in sources
         ]))
         sources_flat = []

@@ -47,8 +47,6 @@ def data_result(func) -> Optional[Union[Data, List[Data]]]:
     return wrapper
 
 
-
-
 def base_query(table: Table, with_null: bool = False):
     """
     Returns a base query for a table. But replace the value of the date column
@@ -57,7 +55,6 @@ def base_query(table: Table, with_null: bool = False):
     :param with_null: Whether to include rows with null data
     :return: The base query to use for all subsequent queries
     """
-
 
     t2 = aliased(table)
 
@@ -86,7 +83,9 @@ def retrieve_latest_row(table: Table, with_null: bool = False) -> Data:
     """
     with engine.connect() as connection:
         return connection.execute(
-            base_query(table, with_null=with_null).order_by(table.c.date.desc()).limit(1)
+            base_query(table, with_null=with_null)
+            .order_by(table.c.date.desc())
+            .limit(1)
         ).fetchone()
 
 
@@ -101,6 +100,7 @@ def retrieve_first_row(table: Table) -> Data:
         return connection.execute(
             base_query(table).order_by(table.c.date.asc()).limit(1)
         ).fetchone()
+
 
 @data_result
 def retrieve_after_datetime(table: Table, date: datetime, limit: int) -> List[Data]:
@@ -122,6 +122,7 @@ def retrieve_before_datetime(table: Table, date: datetime, limit: int) -> List[D
             .order_by(table.c.date.desc())
             .limit(limit)
         ).fetchall()
+
 
 @data_result
 def retrieve_between_datetime(
