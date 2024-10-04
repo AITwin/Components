@@ -1,4 +1,5 @@
 import logging
+import time
 from datetime import timedelta
 from io import BytesIO
 from typing import Dict
@@ -17,6 +18,22 @@ from src.runners._utils import schedule_string_to_time_delta
 
 logger = logging.getLogger("Parquetize")
 
+
+def run_parquetize_on_schedule(
+    component_config: ComponentConfiguration,
+    tables: Dict[str, Table],
+):
+    logger.info("Running parquetize on schedule")
+
+    while True:
+        logger.debug(f"Running parquetize {component_config.name}")
+        try:
+            run_parquetize(component_config, tables)
+        except Exception as e:
+            logger.exception(f"Parquetize {component_config.name} failed: {e}")
+            time.sleep(60)
+
+        time.sleep(60)
 
 def run_parquetize(
     component_config: ComponentConfiguration,
@@ -143,7 +160,6 @@ def _generate_group(
     # Retrieve content from each data source
     datas = [BytesIO(requests.get(url).content) for url in urls]
 
-
     table = None
 
     for data in datas:
@@ -181,7 +197,7 @@ def _generate_group(
             schema=component_config.parquetize.schema,
             batch=False,
             original_size=original_size,
-            compressed_size=compressed_size
+            compressed_size=compressed_size,
         )
     )
 
@@ -208,8 +224,7 @@ def _generate_batch(
     )
     data_rows = connection.execute(data_query).fetchall()
 
-
-    responses =[requests.get(row[0]) for row in data_rows]
+    responses = [requests.get(row[0]) for row in data_rows]
 
     # Retrieve content from each data source
     datas = [(response.json(), row[1]) for response, row in zip(responses, data_rows)]
@@ -250,7 +265,7 @@ def _generate_batch(
             schema=component_config.parquetize.schema,
             batch=True,
             original_size=original_size,
-            compressed_size=compressed_size
+            compressed_size=compressed_size,
         )
     )
     connection.commit()

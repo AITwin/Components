@@ -116,7 +116,7 @@ def launch_parquetize(args, config, processes, tables):
     for name, parquetize_config in config.parquetize.items():
         if name in parquetize_names_to_run:
             process = Process(
-                target=run_parquetize,
+                target=run_parquetize if args.now else run_parquetize_on_schedule,
                 args=(parquetize_config, tables),
             )
             process.start()
