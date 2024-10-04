@@ -16,6 +16,7 @@ if load_dotenv():
         run_handlers,
         run_harvester,
         run_harvester_on_schedule,
+        run_parquetize_on_schedule,
         run_parquetize,
     )
 
@@ -99,6 +100,7 @@ def launch_handlers(args, config, processes, tables):
         handler_process.start()
         processes.append(handler_process)
 
+
 def launch_parquetize(args, config, processes, tables):
     """
     Launch parquetize processes.
@@ -122,6 +124,7 @@ def launch_parquetize(args, config, processes, tables):
             process.start()
             processes.append(process)
 
+
 def main():
     config = load_all_components()
     tables = sync_db_from_configuration(config)
@@ -140,7 +143,6 @@ def main():
 
     # Launch parquetize
     launch_parquetize(args, config, processes, tables)
-
 
     # If no processes were started, display a message
     if not processes:
