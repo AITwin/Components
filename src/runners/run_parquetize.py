@@ -180,7 +180,7 @@ def _generate_group(
     )
 
     url = storage_manager.write(
-        f"{component_config.parquetize_name}/{group_start.strftime('%Y-%m-%d_%H-%M-%S')}_to_{group_end.strftime('%Y-%m-%d_%H-%M-%S')}",
+        f"{component_config.parquetize_name}/{group_start.strftime('%Y-%m-%d_%H-%M-%S')}_to_{group_end.strftime('%Y-%m-%d_%H-%M-%S')}.parquet",
         output.getvalue(),
     )
 
@@ -248,7 +248,7 @@ def _generate_batch(
     )
 
     url = storage_manager.write(
-        f"{component_config.parquetize_name}/{period_start.strftime('%Y-%m-%d_%H-%M-%S')}_to_{period_end.strftime('%Y-%m-%d_%H-%M-%S')}",
+        f"{component_config.parquetize_name}/{period_start.strftime('%Y-%m-%d_%H-%M-%S')}_to_{period_end.strftime('%Y-%m-%d_%H-%M-%S')}.parquet",
         output.getvalue(),
     )
 
