@@ -1,10 +1,15 @@
 import logging
 import os
 import tomllib
+from itertools import chain
 from typing import List, Dict
 
 from src.components import ComponentClass
-from src.configuration.model import ComponentsConfiguration, ComponentConfiguration
+from src.configuration.model import (
+    ComponentsConfiguration,
+    ComponentConfiguration,
+    ComponentParquetizeConfig,
+)
 
 logger = logging.getLogger("Load")
 
@@ -85,10 +90,18 @@ def load_all_components(config_path: str = "configuration") -> ComponentsConfigu
                 )
             )
 
+    parquetize = {}
+
+    for component in chain(collectors.values(), harvesters.values()):
+        if component.parquetize is not None:
+            parquetize[component.name] = component
+
+
     return ComponentsConfiguration(
         collectors=collectors,
         harvesters=harvesters,
         handlers=handlers,
+        parquetize=parquetize
     )
 
 
@@ -102,6 +115,13 @@ def extract_components(
 ):
     for component_name, component in config.get(key, {}).items():
         name = f"{file_name}_{component_name}"
+        parquetize = component.get("PARQUETIZE", None)
+        parquetize_config = ComponentParquetizeConfig(
+                batch=parquetize.get("BATCH", None),
+                group=parquetize.get("GROUP", None),
+                schema=parquetize.get("SCHEMA", None),
+            ) if parquetize is not None else None
+
         component_configuration = ComponentConfiguration(
             name=name,
             data_type=component["DATA_TYPE"],
@@ -110,6 +130,7 @@ def extract_components(
             schedule=component.get("SCHEDULE", None),
             source_range=component.get("SOURCE_RANGE", None),
             source=None,
+            parquetize=parquetize_config,
             dependencies=[],
             dependencies_limit=component.get(
                 "DEPENDENCIES_LIMIT",
@@ -121,7 +142,6 @@ def extract_components(
         )
 
         target_list[name] = component_configuration
-
         source = component.get("SOURCE", None)
         if source is not None:
             source = _treat_name(file_name, source)
@@ -134,9 +154,10 @@ def extract_components(
             )
 
 
+
 def get_optimal_dependencies_wise_order(
-        collectors: Dict[str, ComponentConfiguration],
-    harvesters: Dict[str, ComponentConfiguration]
+    collectors: Dict[str, ComponentConfiguration],
+    harvesters: Dict[str, ComponentConfiguration],
 ) -> List[ComponentConfiguration]:
     """
     Get the optimal order to run the harvesters in.
@@ -145,17 +166,10 @@ def get_optimal_dependencies_wise_order(
     :return:  The optimal order to run the harvesters in
     """
 
-    order = [
-        "stib_stops",
-        "stib_shapefile",
-        "stib_segments"
-    ]
+    order = ["stib_stops", "stib_shapefile", "stib_segments"]
     components = [harvesters.get(name, collectors.get(name, None)) for name in order]
 
-
     return components
-
-
 
 
 def _treat_name(file_name, source):

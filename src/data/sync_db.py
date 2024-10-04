@@ -5,26 +5,37 @@ from sqlalchemy import MetaData, Table
 
 from src.configuration.model import ComponentsConfiguration
 from src.data.engine import engine
-from src.data.table import load_table_from_configuration
+from src.data.table import (
+    load_simple_table_from_configuration,
+    load_parquetize_table_from_configuration,
+)
 
 
 def sync_db_from_configuration(
-    components_configuration: ComponentsConfiguration,
+    configuration: ComponentsConfiguration,
 ) -> Dict[str, Table]:
     """
-    Sync the database from the components configuration.
-    :param components_configuration: The components configuration
+    Sync the database from the components' configuration.
+    :param configuration: The components configuration
+    :return: The tables
     """
+
     metadata_obj = MetaData()
 
     tables = {}
 
-    for name, component_configuration in chain(
-        components_configuration.harvesters.items(),
-        components_configuration.collectors.items(),
+    for name, component in chain(
+        configuration.harvesters.items(),
+        configuration.collectors.items(),
     ):
-        table = load_table_from_configuration(component_configuration, metadata_obj)
-        tables[name] = table
+        tables[name] = load_simple_table_from_configuration(
+            component.name, metadata_obj
+        )
+
+        if component.parquetize:
+            tables[component.parquetize_name] = load_parquetize_table_from_configuration(
+                component.parquetize_name, metadata_obj
+            )
 
     metadata_obj.create_all(engine)
 

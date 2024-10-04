@@ -11,6 +11,8 @@ class StorageManager(abc.ABC):
     @abc.abstractmethod
     def read(self, file_name: str) -> bytes: ...
 
+    @abc.abstractmethod
+    def delete(self, file_name: str): ...
 
 class AzureBlobManager(StorageManager):
     def __init__(self, connection_string, container_name):
@@ -52,6 +54,16 @@ class AzureBlobManager(StorageManager):
         blob_data = blob_client.download_blob().readall()
         return blob_data
 
+    def delete(self, file_name: str):
+        """
+        Delete a blob in Azure Blob Storage.
+
+        :param file_name: Name of the blob to delete.
+        """
+        blob_client = self.container_client.get_blob_client(
+            file_name.split(self.container_client.container_name + "/")[1]
+        )
+        blob_client.delete_blob()
 
 class FileStorageManager(StorageManager):
     def __init__(self, directory):
@@ -85,6 +97,13 @@ class FileStorageManager(StorageManager):
         with open(file_name, "rb") as file:
             return file.read()
 
+    def delete(self, file_name: str):
+        """
+        Delete a file in the local file system.
+
+        :param file_name: Name of the file to delete.
+        """
+        os.remove(file_name)
 
 
 

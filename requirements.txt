@@ -31,3 +31,6 @@ azure-storage-blob
 schedule
 pysftp
 
+
+jsonschema
+pyarrow

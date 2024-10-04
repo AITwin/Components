@@ -27,10 +27,10 @@ PATH = "stib.collectors.vehicle_distance.STIBVehiclePositionsCollector"
 DATA_FORMAT = "json"
 DATA_TYPE = "json"
 SCHEDULE = "20s"
+PARQUETIZE = { BATCH = "1h", GROUP = "1d", SCHEMA = { type = "array", items = { type = "object", properties = { directionId = { type = "string" }, distanceFromPoint = { type = "integer" }, pointId = { type = "string" }, lineId = { type = "string" } } } } }
 
 
 [harvesters]
-
 
 [harvesters.segments]
 

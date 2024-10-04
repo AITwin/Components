@@ -1,75 +1,39 @@
-import argparse
 import logging
 from multiprocessing import Process
 
 from dotenv import load_dotenv
 
-load_dotenv()
+from parser import parse_arguments
 
-from src.configuration.load import (
-    load_all_components,
-    get_optimal_dependencies_wise_order,
-)
-from src.data.sync_db import sync_db_from_configuration
-from src.runners.run_collector import run_collector, run_collector_on_schedule
-from src.runners.run_handler import run_handlers
-from src.runners.run_harvester import run_harvester_on_schedule, run_harvester
-
-
-
-def setup_logging(  level):
-    logging.basicConfig(level=level)
-    logging.getLogger("Handler").setLevel(level)
-    logging.getLogger("Collector").setLevel(level)
-    logging.getLogger("Harvester").setLevel(level)
-
-
-def parse_arguments():
-    parser = argparse.ArgumentParser(
-        description="Run specific handlers, collectors, and harvesters."
+if load_dotenv():
+    from src.configuration.load import (
+        load_all_components,
     )
-    parser.add_argument(
-        "--init-dependencies",
-        action="store_true",
-        help="Runs all harvesters in the order that maximizes the number of dependencies that are satisfied",
+    from src.data.sync_db import sync_db_from_configuration
+    from src.runners import (
+        run_collector,
+        run_collector_on_schedule,
+        run_handlers,
+        run_harvester,
+        run_harvester_on_schedule,
+        run_parquetize,
     )
-    parser.add_argument(
-        "--handlers", nargs="*", default=[], help="List of handler names to run"
-    )
-    parser.add_argument(
-        "--collectors", nargs="*", default=[], help="List of collector names to run"
-    )
-    parser.add_argument(
-        "--harvesters", nargs="*", default=[], help="List of harvester names to run"
-    )
-    parser.add_argument(
-        "--now", action="store_true", help="Run harvesters or collectors once and exit"
-    )
-    parser.add_argument(
-        "--port",
-        type=int,
-        default=8888,
-        help="Port to run the handlers server on (default: 8888)",
-    )
-    parser.add_argument(
-        "--host",
-        type=str,
-        default="localhost",
-        help="Host to run the handlers server on (default: localhost)",
-    )
-    parser.add_argument(
-        "--allowed-hosts",
-        nargs="*",
-        default=["localhost", "127.0.0.1"],
-        help="Allowed hosts for the handlers server (default: *)",
-    )
-    return parser.parse_args()
 
 
 def launch_harvesters(args, config, processes, tables):
+    """
+    Launch harvester processes.
+
+    Parameters:
+        args (argparse.Namespace): Parsed command-line arguments.
+        config: Configuration object.
+        processes (list): List to append the created processes.
+        tables (dict): Tables from the database synchronization.
+    """
     harvester_names_to_run = (
-        args.harvesters if "all" not in args.harvesters else config.harvesters.keys()
+        config.harvesters.keys() if "all" in args.harvesters else args.harvesters
     )
+
     for name, harvester_config in config.harvesters.items():
         if name in harvester_names_to_run:
             process = Process(
@@ -81,8 +45,17 @@ def launch_harvesters(args, config, processes, tables):
 
 
 def launch_collectors(args, config, processes, tables):
+    """
+    Launch collector processes.
+
+    Parameters:
+        args (argparse.Namespace): Parsed command-line arguments.
+        config: Configuration object.
+        processes (list): List to append the created processes.
+        tables (dict): Tables from the database synchronization.
+    """
     collector_names_to_run = (
-        args.collectors if "all" not in args.collectors else config.collectors.keys()
+        config.collectors.keys() if "all" in args.collectors else args.collectors
     )
 
     for name, collector_config in config.collectors.items():
@@ -90,52 +63,69 @@ def launch_collectors(args, config, processes, tables):
             process = Process(
                 target=run_collector if args.now else run_collector_on_schedule,
                 args=(collector_config, tables[name]),
-                kwargs=dict(fail_on_error=False)
+                kwargs={"fail_on_error": False},
             )
             process.start()
             processes.append(process)
 
 
 def launch_handlers(args, config, processes, tables):
+    """
+    Launch handlers server process.
+
+    Parameters:
+        args (argparse.Namespace): Parsed command-line arguments.
+        config: Configuration object.
+        processes (list): List to append the created processes.
+        tables (dict): Tables from the database synchronization.
+    """
     handlers_names_to_run = (
-        args.handlers if "all" not in args.handlers else config.handlers.keys()
+        config.handlers.keys() if "all" in args.handlers else args.handlers
     )
 
     handlers_to_run = {
         name: config.handlers[name]
         for name in handlers_names_to_run
+        if name in config.handlers
     }
 
-    if args.handlers:
+    if handlers_to_run:
         if args.now:
-            raise ValueError("Cannot run handlers with --now flag")
-        handlers = Process(
+            raise ValueError("Cannot run handlers with --now flag.")
+        handler_process = Process(
             target=run_handlers,
             args=(handlers_to_run, tables, args.host, args.port, args.allowed_hosts),
         )
-        handlers.start()
-        processes.append(handlers)
+        handler_process.start()
+        processes.append(handler_process)
 
+def launch_parquetize(args, config, processes, tables):
+    """
+    Launch parquetize processes.
+
+    Parameters:
+        args (argparse.Namespace): Parsed command-line arguments.
+        config: Configuration object.
+        processes (list): List to append the created processes.
+        tables (dict): Tables from the database synchronization.
+    """
+    parquetize_names_to_run = (
+        config.parquetize.keys() if "all" in args.parquetize else args.parquetize
+    )
+
+    for name, parquetize_config in config.parquetize.items():
+        if name in parquetize_names_to_run:
+            process = Process(
+                target=run_parquetize,
+                args=(parquetize_config, tables),
+            )
+            process.start()
+            processes.append(process)
 
 def main():
-    load_dotenv()
     config = load_all_components()
     tables = sync_db_from_configuration(config)
     args = parse_arguments()
-
-    setup_logging(logging.WARNING)
-
-    # Run harvesters in optimal order which maximizes the number of dependencies that are satisfied.
-    if args.init_dependencies:
-        logging.info("Running harvesters in optimal order")
-        components = get_optimal_dependencies_wise_order(config.collectors, config.harvesters)
-        for component in components:
-            logging.info(f"Running {component.name}")
-            if component.source:
-                run_harvester(component, tables)
-            else:
-                run_collector(component, tables[component.name])
-        exit(0)
 
     processes = []
 
@@ -147,6 +137,15 @@ def main():
 
     # Launch harvesters
     launch_harvesters(args, config, processes, tables)
+
+    # Launch parquetize
+    launch_parquetize(args, config, processes, tables)
+
+
+    # If no processes were started, display a message
+    if not processes:
+        logging.warning("No handlers, collectors, or harvesters were specified to run.")
+        return
 
     for process in processes:
         process.join()
