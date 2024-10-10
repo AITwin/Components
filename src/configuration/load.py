@@ -118,7 +118,7 @@ def extract_components(
         parquetize = component.get("PARQUETIZE", None)
         parquetize_config = ComponentParquetizeConfig(
                 batch=parquetize.get("BATCH", None),
-                group=parquetize.get("GROUP", None),
+                groups=parquetize.get("GROUPS", None),
                 schema=parquetize.get("SCHEMA", None),
             ) if parquetize is not None else None
 

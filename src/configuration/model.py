@@ -7,7 +7,7 @@ from src.components import ComponentClass
 @dataclass
 class ComponentParquetizeConfig:
     batch: str
-    group: str
+    groups: List[str]
     schema: Dict[str, Any]
 
 

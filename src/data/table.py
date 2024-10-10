@@ -7,7 +7,6 @@ from sqlalchemy import (
     MetaData,
     VARCHAR,
     Index,
-    BOOLEAN,
 )
 from sqlalchemy.dialects.postgresql import JSONB
 
@@ -67,8 +66,9 @@ def load_parquetize_table_from_configuration(table_name: str, metadata_obj: Meta
             VARCHAR(512),
             nullable=True,
         ),
-        Column("batch", BOOLEAN, nullable=False),
-        Index(f"{table_name}_start_date_index", "start_date"),
-        Index(f"{table_name}_end_date_index", "end_date"),
+        Column("aggregation", VARCHAR(32), nullable=False),
+        Index(
+            f"{table_name}_aggregation_start_date_index", "aggregation", "start_date"
+        ),
         Index(f"{table_name}_start_end_date_index", "start_date", "end_date"),
     )

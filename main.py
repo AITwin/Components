@@ -3,7 +3,7 @@ from multiprocessing import Process
 
 from dotenv import load_dotenv
 
-from parser import parse_arguments
+from parser import parse_arguments, setup_logging
 
 if load_dotenv():
     from src.configuration.load import (
@@ -129,6 +129,7 @@ def main():
     config = load_all_components()
     tables = sync_db_from_configuration(config)
     args = parse_arguments()
+    setup_logging(args.log_level)
 
     processes = []
 

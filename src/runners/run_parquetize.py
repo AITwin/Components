@@ -9,12 +9,15 @@ import pyarrow.parquet as pq
 import requests
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import validate
-from sqlalchemy import Table, select
+from sqlalchemy import Table, select, column
 
 from src.configuration.model import ComponentConfiguration
 from src.data.engine import engine
 from src.data.storage import storage_manager
-from src.runners._utils import schedule_string_to_time_delta
+from src.runners._utils import (
+    schedule_string_to_time_delta,
+    round_datetime_to_previous_delta,
+)
 
 logger = logging.getLogger("Parquetize")
 
@@ -35,6 +38,7 @@ def run_parquetize_on_schedule(
 
         time.sleep(60)
 
+
 def run_parquetize(
     component_config: ComponentConfiguration,
     tables: Dict[str, Table],
@@ -45,18 +49,22 @@ def run_parquetize(
 
     :param component_config: The component configuration
     :param tables: The tables
-    :param fail_on_error: Whether to fail on error
     """
+
+    parquetize_config = component_config.parquetize
+
     assert (
-        component_config.parquetize is not None
+        parquetize_config is not None
     ), f"Parquetize configuration is missing in the component configuration {component_config.name}"
 
     parquet_table = tables[component_config.parquetize_name]
     source = tables[component_config.name]
 
-    delta = schedule_string_to_time_delta(component_config.parquetize.batch)
+    logger.info(f"Running parquetize {component_config.name}")
 
     with engine.connect() as connection:
+        delta = schedule_string_to_time_delta(parquetize_config.batch)
+
         latest_parquet = connection.execute(
             parquet_table.select().order_by(parquet_table.c.end_date.desc()).limit(1)
         ).fetchone()
@@ -80,6 +88,7 @@ def run_parquetize(
         period_start = latest_date
 
         while True:
+            logger.info(f"Processing period {period_start} - {period_start + delta} for batching")
             period_end = period_start + delta
 
             if period_end > end_date:
@@ -99,51 +108,70 @@ def run_parquetize(
 
             period_start = period_end
 
-    # Now we want to group the batch themselves
     with engine.connect() as connection:
-        first_unprocessed_batch = connection.execute(
-            parquet_table.select().where(parquet_table.c.batch.is_(True)).limit(1)
-        ).fetchone()
+        for previous_group, group in zip(
+            [parquetize_config.batch] + parquetize_config.groups[:-1],
+            parquetize_config.groups,
+        ):
+            logger.info(f"Processing group {group}")
+            # Now we want to group the batch themselves
+            first_unprocessed_batch = connection.execute(
+                parquet_table.select()
+                .where((column("aggregation") == previous_group))
+                .limit(1)
+            ).fetchone()
 
-        last_unprocessed_batch = connection.execute(
-            parquet_table.select()
-            .where(parquet_table.c.batch.is_(True))
-            .order_by(parquet_table.c.end_date.desc())
-            .limit(1)
-        ).fetchone()
+            last_unprocessed_batch = connection.execute(
+                parquet_table.select()
+                .where((column("aggregation") == previous_group))
+                .order_by(parquet_table.c.end_date.desc())
+                .limit(1)
+            ).fetchone()
 
-        group_period = schedule_string_to_time_delta(component_config.parquetize.group)
+            if first_unprocessed_batch is None:
+                logger.info(f"All batches are processed for this group {group}")
+                continue
 
-        if first_unprocessed_batch is None:
-            logger.info("All batches are processed")
-            return
-
-        start_date = first_unprocessed_batch[1]
-        end_date = last_unprocessed_batch[2]
-
-        group_start = start_date
-
-        while True:
-            group_end = group_start + group_period
-            if group_end > end_date:
-                logger.info(
-                    f"End of data reached, last period: {start_date} - {end_date}, should re-run later"
-                )
-                break
-
-            _generate_group(
-                component_config,
-                connection,
-                parquet_table,
-                group_start,
-                group_end,
+            group_time_delta = schedule_string_to_time_delta(group)
+            start_date = round_datetime_to_previous_delta(
+                first_unprocessed_batch[1], group_time_delta
             )
+            end_date = last_unprocessed_batch[2]
 
-            group_start = group_end
+            group_start = start_date
+
+            while True:
+                logger.info(f"Processing group {group} {group_start} - {group_start + group_time_delta}")
+                group_end = group_start + group_time_delta
+                if group_end > end_date:
+                    logger.info(
+                        f"End of data reached, last period: {start_date} - {end_date}, should re-run later"
+                    )
+                    break
+
+                _generate_group(
+                    component_config.name,
+                    previous_group,
+                    group,
+                    parquetize_config.schema,
+                    connection,
+                    parquet_table,
+                    group_start,
+                    group_end,
+                )
+
+                group_start = group_end
 
 
 def _generate_group(
-    component_config, connection, parquet_table, group_start, group_end
+    parquetize_table: str,
+    previous_group: str,
+    group: str,
+    schema: dict,
+    connection,
+    parquet_table,
+    group_start,
+    group_end,
 ):
     # Fetch data from the database within the specified date range
     data_query = select(
@@ -152,7 +180,10 @@ def _generate_group(
         parquet_table.c.count,
         parquet_table.c.skipped,
         parquet_table.c.original_size,
-    ).where(parquet_table.c.start_date.between(group_start, group_end))
+    ).where(
+        parquet_table.c.start_date.between(group_start, group_end)
+        & (column("aggregation") == previous_group)
+    ).order_by(parquet_table.c.start_date.asc())
 
     data_rows = connection.execute(data_query).fetchall()
 
@@ -180,7 +211,7 @@ def _generate_group(
     )
 
     url = storage_manager.write(
-        f"{component_config.parquetize_name}/{group_start.strftime('%Y-%m-%d_%H-%M-%S')}_to_{group_end.strftime('%Y-%m-%d_%H-%M-%S')}.parquet",
+        f"{parquetize_table}/{group_start.strftime('%Y-%m-%d_%H-%M-%S')}_to_{group_end.strftime('%Y-%m-%d_%H-%M-%S')}.parquet",
         output.getvalue(),
     )
 
@@ -194,8 +225,8 @@ def _generate_group(
             data=url,
             count=sum([row[2] for row in data_rows]),
             skipped=sum([row[3] for row in data_rows]),
-            schema=component_config.parquetize.schema,
-            batch=False,
+            schema=schema,
+            aggregation=group,
             original_size=original_size,
             compressed_size=compressed_size,
         )
@@ -205,7 +236,7 @@ def _generate_group(
     connection.execute(
         parquet_table.delete().where(
             parquet_table.c.start_date.between(group_start, group_end)
-            & parquet_table.c.batch.is_(True)
+            & (column("aggregation") == previous_group)
         )
     )
     connection.commit()
@@ -263,7 +294,7 @@ def _generate_batch(
             count=len(validated_datas),
             skipped=len(data_rows) - len(validated_datas),
             schema=component_config.parquetize.schema,
-            batch=True,
+            aggregation=component_config.parquetize.batch,
             original_size=original_size,
             compressed_size=compressed_size,
         )
