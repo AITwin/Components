@@ -35,19 +35,17 @@ def write_result(
 
     with engine.connect() as connection:
         # Check if data is already in the database
-        same_data_row = (
-            connection
-            .execute(table.select().where(table.c.hash == md5_digest))
-            .fetchone()
-        )
+        last_row = connection.execute(
+            table.select().order_by(table.c.id.desc())
+        ).first()
 
-        if same_data_row is not None and md5_digest is not None:
+        if last_row is not None and last_row.hash == md5_digest:
             # Insert with copy_id
             connection.execute(
                 table.insert().values(
                     date=date,
-                    data=same_data_row.data,
-                    copy_id=same_data_row.id,
+                    data=None,
+                    copy_id=last_row.id,
                     type=configuration.data_type,
                 )
             )
