@@ -34,34 +34,16 @@ def write_result(
         md5_digest = hashlib.md5(data_bytes).hexdigest()
 
     with engine.connect() as connection:
-        print("Getting last row")
-        # Check if data is already in the database
-        last_row = connection.execute(
-            table.select()
-        ).last()
-        print(last_row)
+        # Upload data to storage
+        url = storage_manager.write(
+            f"{configuration.name}/{date.strftime('%Y-%m-%d_%H-%M-%S')}",
+            data_bytes,
+        )
+        # Insert data to database
+        connection.execute(
+            table.insert().values(
+                date=date, data=url, hash=md5_digest, type=configuration.data_type
+            )
+        )
 
-        if last_row is not None and last_row.hash == md5_digest:
-            # Insert with copy_id
-            connection.execute(
-                table.insert().values(
-                    date=date,
-                    data=None,
-                    copy_id=last_row.id,
-                    type=configuration.data_type,
-                )
-            )
-        else:
-            # Upload data to storage
-            url = storage_manager.write(
-                f"{configuration.name}/{date.strftime('%Y-%m-%d_%H-%M-%S')}",
-                data_bytes,
-            )
-            # Insert data to database
-            connection.execute(
-                table.insert().values(
-                    date=date, data=url, hash=md5_digest, type=configuration.data_type
-                )
-            )
-
-        connection.commit()
+    connection.commit()
