@@ -264,6 +264,11 @@ def _generate_batch(
     for data, date in datas:
         try:
             validate(data, component_config.parquetize.schema)
+            new_data = []
+            for item in data:
+                new_item = item.copy()
+                new_item["lineItem"] = str(item["lineItem"])
+                new_data.append(new_item)
             validated_datas.append({"data": data, "date": date})
         except ValidationError as val:
             logger.warning(f"Error validating data: {val}")
