@@ -269,7 +269,7 @@ def _generate_batch(
                 new_item = item.copy()
                 new_item["lineId"] = str(item["lineId"])
                 new_data.append(new_item)
-            validated_datas.append({"data": data, "date": date})
+            validated_datas.append({"data": new_data, "date": date})
         except ValidationError as val:
             logger.warning(f"Error validating data: {val}")
 
