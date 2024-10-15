@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+from datetime import timedelta
 
 import schedule
 
@@ -53,11 +53,26 @@ def schedule_string_to_time_delta(schedule_string) -> timedelta:
     raise ValueError(f"Invalid schedule string: {schedule_string}")
 
 
+from datetime import datetime, timedelta
+
+
 def round_datetime_to_previous_delta(date: datetime, delta: timedelta) -> datetime:
     """
-    Round a datetime to the previous delta.
+    Round a datetime to the previous delta and reset smaller units (like day, hour, minute, second, and microsecond) to 00.
     :param date: The datetime
     :param delta: The delta
     :return: The rounded datetime
     """
-    return date - (date - date.min) % delta
+    rounded_date = date - (date - date.min) % delta
+
+    # Reset smaller units to 00 if they are smaller than the delta
+    if delta >= timedelta(days=1):
+        rounded_date = rounded_date.replace(hour=0, minute=0, second=0, microsecond=0)
+    elif delta >= timedelta(hours=1):
+        rounded_date = rounded_date.replace(minute=0, second=0, microsecond=0)
+    elif delta >= timedelta(minutes=1):
+        rounded_date = rounded_date.replace(second=0, microsecond=0)
+    elif delta >= timedelta(seconds=1):
+        rounded_date = rounded_date.replace(microsecond=0)
+
+    return rounded_date

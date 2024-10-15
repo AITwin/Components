@@ -134,7 +134,7 @@ def run_parquetize(
             if first_unprocessed_batch is None:
                 logger.info(f"All batches are processed for this group {group}")
                 continue
-
+            round
             group_time_delta = schedule_string_to_time_delta(group)
             start_date = round_datetime_to_previous_delta(
                 first_unprocessed_batch[1], group_time_delta
