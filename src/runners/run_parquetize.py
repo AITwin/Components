@@ -86,7 +86,7 @@ def run_parquetize(
             source.select().order_by(source.c.date.desc()).limit(1)
         ).fetchone()[1]
 
-        period_start = latest_date
+        period_start = round_datetime_to_previous_delta(latest_date, delta)
 
         while True:
             logger.info(
