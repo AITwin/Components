@@ -1,3 +1,4 @@
+import concurrent.futures
 import logging
 import time
 from datetime import timedelta
@@ -88,7 +89,9 @@ def run_parquetize(
         period_start = latest_date
 
         while True:
-            logger.info(f"Processing period {period_start} - {period_start + delta} for batching")
+            logger.info(
+                f"Processing period {period_start} - {period_start + delta} for batching"
+            )
             period_end = period_start + delta
 
             if period_end > end_date:
@@ -141,7 +144,9 @@ def run_parquetize(
             group_start = start_date
 
             while True:
-                logger.info(f"Processing group {group} {group_start} - {group_start + group_time_delta}")
+                logger.info(
+                    f"Processing group {group} {group_start} - {group_start + group_time_delta}"
+                )
                 group_end = group_start + group_time_delta
                 if group_end > end_date:
                     logger.info(
@@ -174,16 +179,20 @@ def _generate_group(
     group_end,
 ):
     # Fetch data from the database within the specified date range
-    data_query = select(
-        parquet_table.c.data,
-        parquet_table.c.start_date,
-        parquet_table.c.count,
-        parquet_table.c.skipped,
-        parquet_table.c.original_size,
-    ).where(
-        parquet_table.c.start_date.between(group_start, group_end)
-        & (column("aggregation") == previous_group)
-    ).order_by(parquet_table.c.start_date.asc())
+    data_query = (
+        select(
+            parquet_table.c.data,
+            parquet_table.c.start_date,
+            parquet_table.c.count,
+            parquet_table.c.skipped,
+            parquet_table.c.original_size,
+        )
+        .where(
+            parquet_table.c.start_date.between(group_start, group_end)
+            & (column("aggregation") == previous_group)
+        )
+        .order_by(parquet_table.c.start_date.asc())
+    )
 
     data_rows = connection.execute(data_query).fetchall()
 
@@ -246,6 +255,11 @@ def _generate_group(
         storage_manager.delete(url)
 
 
+def fetch_data(row):
+    response = requests.get(row[0])
+    return response, row[1]
+
+
 def _generate_batch(
     component_config, connection, parquet_table, period_end, period_start, source
 ):
@@ -255,21 +269,34 @@ def _generate_batch(
     )
     data_rows = connection.execute(data_query).fetchall()
 
-    responses = [requests.get(row[0]) for row in data_rows]
+    # Function to fetch and parse the response
+    print("starting fetch")
+    # Using ThreadPoolExecutor to parallelize fetching
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        # Submit fetch tasks to the executor
+        future_to_row = {executor.submit(fetch_data, row): row for row in data_rows}
 
-    # Retrieve content from each data source
-    datas = [(response.json(), row[1]) for response, row in zip(responses, data_rows)]
+        # Collect the results as they complete
+        responses = [
+            future.result() for future in concurrent.futures.as_completed(future_to_row)
+        ]
 
+        datas = [(r.json(), date) for r,date in responses]
+    print("Finish fetch")
     validated_datas = []
+    validate_schema = component_config.parquetize.schema
+
     for data, date in datas:
         try:
-            validate(data, component_config.parquetize.schema)
-            new_data = []
-            for item in data:
-                new_item = item.copy()
-                new_item["lineId"] = str(item["lineId"])
-                new_data.append(new_item)
+            # Validate data once, without creating new structures for now
+            validate(data, validate_schema)
+
+            # Use a list comprehension to handle transformation in one step
+            new_data = [{**item, "lineId": str(item["lineId"])} for item in data]
+
+            # Append the transformed data directly
             validated_datas.append({"data": new_data, "date": date})
+
         except ValidationError as val:
             logger.warning(f"Error validating data: {val}")
 
@@ -288,7 +315,7 @@ def _generate_batch(
         output.getvalue(),
     )
 
-    original_size = sum([len(response.content) for response in responses])
+    original_size = sum([len(response.content) for response, _ in responses])
     compressed_size = output.getbuffer().nbytes
 
     connection.execute(
