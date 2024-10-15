@@ -272,7 +272,7 @@ def _generate_batch(
     # Function to fetch and parse the response
     print("starting fetch")
     # Using ThreadPoolExecutor to parallelize fetching
-    with concurrent.futures.ThreadPoolExecutor(max_workers=32) as executor:
+    with concurrent.futures.ThreadPoolExecutor() as executor:
         # Submit fetch tasks to the executor
         future_to_row = {executor.submit(fetch_data, row): row for row in data_rows}
 
