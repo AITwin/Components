@@ -293,10 +293,12 @@ def _generate_batch(
 
             # Use a list comprehension to handle transformation in one step
             new_data = [{**item, "lineId": str(item["lineId"])} for item in data]
-
+            flattened = [
+                {**item, "date": date}
+                for item in new_data
+            ]
             # Append the transformed data directly
-            validated_datas.append({"data": new_data, "date": date})
-
+            validated_datas.append(flattened)
         except ValidationError as val:
             logger.warning(f"Error validating data: {val}")
 
