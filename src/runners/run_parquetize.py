@@ -282,7 +282,8 @@ def _generate_batch(
         ]
 
         datas = [(r.json(), date) for r,date in responses]
-    print("Finish fetch")
+
+    not_skipped = 0
     validated_datas = []
     validate_schema = component_config.parquetize.schema
 
@@ -290,7 +291,7 @@ def _generate_batch(
         try:
             # Validate data once, without creating new structures for now
             validate(data, validate_schema)
-
+            not_skipped += 1
             # Use a list comprehension to handle transformation in one step
             new_data = [{**item, "lineId": str(item["lineId"])} for item in data]
             flattened = [
@@ -298,7 +299,7 @@ def _generate_batch(
                 for item in new_data
             ]
             # Append the transformed data directly
-            validated_datas.append(flattened)
+            validated_datas.extend(flattened)
         except ValidationError as val:
             logger.warning(f"Error validating data: {val}")
 
@@ -325,8 +326,8 @@ def _generate_batch(
             start_date=period_start,
             end_date=period_end,
             data=url,
-            count=len(validated_datas),
-            skipped=len(data_rows) - len(validated_datas),
+            count=not_skipped,
+            skipped=len(data_rows) - not_skipped,
             schema=component_config.parquetize.schema,
             aggregation=component_config.parquetize.batch,
             original_size=original_size,
