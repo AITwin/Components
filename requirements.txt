@@ -1,6 +1,6 @@
 # Environment variables management system
 python-dotenv
-
+polars
 # Requests library
 requests
 

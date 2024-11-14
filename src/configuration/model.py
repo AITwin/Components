@@ -5,9 +5,15 @@ from src.components import ComponentClass
 
 
 @dataclass
+class ComponentParquetizeGroupConfig:
+    group: str
+    keys: Optional[List[str]] = None
+
+
+@dataclass
 class ComponentParquetizeConfig:
     batch: str
-    groups: List[str]
+    groups: List[ComponentParquetizeGroupConfig]
     schema: Dict[str, Any]
 
 
@@ -23,7 +29,7 @@ class ComponentConfiguration:
     schedule: Optional[str]
     source: Optional[Self]
     source_range: Optional[str]
-    parquetize: Optional[ComponentParquetizeConfig] =None
+    parquetize: Optional[ComponentParquetizeConfig] = None
     source_range_strict: bool = True
     multiple_results: bool = False
     query_parameters: Optional[Dict[str, str]] = None
@@ -34,6 +40,7 @@ class ComponentConfiguration:
     @property
     def parquetize_name(self):
         return f"{self.name}_parquetize"
+
 
 @dataclass
 class ComponentsConfiguration:

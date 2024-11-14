@@ -1,6 +1,5 @@
 from sqlalchemy import (
     Column,
-    UniqueConstraint,
     TIMESTAMP,
     INTEGER,
     Table,
@@ -64,6 +63,7 @@ def load_parquetize_table_from_configuration(table_name: str, metadata_obj: Meta
             VARCHAR(512),
             nullable=True,
         ),
+        Column("keys", JSONB, nullable=True, index=True),
         Column("aggregation", VARCHAR(32), nullable=False),
         Index(
             f"{table_name}_aggregation_start_date_index", "aggregation", "start_date"

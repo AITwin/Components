@@ -8,7 +8,7 @@ from src.components import ComponentClass
 from src.configuration.model import (
     ComponentsConfiguration,
     ComponentConfiguration,
-    ComponentParquetizeConfig,
+    ComponentParquetizeConfig, ComponentParquetizeGroupConfig,
 )
 
 logger = logging.getLogger("Load")
@@ -118,7 +118,12 @@ def extract_components(
         parquetize = component.get("PARQUETIZE", None)
         parquetize_config = ComponentParquetizeConfig(
                 batch=parquetize.get("BATCH", None),
-                groups=parquetize.get("GROUPS", None),
+                groups=[
+                    ComponentParquetizeGroupConfig(
+                        group=group.get("GROUP", None),
+                        keys=group.get("KEYS", None),
+                    ) for group in parquetize.get("GROUPS", [])
+                ],
                 schema=parquetize.get("SCHEMA", None),
             ) if parquetize is not None else None
 

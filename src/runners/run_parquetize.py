@@ -5,6 +5,7 @@ from datetime import timedelta
 from io import BytesIO
 from typing import Dict
 
+import polars
 import pyarrow as pa
 import pyarrow.parquet as pq
 import requests
@@ -12,7 +13,10 @@ from jsonschema.exceptions import ValidationError
 from jsonschema.validators import validate
 from sqlalchemy import Table, select, column
 
-from src.configuration.model import ComponentConfiguration
+from src.configuration.model import (
+    ComponentConfiguration,
+    ComponentParquetizeGroupConfig,
+)
 from src.data.engine import engine
 from src.data.storage import storage_manager
 from src.runners._utils import (
@@ -87,7 +91,6 @@ def run_parquetize(
         ).fetchone()[1]
 
         period_start = round_datetime_to_previous_delta(latest_date, delta)
-
         while True:
             logger.info(
                 f"Processing period {period_start} - {period_start + delta} for batching"
@@ -113,31 +116,46 @@ def run_parquetize(
 
     with engine.connect() as connection:
         for previous_group, group in zip(
-            [parquetize_config.batch] + parquetize_config.groups[:-1],
+            [ComponentParquetizeGroupConfig(group=parquetize_config.batch)]
+            + parquetize_config.groups[:-1],
             parquetize_config.groups,
         ):
             logger.info(f"Processing group {group}")
             # Now we want to group the batch themselves
-            first_unprocessed_batch = connection.execute(
+            last_processed_batch = connection.execute(
                 parquet_table.select()
-                .where((column("aggregation") == previous_group))
+                .where((column("aggregation") == group.group))
+                .order_by(parquet_table.c.end_date.desc())
+                .limit(1)
+            ).fetchone()
+
+            first_previous_group_batch = connection.execute(
+                parquet_table.select()
+                .where((column("aggregation") == previous_group.group))
+                .order_by(parquet_table.c.end_date.asc())
                 .limit(1)
             ).fetchone()
 
             last_unprocessed_batch = connection.execute(
                 parquet_table.select()
-                .where((column("aggregation") == previous_group))
+                .where((column("aggregation") == previous_group.group))
                 .order_by(parquet_table.c.end_date.desc())
                 .limit(1)
             ).fetchone()
 
-            if first_unprocessed_batch is None:
-                logger.info(f"All batches are processed for this group {group}")
+            if first_previous_group_batch is None:
+                logger.info(f"No previous group {previous_group.group} found")
                 continue
 
-            group_time_delta = schedule_string_to_time_delta(group)
+            group_time_delta = schedule_string_to_time_delta(group.group)
+
             start_date = round_datetime_to_previous_delta(
-                first_unprocessed_batch[1], group_time_delta
+                (
+                    last_processed_batch[2]
+                    if last_processed_batch
+                    else first_previous_group_batch[1]
+                ),
+                group_time_delta,
             )
             end_date = last_unprocessed_batch[2]
 
@@ -145,7 +163,7 @@ def run_parquetize(
 
             while True:
                 logger.info(
-                    f"Processing group {group} {group_start} - {group_start + group_time_delta}"
+                    f"Processing group {group.group} {group_start} - {group_start + group_time_delta}"
                 )
                 group_end = group_start + group_time_delta
                 if group_end > end_date:
@@ -170,8 +188,8 @@ def run_parquetize(
 
 def _generate_group(
     parquetize_table: str,
-    previous_group: str,
-    group: str,
+    previous_group: ComponentParquetizeGroupConfig,
+    group: ComponentParquetizeGroupConfig,
     schema: dict,
     connection,
     parquet_table,
@@ -189,7 +207,7 @@ def _generate_group(
         )
         .where(
             parquet_table.c.start_date.between(group_start, group_end)
-            & (column("aggregation") == previous_group)
+            & (column("aggregation") == previous_group.group)
         )
         .order_by(parquet_table.c.start_date.asc())
     )
@@ -210,49 +228,103 @@ def _generate_group(
                 [table, pq.read_table(data)], promote=True, safe=False
             )
 
-    output = BytesIO()
-    pq.write_table(
-        table,
-        output,
-        compression="gzip",
-        use_dictionary=True,
-        compression_level=9,
-    )
+    total_row_count = table.num_rows
 
-    url = storage_manager.write(
-        f"{parquetize_table}/{group_start.strftime('%Y-%m-%d_%H-%M-%S')}_to_{group_end.strftime('%Y-%m-%d_%H-%M-%S')}.parquet",
-        output.getvalue(),
-    )
+    if group.keys:
+        polars_df = polars.from_arrow(table)
+        for partitioned in polars_df.partition_by(*group.keys):
+            keys = partitioned.select(group.keys).unique()
 
-    original_size = sum([row[4] for row in data_rows])
-    compressed_size = output.getbuffer().nbytes
+            filtered_table = partitioned.to_arrow()
 
-    connection.execute(
-        parquet_table.insert().values(
-            start_date=group_start,
-            end_date=group_end,
-            data=url,
-            count=sum([row[2] for row in data_rows]),
-            skipped=sum([row[3] for row in data_rows]),
-            schema=schema,
-            aggregation=group,
-            original_size=original_size,
-            compressed_size=compressed_size,
+            filtered_row_count = filtered_table.num_rows
+            output = BytesIO()
+
+            pq.write_table(
+                filtered_table,
+                output,
+                compression="gzip",
+                use_dictionary=True,
+                compression_level=9,
+            )
+
+            keys_suffix = "_".join(
+                [f"{key}_{value[0]}" for key, value in zip(group.keys, keys)]
+            )
+            url = storage_manager.write(
+                f"{parquetize_table}/{group_start.strftime('%Y-%m-%d_%H-%M-%S')}_to_{group_end.strftime('%Y-%m-%d_%H-%M-%S')}_{keys_suffix}.parquet",
+                output.getvalue(),
+            )
+
+            original_size = (
+                sum([row[4] for row in data_rows])
+                / total_row_count
+                * filtered_row_count
+            )
+
+            compressed_size = output.getbuffer().nbytes
+
+            connection.execute(
+                parquet_table.insert().values(
+                    start_date=group_start,
+                    end_date=group_end,
+                    data=url,
+                    count=filtered_row_count,
+                    skipped=0,
+                    schema=schema,
+                    aggregation=group.group,
+                    original_size=original_size,
+                    compressed_size=compressed_size,
+                    keys={key: value[0] for key, value in zip(group.keys, keys)},
+                )
+            )
+    else:
+        output = BytesIO()
+        pq.write_table(
+            table,
+            output,
+            compression="gzip",
+            use_dictionary=True,
+            compression_level=9,
         )
-    )
 
-    # Delete the processed data (period and batch)
-    connection.execute(
-        parquet_table.delete().where(
-            parquet_table.c.start_date.between(group_start, group_end)
-            & (column("aggregation") == previous_group)
+        url = storage_manager.write(
+            f"{parquetize_table}/{group_start.strftime('%Y-%m-%d_%H-%M-%S')}_to_{group_end.strftime('%Y-%m-%d_%H-%M-%S')}.parquet",
+            output.getvalue(),
         )
-    )
+
+        original_size = sum([row[4] for row in data_rows])
+        compressed_size = output.getbuffer().nbytes
+
+        connection.execute(
+            parquet_table.insert().values(
+                start_date=group_start,
+                end_date=group_end,
+                data=url,
+                count=sum([row[2] for row in data_rows]),
+                skipped=sum([row[3] for row in data_rows]),
+                schema=schema,
+                aggregation=group.group,
+                original_size=original_size,
+                compressed_size=compressed_size,
+            )
+        )
+
+    if not group.keys:
+        # Delete the processed data (period and batch)
+        connection.execute(
+            parquet_table.delete().where(
+                parquet_table.c.start_date.between(group_start, group_end)
+                & (column("aggregation") == previous_group)
+            )
+        )
+
     connection.commit()
 
-    # Delete files
-    for url in urls:
-        storage_manager.delete(url)
+    if not group.keys:
+        # Delete files
+        for url in urls:
+            storage_manager.delete(url)
 
 
 def fetch_data(row):
@@ -269,8 +341,6 @@ def _generate_batch(
     )
     data_rows = connection.execute(data_query).fetchall()
 
-    # Function to fetch and parse the response
-    print("starting fetch")
     # Using ThreadPoolExecutor to parallelize fetching
     with concurrent.futures.ThreadPoolExecutor() as executor:
         # Submit fetch tasks to the executor
@@ -281,7 +351,7 @@ def _generate_batch(
             future.result() for future in concurrent.futures.as_completed(future_to_row)
         ]
 
-        datas = [(r.json(), date) for r,date in responses]
+        datas = [(r.json(), date) for r, date in responses]
 
     not_skipped = 0
     validated_datas = []
@@ -294,10 +364,7 @@ def _generate_batch(
             not_skipped += 1
             # Use a list comprehension to handle transformation in one step
             new_data = [{**item, "lineId": str(item["lineId"])} for item in data]
-            flattened = [
-                {**item, "date": date}
-                for item in new_data
-            ]
+            flattened = [{**item, "date": date} for item in new_data]
             # Append the transformed data directly
             validated_datas.extend(flattened)
         except ValidationError as val:
