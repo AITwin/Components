@@ -231,6 +231,9 @@ def _generate_group(
     total_row_count = table.num_rows
 
     if group.keys:
+        # if table is empty, skip
+        if total_row_count == 0:
+            return
         polars_df = polars.from_arrow(table)
         for partitioned in polars_df.partition_by(*group.keys):
             keys = partitioned.select(group.keys).unique()
