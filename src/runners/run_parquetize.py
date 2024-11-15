@@ -315,7 +315,7 @@ def _generate_group(
         connection.execute(
             parquet_table.delete().where(
                 parquet_table.c.start_date.between(group_start, group_end)
-                & (column("aggregation") == previous_group)
+                & (column("aggregation") == previous_group.group)
             )
         )
 
