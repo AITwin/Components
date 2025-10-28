@@ -1,7 +1,7 @@
 import requests, pandas as pd, plotly.express as px, plotly.graph_objects as go
 
 URL   = "https://api.mobilitytwin.brussels/stib/speed"
-TOKEN = "7eba4bf32fcb9502a0ff273fb3191db5b0bbde7cc7f75dc40304dcf2a91c07ed67a55cbbd4e26bf2675e01c5a19d4e7abf92849a5a9fe36d30b558d567dd10cc"
+TOKEN = "YOUR_BEARER_TOKEN_HERE"
 
 def main():
     r = requests.get(URL, headers={"Authorization": f"Bearer {TOKEN}"})

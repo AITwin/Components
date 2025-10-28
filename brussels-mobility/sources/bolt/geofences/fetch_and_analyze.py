@@ -2,7 +2,7 @@ import requests, geopandas as gpd, folium, json
 
 # --- CONFIG ---
 URL   = "https://api.mobilitytwin.brussels/bolt/geofences"
-TOKEN = "7eba4bf32fcb9502a0ff273fb3191db5b0bbde7cc7f75dc40304dcf2a91c07ed67a55cbbd4e26bf2675e01c5a19d4e7abf92849a5a9fe36d30b558d567dd10cc"   # replace with your real token
+TOKEN = "YOUR_BEARER_TOKEN_HERE"   # replace with your real token
 
 def normalize_rules(val):
     if isinstance(val, list): return val

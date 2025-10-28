@@ -3,7 +3,7 @@ from branca.colormap import linear
 
 GEOFENCE_URL = "https://api.mobilitytwin.brussels/dott/geofences"
 VEHICLE_URL  = "https://api.mobilitytwin.brussels/dott/vehicle-position"
-TOKEN        = "7eba4bf32fcb9502a0ff273fb3191db5b0bbde7cc7f75dc40304dcf2a91c07ed67a55cbbd4e26bf2675e01c5a19d4e7abf92849a5a9fe36d30b558d567dd10cc"   # <- put your token here
+TOKEN        = "YOUR_BEARER_TOKEN_HERE"   # <- put your token here
 HEADERS      = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
 MAX_NO_RIDE_AREA_KM2 = 5.0  # drop giant service polygon
 

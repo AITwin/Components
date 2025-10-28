@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 URL   = "https://api.mobilitytwin.brussels/environment/weather"
-TOKEN = "7eba4bf32fcb9502a0ff273fb3191db5b0bbde7cc7f75dc40304dcf2a91c07ed67a55cbbd4e26bf2675e01c5a19d4e7abf92849a5a9fe36d30b558d567dd10cc"  # put token if required
+TOKEN = "YOUR_BEARER_TOKEN_HERE"  # put token if required
 HDRS  = {"Authorization": f"Bearer {TOKEN}"} if TOKEN else {}
 TZ    = ZoneInfo("Europe/Brussels")
 
