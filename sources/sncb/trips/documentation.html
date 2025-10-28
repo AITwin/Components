@@ -1,0 +1,103 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="sncb-trips">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #sncb-trips { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #sncb-trips h1,
+    #sncb-trips h2,
+    #sncb-trips h3 { color: #16324a; margin-top: 1.1rem; }
+    #sncb-trips code,
+    #sncb-trips pre { background: #f6f8fa; border-radius: 6px; }
+    #sncb-trips pre { padding: 12px; overflow: auto; }
+    #sncb-trips table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #sncb-trips th,
+    #sncb-trips td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #sncb-trips th { background: #f3f6f9; }
+    #sncb-trips .muted { color:#566; font-size: 0.95rem; }
+    #sncb-trips ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #sncb-trips .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>SNCB Trips</h1>
+  <pre><code>GET /sncb/trips</code></pre>
+  <p class="muted">All SNCB trips for a specified time window. This endpoint aggregates vehicle positions into trip-level trajectories in MF-JSON (Moving Features JSON) format — ideal for movement over time and space.</p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      This endpoint returns multi-point train trajectories representing each train's path during a selected time range. It builds on <code>/sncb/vehicle-position</code> by grouping individual position snapshots into trip-level movement, suitable for higher-level analytics and visualization.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes) -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>MovingFeatureCollection identifier indicating MF-JSON (Moving Features JSON) OGC standard format for spatio-temporal trajectories—specialized GeoJSON extension designed for representing objects moving through space and time. For Belgian national rail, this format enables <em>analysts</em> to study train movements across ~3,600 stations spanning Belgium from coast to Ardennes, <em>visualization tools</em> to render animated train paths showing actual travel routes vs. planned GTFS shapes, and <em>performance systems</em> to calculate journey speeds, dwell times, and schedule adherence from continuous position samples. Unlike static GeoJSON where features represent fixed locations, MovingFeatureCollection explicitly models temporal dimension through synchronized coordinate-timestamp pairs, essential for rail operations where time is fundamental (IC train Brussels-Oostende trajectory shows not just geographic path but when train reached each point along route).</td></tr>
+      <tr><td>features</td><td>array</td><td>Each element is one trip’s trajectory reconstructed from live positions within the requested window.</td></tr>
+      <tr><td>features[].type</td><td>string</td><td><code>MovingFeature</code> representing a train movement with spatio-temporal samples.</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Identifier of this trajectory instance. Multiple instances may exist for the same <code>trip_id</code> at different dates.</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>Base shape of the path for rendering and distance measures.</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td><code>LineString</code> — polyline approximating the train path across sampled points.</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>Array of [longitude, latitude] (WGS84) sampled along the movement; indices align with <code>properties.timestamps</code>.</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Metadata linking this movement to the planned service and human-readable labels.</td></tr>
+      <tr><td>properties.trip_id</td><td>string</td><td>GTFS trip identifier that this trajectory corresponds to (planned journey reference).</td></tr>
+      <tr><td>properties.trip_headsign</td><td>string</td><td>Passenger-facing destination label shown on trains/displays.</td></tr>
+      <tr><td>properties.name_start</td><td>string</td><td>Name of the origin station where the service starts.</td></tr>
+      <tr><td>properties.name_end</td><td>string</td><td>Name of the destination station where the service ends.</td></tr>
+      <tr><td>properties.ptcarid_start</td><td>string</td><td>Origin station code (provider code) for programmatic joins.</td></tr>
+      <tr><td>properties.ptcarid_end</td><td>string</td><td>Destination station code (provider code) for programmatic joins.</td></tr>
+      <tr><td>properties.timestamps</td><td>array</td><td>ISO-8601 timestamps corresponding one-to-one with geometry samples, enabling animation and speed computation.</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Single trip: tens to hundreds of sampled points</li>
+      <li>Network-wide hourly range: can be thousands of trajectories</li>
+      <li>Large time windows may require pagination downstream</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Previously harvested SNCB <strong>vehicle positions</strong> from <code>/sncb/vehicle-position</code></li>
+      <li><strong>GTFS-RT</strong> (SNCB): real-time vehicle updates</li>
+      <li><strong>GTFS</strong> (SNCB): stops, trips, routes, stop times</li>
+      <li><strong>Infrabel</strong> infrastructure geodata: track segments and operational points</li>
+    </ul>
+    <p>Processed vehicle positions are stored historically (e.g., in <code>sncb_vehicle_position_geometry</code>) and grouped by query time window.</p>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Harvest &amp; align:</strong> decode GTFS-RT messages, align with GTFS stop sequences, and map positions to Infrabel segments.</li>
+      <li><strong>Interpolate movement:</strong> estimate positions between stops; associate each sample with <code>trip_id</code> and metadata.</li>
+      <li><strong>Aggregate trajectories:</strong> group all samples by <code>trip_id</code> within the requested interval; stitch into coherent paths (MF-JSON).</li>
+      <li><strong>Serve:</strong> fetch the relevant slices for the requested window and return an MF-JSON collection of trip trajectories.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Trip playback over a time range</li>
+      <li>Transit performance and on-time behavior analysis</li>
+      <li>Traffic density mapping and corridor analysis</li>
+      <li>Operational forensics (disruptions, delays, reroutes)</li>
+    </ul>
+  </div>
+
+  <div class="section" style="border-left: 4px solid #8B0000; padding: 15px; margin: 20px 0; background-color: #f8f9fa;">
+    <h3>Operational Context for Belgian National Rail Ecosystem</h3>
+    <p>The SNCB Trips endpoint aggregates individual vehicle position snapshots into complete trip-level trajectories using MovingFeatures JSON format—enabling <em>operations analysts</em> to reconstruct entire train journeys across Belgian rail network for performance evaluation, delay forensics, and service quality monitoring. Each MovingFeature represents one complete train trip with synchronized coordinates and timestamps: morning IC departure from Brussels-Midi to Oostende (120 km, ~90 minutes) appears as LineString with dozens of sampled points showing actual path taken, dwell times at intermediate stations (Ghent, Bruges), and speeds between stops—<em>punctuality analysts</em> compare trajectory timestamps against GTFS stop_times.txt scheduled arrivals to calculate station-by-station delays quantifying where time was lost. For <em>infrastructure planners</em>, aggregating multiple trips over same corridor reveals operational patterns: do IC trains consistently slow between Mechelen-Antwerp (suggesting capacity constraint or speed restriction?), are certain station dwells unusually long (platform congestion, accessibility delays, crew changes?), do speeds vary by time-of-day (morning peak congestion vs. midday free-flow?). The trip_id linkage to GTFS static data enables contextual analysis: <em>service quality teams</em> identify which route categories experience most delays (IC intercity vs. S suburban vs. L local), whether directional asymmetry exists (inbound Brussels trains slower than outbound due to AM peak congestion?), and if weekend/weekday patterns differ. <em>Visualization applications</em> leverage MF-JSON trajectories for animated playback: replaying October 23rd 07:00-09:00 morning peak shows Brussels-centric commuter flow pattern with dozens of S-trains converging on Brussels-Central/Brussels-Midi while IC trains radiate outward to Antwerp/Ghent/Liège, providing intuitive understanding of Belgian rail network dynamics impossible from static timetables. The timestamp arrays enable precise speed calculations: distance between consecutive coordinate pairs divided by time difference yields instantaneous speeds revealing acceleration/braking patterns (trains slow for curves, speed restrictions, station approaches), cruising speeds on open track (120-140 km/h for IC trains on modernized lines, 60-80 km/h for L-local services with frequent stops), and maximum speeds identifying infrastructure capabilities (which corridors support high-speed operation?). For <em>disruption forensics</em>, historical trip trajectories document actual train behavior during incidents: signal failure at Liège-Guillemins visible as trains stopping mid-route, slow crawl through affected section, or reroutes onto alternate tracks—providing evidence for post-incident analysis and compensation claims. Belgium's geographic context shapes trajectory patterns: flat Flanders enables faster IC services Brussels-Antwerp-Netherlands corridor, mountainous Ardennes shows slower climbing speeds for trains to Luxembourg/Germany, coastal routes curve northwest following North Sea shoreline. The MovingFeatures format supports multi-trip queries: requesting all trips 14:00-16:00 returns hundreds of concurrent trajectories enabling <em>network congestion analysis</em> (where do paths overlap? which junctions show highest train density? do multiple trains queue at Brussels bottleneck?). <em>Multi-modal integration</em> combines SNCB trip trajectories with STIB/TEC/De Lijn local transit, showing last-mile connections: passenger arriving Brussels-Midi on IC train transfers to STIB metro trajectory continuing to European Quarter—complete door-to-door journey tracking across operators and modes demonstrating Belgian mobility ecosystem integration essential for sustainable transportation policy and user experience optimization.</p>
+  </div>
+</div>

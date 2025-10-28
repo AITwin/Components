@@ -1,0 +1,77 @@
+{
+  "data": {
+    "BEL_TD4": {
+      "results": {
+        "1m": {
+          "t1": {
+            "count": 16,
+            "occupancy": 7.0,
+            "speed": 71.5,
+            "start_time": "2025/07/29 10:02",
+            "end_time": "2025/07/29 10:03"
+          },
+          "t2": {
+            "count": 13,
+            "occupancy": 7.0,
+            "speed": 72.0,
+            "start_time": "2025/07/29 10:01",
+            "end_time": "2025/07/29 10:02"
+          }
+        },
+        "15m": {
+          "t1": {
+            "count": 244,
+            "occupancy": 8.6,
+            "speed": 70.68,
+            "start_time": "2025/07/29 09:45",
+            "end_time": "2025/07/29 10:00"
+          },
+          "t2": {
+            "count": 260,
+            "occupancy": 8.93,
+            "speed": 70.585,
+            "start_time": "2025/07/29 09:30",
+            "end_time": "2025/07/29 09:45"
+          }
+        }
+      }
+    },
+    "BET_TD2_12": {
+      "results": {
+        "1m": {
+          "t1": {
+            "count": 11,
+            "occupancy": 16.0,
+            "speed": 41.0,
+            "start_time": "2025/08/14 17:49",
+            "end_time": "2025/08/14 17:50"
+          },
+          "t2": {
+            "count": 10,
+            "occupancy": 15.0,
+            "speed": 44.0,
+            "start_time": "2025/08/14 17:48",
+            "end_time": "2025/08/14 17:49"
+          }
+        },
+        "15m": {
+          "t1": {
+            "count": 126,
+            "occupancy": 12.0,
+            "speed": 43.06,
+            "start_time": "2025/08/14 16:30",
+            "end_time": "2025/08/14 16:45"
+          },
+          "t2": {
+            "count": 138,
+            "occupancy": 12.6,
+            "speed": 42.02,
+            "start_time": "2025/08/14 16:15",
+            "end_time": "2025/08/14 16:30"
+          }
+        }
+      }
+    }
+  },
+  "requestDate": "2025/08/14 17:50:31"
+}

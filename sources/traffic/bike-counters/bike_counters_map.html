@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_169e4de30858fba657426169cb56b2de {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    <style>html,body{height:100%;margin:0}.folium-map{height:100vh;width:100%}</style>
+    
+            <div class="folium-map" id="map_169e4de30858fba657426169cb56b2de" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_169e4de30858fba657426169cb56b2de = L.map(
+                "map_169e4de30858fba657426169cb56b2de",
+                {
+                    center: [50.820621002525904, 4.301991995919691],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_8a715e575f6c5c0c4d5111ed50cdd4b2 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_8a715e575f6c5c0c4d5111ed50cdd4b2.addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+            var circle_marker_1c58d298f8b6919a1a84c42d9d0d9430 = L.circleMarker(
+                [50.820621002525904, 4.301991995919691],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_109e3ccfa37daefd6dd43a712eff4739 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b24145665128434956179b5c676a1551 = $(`<div id="html_b24145665128434956179b5c676a1551" style="width: 100.0%; height: 100.0%;"><b>CAT17</b><br>Quai de Veeweyde 11 - 1070 Anderlecht<br>Quai de Veeweyde 11 - 1070 Anderlecht<br>Status: Active</div>`)[0];
+                popup_109e3ccfa37daefd6dd43a712eff4739.setContent(html_b24145665128434956179b5c676a1551);
+            
+        
+
+        circle_marker_1c58d298f8b6919a1a84c42d9d0d9430.bindPopup(popup_109e3ccfa37daefd6dd43a712eff4739)
+        ;
+
+        
+    
+    
+            circle_marker_1c58d298f8b6919a1a84c42d9d0d9430.bindTooltip(
+                `<div>
+                     CAT17 — Quai de Veeweyde 11 - 1070 Anderlecht
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4330b60683f002160cdab6b67eaf96d5 = L.circleMarker(
+                [50.88185000251615, 4.373960995908418],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_1f718f7a9cd48f9d2046f4194b0d220d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_39bba1ec3c1958a2aff0dbb3cf7d05f3 = $(`<div id="html_39bba1ec3c1958a2aff0dbb3cf7d05f3" style="width: 100.0%; height: 100.0%;"><b>CB02411</b><br>Chaussée de Vilvorde - 1020 Bruxelles<br>Chaussée de Vilvorde - 1020 Bruxelles<br>Status: Active</div>`)[0];
+                popup_1f718f7a9cd48f9d2046f4194b0d220d.setContent(html_39bba1ec3c1958a2aff0dbb3cf7d05f3);
+            
+        
+
+        circle_marker_4330b60683f002160cdab6b67eaf96d5.bindPopup(popup_1f718f7a9cd48f9d2046f4194b0d220d)
+        ;
+
+        
+    
+    
+            circle_marker_4330b60683f002160cdab6b67eaf96d5.bindTooltip(
+                `<div>
+                     CB02411 — Chaussée de Vilvorde - 1020 Bruxelles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_733bcfa02bfcf19d6a505e34a98315f5 = L.circleMarker(
+                [50.84534100252618, 4.36858299590588],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_34dad53a5894bbfd8b52129ff9c7a9d9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_83e338d12067a1f6575f007e9ed4c072 = $(`<div id="html_83e338d12067a1f6575f007e9ed4c072" style="width: 100.0%; height: 100.0%;"><b>CB1101</b><br>Avenue des Arts 26 - 1000 Bruxelles<br>Avenue des Arts 26 - 1000 Bruxelles<br>Status: Active</div>`)[0];
+                popup_34dad53a5894bbfd8b52129ff9c7a9d9.setContent(html_83e338d12067a1f6575f007e9ed4c072);
+            
+        
+
+        circle_marker_733bcfa02bfcf19d6a505e34a98315f5.bindPopup(popup_34dad53a5894bbfd8b52129ff9c7a9d9)
+        ;
+
+        
+    
+    
+            circle_marker_733bcfa02bfcf19d6a505e34a98315f5.bindTooltip(
+                `<div>
+                     CB1101 — Avenue des Arts 26 - 1000 Bruxelles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_9719a04f997783c6ab3ed756a35da54b = L.circleMarker(
+                [50.843570002527876, 4.378737995903186],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_462690946cfd1e5ce36e7cc91713bf8e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_14771a70771536a76176767b8e5c5da4 = $(`<div id="html_14771a70771536a76176767b8e5c5da4" style="width: 100.0%; height: 100.0%;"><b>CB1142</b><br>Rue de la Loi 130 - 1000 Bruxelles<br>Wetstraat 130 - 1000 Brussel<br>Status: Active</div>`)[0];
+                popup_462690946cfd1e5ce36e7cc91713bf8e.setContent(html_14771a70771536a76176767b8e5c5da4);
+            
+        
+
+        circle_marker_9719a04f997783c6ab3ed756a35da54b.bindPopup(popup_462690946cfd1e5ce36e7cc91713bf8e)
+        ;
+
+        
+    
+    
+            circle_marker_9719a04f997783c6ab3ed756a35da54b.bindTooltip(
+                `<div>
+                     CB1142 — Rue de la Loi 130 - 1000 Bruxelles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_399e9d69e6a35c64431bbe30beba2faf = L.circleMarker(
+                [50.84337000252792, 4.378813995903146],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_e399de5fa94bf01a85407c86b0c653f1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1b7745f6ef7ec3d092436e7c7c4bc46f = $(`<div id="html_1b7745f6ef7ec3d092436e7c7c4bc46f" style="width: 100.0%; height: 100.0%;"><b>CB1143</b><br>Rue de la Loi 145 - 1000 Bruxelles<br>Rue de la Loi 145 - 1000 Bruxelles<br>Status: Active</div>`)[0];
+                popup_e399de5fa94bf01a85407c86b0c653f1.setContent(html_1b7745f6ef7ec3d092436e7c7c4bc46f);
+            
+        
+
+        circle_marker_399e9d69e6a35c64431bbe30beba2faf.bindPopup(popup_e399de5fa94bf01a85407c86b0c653f1)
+        ;
+
+        
+    
+    
+            circle_marker_399e9d69e6a35c64431bbe30beba2faf.bindTooltip(
+                `<div>
+                     CB1143 — Rue de la Loi 145 - 1000 Bruxelles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_534f2adfdd9566bd07c2af9cc534dff3 = L.circleMarker(
+                [50.81240800253699, 4.379253995899753],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_ed6534987eab1968628cd7c182411bfd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ae567843d04ed89d65b46a791c56c0ad = $(`<div id="html_ae567843d04ed89d65b46a791c56c0ad" style="width: 100.0%; height: 100.0%;"><b>CB1599</b><br>Avenue Franklin Rooseveltlaan 48 - 1000 Bruxelles<br>Avenue Franklin Rooseveltlaan 48 - 1000 Bruxelles<br>Status: Active</div>`)[0];
+                popup_ed6534987eab1968628cd7c182411bfd.setContent(html_ae567843d04ed89d65b46a791c56c0ad);
+            
+        
+
+        circle_marker_534f2adfdd9566bd07c2af9cc534dff3.bindPopup(popup_ed6534987eab1968628cd7c182411bfd)
+        ;
+
+        
+    
+    
+            circle_marker_534f2adfdd9566bd07c2af9cc534dff3.bindTooltip(
+                `<div>
+                     CB1599 — Avenue Franklin Rooseveltlaan 48 - 1000 Bruxelles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_58d987fe6ff1c1bcbcf93585475d6fca = L.circleMarker(
+                [50.81228000253699, 4.378799995899851],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_84b83658809feae5a160cb4cf89a800a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_145cd6224d12fab911b20e60d587d434 = $(`<div id="html_145cd6224d12fab911b20e60d587d434" style="width: 100.0%; height: 100.0%;"><b>CB1699</b><br>Avenue Franklin Roosevelt 19 - 1000 Bruxelles<br>Avenue Franklin Roosevelt 19 - 1000 Bruxelles<br>Status: Active</div>`)[0];
+                popup_84b83658809feae5a160cb4cf89a800a.setContent(html_145cd6224d12fab911b20e60d587d434);
+            
+        
+
+        circle_marker_58d987fe6ff1c1bcbcf93585475d6fca.bindPopup(popup_84b83658809feae5a160cb4cf89a800a)
+        ;
+
+        
+    
+    
+            circle_marker_58d987fe6ff1c1bcbcf93585475d6fca.bindTooltip(
+                `<div>
+                     CB1699 — Avenue Franklin Roosevelt 19 - 1000 Bruxelles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ace58e83faf2a452bafa026baf938a7a = L.circleMarker(
+                [50.84048000252439, 4.340009995912418],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_52c44176ed2b9e907322f09e6f258904 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_873dc64408f11f4a8ca1d79484ecdead = $(`<div id="html_873dc64408f11f4a8ca1d79484ecdead" style="width: 100.0%; height: 100.0%;"><b>CB2105</b><br>Boulevard Poincaré 75 - 1070 Anderlecht<br>Boulevard Poincaré 75 - 1070 Anderlecht<br>Status: Active</div>`)[0];
+                popup_52c44176ed2b9e907322f09e6f258904.setContent(html_873dc64408f11f4a8ca1d79484ecdead);
+            
+        
+
+        circle_marker_ace58e83faf2a452bafa026baf938a7a.bindPopup(popup_52c44176ed2b9e907322f09e6f258904)
+        ;
+
+        
+    
+    
+            circle_marker_ace58e83faf2a452bafa026baf938a7a.bindTooltip(
+                `<div>
+                     CB2105 — Boulevard Poincaré 75 - 1070 Anderlecht
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4c8e09464b4f8d024dd655901f7be66e = L.circleMarker(
+                [50.82137600253522, 4.386718995898861],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_924c7f81e170fcb14ead6e856a710514 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_89cd22283ec8bdccccf24d36a46c5a32 = $(`<div id="html_89cd22283ec8bdccccf24d36a46c5a32" style="width: 100.0%; height: 100.0%;"><b>CEE016</b><br>Avenue Général Jacques 210 - 1050 Ixelles<br>Avenue Général Jacques 210 - 1050 Ixelles<br>Status: Active</div>`)[0];
+                popup_924c7f81e170fcb14ead6e856a710514.setContent(html_89cd22283ec8bdccccf24d36a46c5a32);
+            
+        
+
+        circle_marker_4c8e09464b4f8d024dd655901f7be66e.bindPopup(popup_924c7f81e170fcb14ead6e856a710514)
+        ;
+
+        
+    
+    
+            circle_marker_4c8e09464b4f8d024dd655901f7be66e.bindTooltip(
+                `<div>
+                     CEE016 — Avenue Général Jacques 210 - 1050 Ixelles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5c18a274829109b234f083bcb35c8859 = L.circleMarker(
+                [50.82448000253513, 4.393892995897416],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_8800d994e7b5e98c7518514cacecd491 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5ce3654a9426355e3db1e2993c87e8e7 = $(`<div id="html_5ce3654a9426355e3db1e2993c87e8e7" style="width: 100.0%; height: 100.0%;"><b>CEK049</b><br>Boulevard Général Jacques (VUB) - 1050 Ixelles<br>Boulevard Général Jacques (VUB) - 1050 Ixelles<br>Status: Active</div>`)[0];
+                popup_8800d994e7b5e98c7518514cacecd491.setContent(html_5ce3654a9426355e3db1e2993c87e8e7);
+            
+        
+
+        circle_marker_5c18a274829109b234f083bcb35c8859.bindPopup(popup_8800d994e7b5e98c7518514cacecd491)
+        ;
+
+        
+    
+    
+            circle_marker_5c18a274829109b234f083bcb35c8859.bindTooltip(
+                `<div>
+                     CEK049 — Boulevard Général Jacques (VUB) - 1050 Ixelles
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b0b65a671863adecb9c818583213045a = L.circleMarker(
+                [50.83920000253155, 4.400258995897405],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_5e189a50f4ad8978f8e8b85b36720054 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f2f23171483f7a0176418ddd914cd31a = $(`<div id="html_f2f23171483f7a0176418ddd914cd31a" style="width: 100.0%; height: 100.0%;"><b>CEK18</b><br>Avenue de Tervueren 28 - 1040 Etterbeek<br>Avenue de Tervueren 28 - 1040 Etterbeek<br>Status: Active</div>`)[0];
+                popup_5e189a50f4ad8978f8e8b85b36720054.setContent(html_f2f23171483f7a0176418ddd914cd31a);
+            
+        
+
+        circle_marker_b0b65a671863adecb9c818583213045a.bindPopup(popup_5e189a50f4ad8978f8e8b85b36720054)
+        ;
+
+        
+    
+    
+            circle_marker_b0b65a671863adecb9c818583213045a.bindTooltip(
+                `<div>
+                     CEK18 — Avenue de Tervueren 28 - 1040 Etterbeek
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_94974e0b3ede7ae8008f8641b288932d = L.circleMarker(
+                [50.83818200253104, 4.393037995899081],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_cecaca35347937966450a286098b62e3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c0cd48a4fa58ceb52b7a9dcf5d797e2b = $(`<div id="html_c0cd48a4fa58ceb52b7a9dcf5d797e2b" style="width: 100.0%; height: 100.0%;"><b>CEK31</b><br>Avenue des Nerviens 135 - 1040 Etterbeek<br>Avenue des Nerviens 135 - 1040 Etterbeek<br>Status: Active</div>`)[0];
+                popup_cecaca35347937966450a286098b62e3.setContent(html_c0cd48a4fa58ceb52b7a9dcf5d797e2b);
+            
+        
+
+        circle_marker_94974e0b3ede7ae8008f8641b288932d.bindPopup(popup_cecaca35347937966450a286098b62e3)
+        ;
+
+        
+    
+    
+            circle_marker_94974e0b3ede7ae8008f8641b288932d.bindTooltip(
+                `<div>
+                     CEK31 — Avenue des Nerviens 135 - 1040 Etterbeek
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_eed13789a95d291ff033317a7b3ea01e = L.circleMarker(
+                [50.86692100252375, 4.402934995899683],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_79992bead055d4539596f770e1983b62 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8089da161fd949b3eae829f51071320f = $(`<div id="html_8089da161fd949b3eae829f51071320f" style="width: 100.0%; height: 100.0%;"><b>CEV011</b><br>Avenue Léopold III / Avenue des Loisirs - 1140 Evere<br>Avenue Léopold III / Avenue des Loisirs - 1140 Evere<br>Status: Active</div>`)[0];
+                popup_79992bead055d4539596f770e1983b62.setContent(html_8089da161fd949b3eae829f51071320f);
+            
+        
+
+        circle_marker_eed13789a95d291ff033317a7b3ea01e.bindPopup(popup_79992bead055d4539596f770e1983b62)
+        ;
+
+        
+    
+    
+            circle_marker_eed13789a95d291ff033317a7b3ea01e.bindTooltip(
+                `<div>
+                     CEV011 — Avenue Léopold III / Avenue des Loisirs - 1140 Evere
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7b5fac67ee9db13ac0fce582fe08981c = L.circleMarker(
+                [50.88029700251005, 4.315713995922622],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_93862dcf3a00c62660a35fffc290cffd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_eeebb3de5cc2db7264e0c1aedfc49fda = $(`<div id="html_eeebb3de5cc2db7264e0c1aedfc49fda" style="width: 100.0%; height: 100.0%;"><b>CJE181</b><br>Avenue de l'Exposition - 1090 Jette<br>Avenue de l'Exposition - 1090 Jette<br>Status: Active</div>`)[0];
+                popup_93862dcf3a00c62660a35fffc290cffd.setContent(html_eeebb3de5cc2db7264e0c1aedfc49fda);
+            
+        
+
+        circle_marker_7b5fac67ee9db13ac0fce582fe08981c.bindPopup(popup_93862dcf3a00c62660a35fffc290cffd)
+        ;
+
+        
+    
+    
+            circle_marker_7b5fac67ee9db13ac0fce582fe08981c.bindTooltip(
+                `<div>
+                     CJE181 — Avenue de l'Exposition - 1090 Jette
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_82beaefe6a2565390d3cc603e0ca7366 = L.circleMarker(
+                [50.8536300025207, 4.341239995913506],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_dc40ccba2e5212c1b5d275c8903423bd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a38592457582852c52e68d80d0b0c80a = $(`<div id="html_a38592457582852c52e68d80d0b0c80a" style="width: 100.0%; height: 100.0%;"><b>CJM90</b><br>Quai des Charbonnages 8 - 1080 Molenbeek-Saint-Jean<br>Quai des Charbonnages 8 - 1080 Molenbeek-Saint-Jean<br>Status: Active</div>`)[0];
+                popup_dc40ccba2e5212c1b5d275c8903423bd.setContent(html_a38592457582852c52e68d80d0b0c80a);
+            
+        
+
+        circle_marker_82beaefe6a2565390d3cc603e0ca7366.bindPopup(popup_dc40ccba2e5212c1b5d275c8903423bd)
+        ;
+
+        
+    
+    
+            circle_marker_82beaefe6a2565390d3cc603e0ca7366.bindTooltip(
+                `<div>
+                     CJM90 — Quai des Charbonnages 8 - 1080 Molenbeek-Saint-Jean
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4dfb808303afdfe783a868ab56a16a11 = L.circleMarker(
+                [50.83799800253579, 4.4348299958887285],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_52fdcdfdaeff98626f2430fccbcede08 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e63566e83519ff1b0340687643b67a5e = $(`<div id="html_e63566e83519ff1b0340687643b67a5e" style="width: 100.0%; height: 100.0%;"><b>CLW239</b><br>Boulevard de la Woluwe 34 - 1200 Woluwe-Saint-Lambert<br>Boulevard de la Woluwe 34 - 1200 Woluwe-Saint-Lambert<br>Status: Active</div>`)[0];
+                popup_52fdcdfdaeff98626f2430fccbcede08.setContent(html_e63566e83519ff1b0340687643b67a5e);
+            
+        
+
+        circle_marker_4dfb808303afdfe783a868ab56a16a11.bindPopup(popup_52fdcdfdaeff98626f2430fccbcede08)
+        ;
+
+        
+    
+    
+            circle_marker_4dfb808303afdfe783a868ab56a16a11.bindTooltip(
+                `<div>
+                     CLW239 — Boulevard de la Woluwe 34 - 1200 Woluwe-Saint-Lambert
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e203644ae36274c285ff42ad01e6d4bc = L.circleMarker(
+                [50.82029000254048, 4.430120995888016],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_4e4617045c39a29457207b24da8972fc = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_586cfafc03d3a511a295514fa9ac6b42 = $(`<div id="html_586cfafc03d3a511a295514fa9ac6b42" style="width: 100.0%; height: 100.0%;"><b>COM205</b><br>Boulevard du Souverain 213 - 1160 Auderghem<br>Boulevard du Souverain 213 - 1160 Auderghem<br>Status: Active</div>`)[0];
+                popup_4e4617045c39a29457207b24da8972fc.setContent(html_586cfafc03d3a511a295514fa9ac6b42);
+            
+        
+
+        circle_marker_e203644ae36274c285ff42ad01e6d4bc.bindPopup(popup_4e4617045c39a29457207b24da8972fc)
+        ;
+
+        
+    
+    
+            circle_marker_e203644ae36274c285ff42ad01e6d4bc.bindTooltip(
+                `<div>
+                     COM205 — Boulevard du Souverain 213 - 1160 Auderghem
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8db3ba20de071bb7330d8faf4a0179d8 = L.circleMarker(
+                [50.805366002531436, 4.311588995915708],
+                {"bubblingMouseEvents": true, "color": "#2ca02c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ca02c", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(map_169e4de30858fba657426169cb56b2de);
+        
+    
+        var popup_928595c0374e1ccf4ca7febf3d38c310 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e56683fde4995265dbaf55b05b1b19b4 = $(`<div id="html_e56683fde4995265dbaf55b05b1b19b4" style="width: 100.0%; height: 100.0%;"><b>CVT387</b><br>rue de Hal 164 - 1190 Forest<br>rue de Hal 164 - 1190 Forest<br>Status: Active</div>`)[0];
+                popup_928595c0374e1ccf4ca7febf3d38c310.setContent(html_e56683fde4995265dbaf55b05b1b19b4);
+            
+        
+
+        circle_marker_8db3ba20de071bb7330d8faf4a0179d8.bindPopup(popup_928595c0374e1ccf4ca7febf3d38c310)
+        ;
+
+        
+    
+    
+            circle_marker_8db3ba20de071bb7330d8faf4a0179d8.bindTooltip(
+                `<div>
+                     CVT387 — rue de Hal 164 - 1190 Forest
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            map_169e4de30858fba657426169cb56b2de.fitBounds(
+                [[50.805366002531436, 4.301991995919691], [50.88185000251615, 4.4348299958887285]],
+                {}
+            );
+        
+</script>
+</html>

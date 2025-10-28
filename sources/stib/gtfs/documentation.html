@@ -1,0 +1,92 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="stib-gtfs">
+  <style>
+    /* Scoped styles */
+    #stib-gtfs { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #stib-gtfs h1,
+    #stib-gtfs h2,
+    #stib-gtfs h3 { color: #16324a; margin-top: 1.1rem; }
+    #stib-gtfs code,
+    #stib-gtfs pre { background: #f6f8fa; border-radius: 6px; }
+    #stib-gtfs pre { padding: 12px; overflow: auto; }
+    #stib-gtfs table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #stib-gtfs th,
+    #stib-gtfs td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #stib-gtfs th { background: #f3f6f9; }
+    #stib-gtfs .muted { color:#566; font-size: 0.95rem; }
+    #stib-gtfs ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #stib-gtfs .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>STIB/MIVB — GTFS</h1>
+  <pre><code>GET /stib/gtfs</code></pre>
+  <p class="muted">The STIB/MIVB GTFS API returns the official static schedule dataset as a ZIP archive containing standard GTFS tables (routes, trips, stops, calendars, shapes, …).</p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      This endpoint delivers the <strong>static</strong> GTFS feed of STIB/MIVB for Brussels public transport. The ZIP archive includes CSV text files that describe routes, trips, stop times, calendars, and geometries. It is suitable for offline processing, validation, visualizations, schedule analytics, and as a baseline for GTFS-RT overlays.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers, body, other status codes) -->
+
+  <div class="section">
+    <h2>Output Contents (inside ZIP)</h2>
+    <table>
+      <tr><th>File</th><th>Description</th></tr>
+      <tr><td><code>routes.txt</code></td><td>Route metadata defining STIB/MIVB service lines—metro (M1-6), tram (3-97), and bus (12-95) routes. Core fields: route_id (unique identifier), route_short_name (public line number like "1", "81"), route_long_name (descriptive name "Gare du Midi — Stockel"), route_type (1=metro, 0=tram, 3=bus per GTFS spec), route_color/route_text_color (Brussels uses iconic blue #0066CC for metro, red/green/yellow for tram/bus). Essential reference connecting trip-level schedules to public-facing line identities. Enables: route network visualization (what lines serve Brussels?), mode-specific analysis (metro vs. tram vs. bus coverage), and service design evaluation (route naming conventions, color coding consistency).</td></tr>
+      <tr><td><code>trips.txt</code></td><td>Individual trip instances defining scheduled service vehicle journeys—each trip represents one vehicle traversing one route in one direction during one service period. Core fields: trip_id (unique trip identifier linking to stop_times schedules), route_id (which line this trip operates on), service_id (which calendar days trip runs—weekday/weekend/holiday), direction_id (0/1 for outbound/inbound), shape_id (geographic path followed), trip_headsign (destination shown to passengers "Roodebeek", "Gare du Midi"). Fundamental scheduling unit: STIB operates thousands of trips daily across ~70 routes. Critical for: schedule frequency analysis (trips per hour per route), service pattern identification (peak vs. off-peak trip counts), and real-time integration (GTFS-RT TripUpdate messages reference trip_ids from this table to report delays/cancellations).</td></tr>
+      <tr><td><code>stops.txt</code></td><td>Physical stop/station locations across Brussels STIB network—metro stations, tram stops, bus stops. Core fields: stop_id (unique stop identifier used throughout GTFS), stop_name (public name "Schuman", "Arts-Loi", "Montgomery"), stop_lat/stop_lon (WGS84 coordinates lat 50.79-50.91°N, lon 4.24-4.48°E), stop_code (optional short code for passenger information), location_type (0=stop/platform, 1=station containing multiple platforms), parent_station (for metro stations with multiple platform stops). Brussels STIB network includes ~2,000 stops across metro/tram/bus modes. Essential for: map rendering (plotting all stops), accessibility analysis (stop coverage within 400m walking distance), multimodal connections (identifying co-located metro/tram/bus stops), and stop-specific queries (what routes serve this stop? when does next vehicle arrive?).</td></tr>
+      <tr><td><code>stop_times.txt</code></td><td>Scheduled arrival/departure times for every trip at every stop—the core timetable data. Each row represents one stop event: trip X arrives at stop Y at time Z. Core fields: trip_id (which trip this stop event belongs to), stop_id (which stop), arrival_time/departure_time (scheduled times in HH:MM:SS format, may exceed 24:00 for post-midnight service like 25:30:00), stop_sequence (integer ordering stops along trip, enabling path reconstruction). Largest GTFS file—millions of rows for Brussels network (thousands of trips × dozens of stops per trip × daily schedules). Critical for: timetable queries (when does next Line 1 arrive at Schuman?), travel time calculation (summing intervals between stops), schedule adherence monitoring (comparing stop_times scheduled times to GTFS-RT actual arrival times), and accessibility planning (dwell times at stops, transfer time between lines at interchange stations).</td></tr>
+      <tr><td><code>calendar.txt</code> / <code>calendar_dates.txt</code></td><td>Service calendars defining which days trips operate. <strong>calendar.txt</strong> specifies regular weekly patterns: service_id with monday/tuesday/.../sunday binary flags (1=operates, 0=doesn't) and start_date/end_date validity range—e.g., "weekday_service" operates Mon-Fri from 2025-01-01 to 2025-12-31. <strong>calendar_dates.txt</strong> specifies exceptions: specific dates (YYYYMMDD) when service is added (exception_type=1) or removed (exception_type=2)—e.g., Christmas Day 2025-12-25 exception_type=2 (no weekday service), New Year's Day special schedule exception_type=1. Together enable complete service pattern definition: trips.txt references service_id, which calendar resolves to actual dates of operation. Critical for: schedule validity (which trips run today?), holiday service planning (reduced schedules on Belgian holidays), and real-time feed generation (only providing updates for trips actually operating today).</td></tr>
+      <tr><td><code>shapes.txt</code></td><td>Geographic path geometries (polylines) representing actual vehicle routes through Brussels street network. Each shape_id corresponds to sequence of lat/lon coordinates with shape_pt_sequence ordering—connecting the dots traces metro line paths, tram track alignments, bus street routes. Core fields: shape_id (referenced from trips.txt), shape_pt_lat/shape_pt_lon (WGS84 coordinates), shape_pt_sequence (point ordering), shape_dist_traveled (optional cumulative distance). Enables: accurate map rendering (showing routes following actual streets/tracks rather than straight lines between stops), travel distance calculation (route-miles operated, vehicle mileage planning), and geographic analysis (which routes traverse specific neighborhoods/corridors?). Brussels shapes reflect mixed infrastructure: underground metro tunnels, dedicated tram lanes on boulevards, buses on shared streets—geometric complexity captured in detailed polylines.</td></tr>
+      <tr><td><em>other optional GTFS tables</em></td><td>Additional files may include: <strong>frequencies.txt</strong> (headway-based service like "metro every 4 minutes 07:00-09:00" rather than fixed schedules), <strong>transfers.txt</strong> (recommended/timed connections between routes at interchange stations—critical for Brussels with metro-tram-bus coordination), <strong>fare_attributes.txt</strong> / <strong>fare_rules.txt</strong> (Brussels uses MOBIB card pricing, zone-based fares, integration with De Lijn/TEC), <strong>agency.txt</strong> (STIB/MIVB organization metadata), <strong>feed_info.txt</strong> (dataset version, validity dates, publisher contact). These enrich core schedule data with operational details—frequency-based service common for high-frequency metro lines where exact trip times less important than guaranteed headways, transfers essential for trip planning across multi-leg journeys through Brussels network.</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Archived snapshots observed: <strong>~289</strong> between Aug&nbsp;24&nbsp;2024 and Aug&nbsp;4&nbsp;2025</li>
+      <li>Typical ZIP size: <strong>~10–50&nbsp;MB</strong> (varies with shapes and service coverage)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <ol>
+      <li><strong>Source:</strong> Official STIB/MIVB GTFS static feed.</li>
+      <li><strong>Ingestion:</strong> MobilityTwin periodically fetches and archives snapshots (timestamp-indexed).</li>
+      <li><strong>Selection:</strong> If no timestamp is provided, the latest available snapshot is returned. If provided, the closest snapshot at or before the timestamp is served (<em>lte logic</em>).</li>
+      <li><strong>Serving:</strong> The ZIP is returned <em>as-is</em> (no transformation) with <code>application/zip</code> content type.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Schedule analytics and timetable validation</li>
+      <li>Map rendering (routes, shapes, and stops)</li>
+      <li>Combining with GTFS-RT to compute delays and real-time ETAs</li>
+      <li>Trip planning and accessibility analysis</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3 style="border-left: 4px solid #0066CC; padding-left: 10px;">Operational Context for STIB/MIVB GTFS Static Schedule Data</h3>
+    <p>
+      This endpoint delivers the foundational static schedule dataset for Brussels' public transport network—the complete GTFS (General Transit Feed Specification) package defining STIB/MIVB routes, timetables, stops, and service patterns across metro, tram, and bus modes. <em>For transit application developers and trip planners</em>, GTFS Static provides the essential baseline for passenger information systems: routes.txt defines the ~70 service lines (metro M1-M6, tram lines 3-97, bus routes 12-95) with public identifiers and naming, stops.txt geocodes ~2,000 station/stop locations enabling map visualization and proximity searches, stop_times.txt contains millions of scheduled arrival/departure events enabling "when does next Line 1 arrive at Schuman?" queries, and shapes.txt provides geographic polylines for accurate route rendering on maps following actual metro tunnels, tram tracks, and bus street paths. The standard GTFS format ensures compatibility with established tools (OpenTripPlanner, Mapbox, Google Transit) and libraries (gtfs-kit, transitfeed), accelerating development and ensuring interoperability across transit data ecosystem.
+    </p>
+    <p>
+      <em>For operations planners and schedule analysts</em>, this GTFS archive supports comprehensive service evaluation and planning activities. The trip-level structure (trips.txt with route_id, service_id, direction_id, shape_id) enables frequency analysis: how many trips per hour does Line 1 operate during morning peak (07:00-09:00) versus midday off-peak? Calendar tables (calendar.txt + calendar_dates.txt) define service patterns across weekday/weekend/holiday schedules with Belgian-specific exceptions (reduced service on November 11 Armistice Day, Christmas, New Year), enabling seasonal service planning and holiday scheduling. Stop_times.txt intervals reveal running times and layover allocations: scheduled time from Gare du Midi to Stockel on M1, dwell times at major transfer stations like Arts-Loi where passengers interchange metro-tram-bus, recovery time built into terminus schedules buffering delays. Historical snapshot archival (~289 versions observed Aug 2024-Aug 2025) preserves schedule evolution—tracking service changes, new routes, stop relocations, and timetable adjustments over time for longitudinal analysis and impact evaluation of network modifications.
+    </p>
+    <p>
+      <em>For real-time data integration and monitoring systems</em>, GTFS Static serves as essential reference layer for GTFS-Realtime overlays. Real-time vehicle positions, trip updates (delays/cancellations), and service alerts reference GTFS Static IDs: RT vehicle position message contains trip_id from trips.txt and stop_id from stops.txt, enabling systems to resolve "vehicle 4213 is currently on trip 1_monday_0700 approaching stop Arts-Loi" into human-readable "Line 1 toward Stockel arriving at Arts-Loi metro station in 2 minutes". Schedule adherence calculations compare RT actual arrival times against Static stop_times.txt scheduled times, computing delay in seconds. Service disruption handling uses routes.txt and shapes.txt to identify affected corridors and suggest alternative routing when Real-time alerts report Line 81 tram suspended due to accident. The periodic snapshot architecture (MobilityTwin archives dated GTFS versions with lte timestamp logic) ensures RT feeds can reference appropriate static baseline even during schedule transitions—today's real-time data validated against today's active GTFS, historical RT playback uses historical GTFS from same date. By providing authoritative, versioned, Brussels-complete static transit schedules in industry-standard GTFS format as downloadable ZIP archives, this endpoint anchors the entire ecosystem of transit applications, analytics, and real-time intelligence—from passenger-facing trip planners to operator performance monitoring to research studies of urban mobility patterns across Brussels' multimodal public transport network.
+    </p>
+  </div>
+</div>

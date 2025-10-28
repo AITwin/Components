@@ -1,0 +1,116 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="sncb-vehicle-schedule">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #sncb-vehicle-schedule { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #sncb-vehicle-schedule h1,
+    #sncb-vehicle-schedule h2,
+    #sncb-vehicle-schedule h3 { color: #16324a; margin-top: 1.1rem; }
+    #sncb-vehicle-schedule code,
+    #sncb-vehicle-schedule pre { background: #f6f8fa; border-radius: 6px; }
+    #sncb-vehicle-schedule pre { padding: 12px; overflow: auto; }
+    #sncb-vehicle-schedule table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #sncb-vehicle-schedule th,
+    #sncb-vehicle-schedule td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #sncb-vehicle-schedule th { background: #f3f6f9; }
+    #sncb-vehicle-schedule .muted { color:#566; font-size: 0.95rem; }
+    #sncb-vehicle-schedule ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #sncb-vehicle-schedule .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>SNCB Vehicle schedule</h1>
+  <pre><code>GET /sncb/vehicle-schedule</code></pre>
+  <p class="muted">The SNCB Vehicle Schedule API provides scheduled stop information for Belgian national railway trains (SNCB/NMBS) within a given time interval.</p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Data originates from SNCB's official GTFS (General Transit Feed Specification) and GTFS-RT (real-time) feeds and is enriched by the MobilityTwin.Brussels platform. The enrichment maps real-time signals to scheduled stops and returns a structured geospatial dataset in GeoJSON.
+    </p>
+    <p>
+      This endpoint uses token-based authorization and returns data suitable for transit analytics, visualizations, and dashboards.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes) -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type (always <code>FeatureCollection</code>)</td></tr>
+      <tr><td>features</td><td>array</td><td>List of features (each feature = one stop)</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>GeoJSON feature type (<code>Feature</code>)</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Unique identifier of the feature/stop</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON geometry</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td>Geometry type (e.g., <code>Point</code>)</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>[longitude, latitude] of the stop</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Stop metadata and schedule details</td></tr>
+      <tr><td>properties.stop_id</td><td>string</td><td>Stop ID (GTFS)</td></tr>
+      <tr><td>properties.stop_name</td><td>string</td><td>Human-readable stop name</td></tr>
+      <tr><td>properties.stop_lat</td><td>number</td><td>Latitude</td></tr>
+      <tr><td>properties.stop_lon</td><td>number</td><td>Longitude</td></tr>
+      <tr><td>properties.schedule</td><td>array</td><td>List of scheduled train events for this stop</td></tr>
+      <tr><td>schedule[].arrival_time</td><td>string</td><td>Scheduled arrival time (<code>HH:MM:SS</code>)</td></tr>
+      <tr><td>schedule[].departure_time</td><td>string</td><td>Scheduled departure time</td></tr>
+      <tr><td>schedule[].route_id</td><td>string</td><td>Route identifier (e.g., <code>IC-22</code>)</td></tr>
+      <tr><td>schedule[].trip_id</td><td>string</td><td>Trip ID (GTFS)</td></tr>
+      <tr><td>schedule[].trip_headsign</td><td>string</td><td>Trip destination (e.g., "Namur")</td></tr>
+      <tr><td>schedule[].trip_short_name</td><td>string</td><td>Short code (e.g., <code>IC</code>)</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>~1 hour window: typically 100–500 features</li>
+      <li>Peak hours: expect higher counts</li>
+      <li>Each feature is one stop; a stop can include multiple <code>schedule[]</code> entries</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <p><strong>GTFS Static (from SNCB):</strong> provides scheduled data on stops, trips, routes, and stop sequences.</p>
+    <p><strong>GTFS Realtime (GTFS-RT) (from SNCB):</strong> real-time vehicle positions/delays mapped to trips.</p>
+
+    <h3>GTFS Snapshot Details</h3>
+    <ul>
+      <li><code>trips.txt</code> — train services and route information</li>
+      <li><code>stop_times.txt</code> — scheduled stop arrivals and departures</li>
+      <li><code>stops.txt</code> — geographic locations and station names</li>
+    </ul>
+    <p>GTFS snapshots are published by SNCB (typically daily or weekly), automatically ingested and archived by MobilityTwin.Brussels, and stored in a time-versioned internal database (e.g., <code>sncb_gtfs</code>) indexed by publish date.</p>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>GTFS Fetching:</strong> store each snapshot in a time-indexed table (<code>sncb_gtfs</code>) for historical querying.</li>
+      <li><strong>API Invocation:</strong> clients provide <code>start_timestamp</code> and <code>end_timestamp</code> in Unix epoch seconds.</li>
+      <li><strong>GTFS Snapshot Selection:</strong> use the most recent GTFS snapshot available before <code>end_timestamp</code> to align with the service calendar.</li>
+      <li><strong>GTFS Parsing:</strong> parse the ZIP into memory (e.g., with <code>gtfs_kit</code>) and load <code>trips</code>, <code>stop_times</code>, and <code>stops</code>.</li>
+      <li><strong>Schedule Filtering:</strong> select trips whose stop times overlap the requested interval; aggregate by stop into GeoJSON features.</li>
+      <li><strong>Enrichment:</strong> map GTFS-RT signals to trips when available to improve timing estimates.</li>
+      <li><strong>Output:</strong> return a GeoJSON <code>FeatureCollection</code> with stop location and an array of scheduled events.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Geospatial Train Visualization (Leaflet, Kepler.gl, GeoPandas)</li>
+      <li>Mobility Analytics (frequency per stop, delay distributions)</li>
+      <li>Service Planning using historical snapshots</li>
+      <li>Performance Tracking with GTFS-RT deviations</li>
+    </ul>
+  </div>
+
+  <div class="section" style="border-left: 4px solid #8B0000; padding: 15px; margin: 20px 0; background-color: #f8f9fa;">
+    <h3>Operational Context for Belgian National Rail Ecosystem</h3>
+    <p>The SNCB Vehicle Schedule endpoint enriches GTFS static timetable data into geospatial stop-centric format—each Belgian rail station appears as GeoJSON Point feature with schedule[] array listing all train arrivals/departures within requested time window, enabling <em>station managers</em> to monitor expected traffic volumes, <em>passenger displays</em> to show comprehensive departure boards, and <em>accessibility planners</em> to evaluate service frequency across Belgium's ~3,600 stations. The stop-centric aggregation simplifies common queries: "what trains serve Brussels-Central 07:00-09:00?" returns single feature with schedule array showing dozens of IC/S/L train events (arrivals and departures with trip_headsign destinations like "Oostende", "Liège", "Antwerp"), versus raw GTFS stop_times.txt requiring complex joins across trips, routes, and calendars. For <em>service planners</em>, comparing schedule densities quantifies Belgian rail coverage equity: Brussels-Central may show 100+ trains per hour (major hub with overlapping IC/S routes), while rural Ardennes station shows 4-6 trains daily (sparse L-local service)—informing subsidy allocation and infrastructure investment priorities. The route_id and trip_short_name fields enable service-level filtering: <em>commuter-focused applications</em> display only S-suburban trains for Brussels-area travelers, <em>long-distance planners</em> highlight IC intercity services for faster inter-city connections, <em>comprehensive tools</em> show all L-local options for maximum coverage including small intermediate stations. <em>Real-time integration</em> (mentioned in transformation pipeline) correlates static schedules with GTFS-RT updates: scheduled departure Brussels-Midi 14:23 overlaid with +8 minute delay message yields passenger-facing "expected 14:31" display, combining certainty of planned service with flexibility of actual conditions. Belgium's bilingual context complicates stop_name display: Brussels-Central / Brussel-Centraal, Liège-Guillemins / Luik-Guillemins require <em>interface localization</em> showing appropriate language variant (French in Wallonia, Dutch in Flanders, both in Brussels). The GeoJSON spatial format enables <em>geographic service analysis</em>: mapping Belgium color-coded by trains-per-hour reveals corridor-centric network (dense Brussels-Antwerp-Netherlands, Brussels-Ghent-coast, Brussels-Liège-Germany corridors contrasting with sparse Ardennes coverage), identifying underserved regions for mobility equity evaluation. <em>Historical snapshot capability</em> (GTFS versions archived with timestamps) enables longitudinal studies: has Brussels Airport station frequency increased after terminal expansion? did COVID-19 reduce service levels systemically? do seasonal patterns exist (more coastal trains summer, fewer Ardennes trains winter?)—quantifying Belgian rail evolution through time-versioned timetable analysis. For <em>multi-modal integration</em>, SNCB schedules join with STIB/TEC/De Lijn local transit schedules at transfer hubs: Brussels-Midi shows SNCB intercity arrivals coordinating with STIB metro departures and TEC bus connections, enabling seamless journey planning across operators—critical for Belgium's integrated mobility vision supporting sustainable transportation and reducing car dependency through comprehensive public transit accessibility.</p>
+  </div>
+</div>

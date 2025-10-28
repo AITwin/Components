@@ -1,0 +1,76 @@
+{
+  "gtfs_preview": {
+    "stops.txt": [
+      {
+        "stop_id": "8008094",
+        "stop_name": "Dusseldorf Hbf (DE)",
+        "stop_lat": "51.2191760",
+        "stop_lon": "6.79530100"
+      },
+      {
+        "stop_id": "8010053",
+        "stop_name": "Dortmund Hbf (DE)",
+        "stop_lat": "51.5170970",
+        "stop_lon": "7.45954400"
+      },
+      {
+        "stop_id": "8010184",
+        "stop_name": "Essen Hbf (DE)",
+        "stop_lat": "51.4515370",
+        "stop_lon": "7.01468900"
+      }
+    ],
+    "routes.txt": [
+      {
+        "route_id": "1",
+        "route_short_name": "IC",
+        "route_long_name": "Anvers-Central -- Essen",
+        "route_type": "103"
+      },
+      {
+        "route_id": "10",
+        "route_short_name": "IC",
+        "route_long_name": "Ostende -- Courtrai",
+        "route_type": "103"
+      },
+      {
+        "route_id": "100",
+        "route_short_name": "TRN",
+        "route_long_name": "Anvers-Central -- Termonde",
+        "route_type": "103"
+      }
+    ],
+    "trips.txt": [
+      {
+        "trip_id": "88____:007::8821006:8821402:13:613:20250829",
+        "route_id": "1",
+        "service_id": "000001",
+        "trip_headsign": "Essen"
+      },
+      {
+        "trip_id": "88____:007::8821006:8821402:13:713:20250829",
+        "route_id": "1",
+        "service_id": "000001",
+        "trip_headsign": "Essen"
+      },
+      {
+        "trip_id": "88____:007::8821006:8821402:13:813:20250829",
+        "route_id": "1",
+        "service_id": "000001",
+        "trip_headsign": "Essen"
+      }
+    ]
+  },
+  "files_in_archive": [
+    "trips.txt",
+    "routes.txt",
+    "translations.txt",
+    "calendar.txt",
+    "calendar_dates.txt",
+    "stop_time_overrides.txt",
+    "transfers.txt",
+    "stop_times.txt",
+    "agency.txt",
+    "feed_info.txt"
+  ]
+}

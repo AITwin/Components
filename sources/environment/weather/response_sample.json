@@ -1,0 +1,27 @@
+{
+  "coord": {
+    "lat": 50.85,
+    "lon": 4.35
+  },
+  "dt": 1755181878,
+  "name": "Arrondissement Brussel-Hoofdstad",
+  "timezone": 7200,
+  "main": {
+    "temp": 304.4,
+    "feels_like": 306.9,
+    "pressure": 1017,
+    "humidity": 53
+  },
+  "wind": {
+    "speed": 2.06,
+    "deg": 240
+  },
+  "visibility": 10000,
+  "weather": [
+    {
+      "main": "Clear",
+      "description": "clear sky",
+      "icon": "01d"
+    }
+  ]
+}

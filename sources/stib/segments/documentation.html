@@ -1,0 +1,103 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="stib-segments">
+  <style>
+    /* Scoped styles */
+    #stib-segments { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #stib-segments h1,
+    #stib-segments h2,
+    #stib-segments h3 { color: #16324a; margin-top: 1.1rem; }
+    #stib-segments code,
+    #stib-segments pre { background: #f6f8fa; border-radius: 6px; }
+    #stib-segments pre { padding: 12px; overflow: auto; }
+    #stib-segments table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #stib-segments th,
+    #stib-segments td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #stib-segments th { background: #f3f6f9; }
+    #stib-segments .muted { color:#566; font-size: 0.95rem; }
+    #stib-segments ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #stib-segments .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>STIB/MIVB Segments</h1>
+  <pre><code>GET /stib/segments</code></pre>
+  <p class="muted">
+    Returns the polyline segments of the STIB/MIVB public transport network in GeoJSON. Each feature represents
+    a schematic network segment suitable for mapping, analytics, and schematic visualizations.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      This endpoint provides the geometric segments of the STIB/MIVB network as a GeoJSON
+      <code>FeatureCollection</code>. Segments are intended for network visualization and analysis and are not meant
+      for large-scale (fine-detail) cartography.
+    </p>
+    <p class="muted">
+      If no timestamp is provided by the platform, the latest available snapshot is served. Internally, the closest
+      snapshot at or before the requested time may be used.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes) -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type, always <code>"FeatureCollection"</code>. Standard GeoJSON top-level container for spatial feature collections with default WGS84/EPSG:4326 coordinate reference system. Signals to mapping libraries and GIS tools that content is standards-compliant GeoJSON suitable for direct rendering and spatial operations without format conversion.</td></tr>
+      <tr><td>features</td><td>array</td><td>Array of GeoJSON Feature objects, each representing one network segment—typically the path between two consecutive stops or junctions on the STIB/MIVB network. Segments form the graph structure of the transit network: nodes are stops/junctions, edges (segments) are the polyline paths connecting them. Brussels STIB network decomposes into hundreds of segments covering metro tunnels (underground paths invisible on surface maps but critical for route geometry), tram tracks (following street alignments on dedicated lanes or mixed traffic), and bus routes (following street centerlines). Segment granularity enables: network topology analysis (graph connectivity, route overlaps where multiple lines share infrastructure), infrastructure mapping (which streets carry transit service), and schematic diagram generation (abstracting complex geography into simplified network maps).</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>GeoJSON feature type, always <code>"Feature"</code>. Standard GeoJSON designation indicating object contains geometry (segment polyline) and properties (segment metadata like route identifier, direction, endpoints). Distinguishes individual segment features from FeatureCollection container.</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Optional unique feature identifier for the segment. May be provider-assigned segment ID, composite key (route-direction-sequence), or omitted if segments lack persistent identifiers. When present, enables: segment-specific queries (retrieving specific segment by ID), temporal tracking (monitoring same segment across snapshots to detect geometry changes from infrastructure work), and reference linking (connecting segments to external datasets like maintenance records, service disruption zones, or infrastructure asset databases). Absence (null/undefined) doesn't prevent usage—segments still identifiable by geometry or properties, just without stable cross-temporal identifier.</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON Geometry object containing segment path coordinates. Defines the actual geographic route traversed by transit vehicles on this network segment—the polyline connecting consecutive stops, junctions, or waypoints. Geometry captures infrastructure alignment: metro segments follow tunnel paths (often straight underground between stations), tram segments follow street track centerlines (curves matching boulevard/street geometry), bus segments follow street centerlines (matching actual vehicle travel paths including turns, lane shifts). Essential for: route map rendering (drawing accurate line paths on maps), distance calculations (measuring segment lengths for network statistics), and spatial queries (which segments traverse this neighborhood? which routes share this street segment?).</td></tr>
+      <tr><td>geometry.type</td><td>string</td><td>Geometry type, either <code>"LineString"</code> (single continuous path) or <code>"MultiLineString"</code> (multiple disjoint path segments grouped as one feature). <strong>LineString</strong> is typical for simple inter-stop segments—single polyline from Stop A to Stop B with waypoints capturing curves and alignment. <strong>MultiLineString</strong> used for complex scenarios: segments with multiple parallel tracks (bidirectional tram lines with separate track alignments shown as two LineStrings within one feature), branching segments (route splits where one logical segment represents diverging paths), or discontinuous infrastructure (ferry segments with water gaps, or segments interrupted by construction represented as multiple disconnected pieces). Brussels network predominantly LineString (most segments are continuous paths), with occasional MultiLineString for complex junctions or shared-infrastructure scenarios where multiple geometric paths represent single logical network edge.</td></tr>
+      <tr><td>geometry.coordinates</td><td>array</td><td>Coordinate array defining segment path geometry. For <strong>LineString</strong>: array of [longitude, latitude] pairs ordered along path direction (first coordinate = segment start, last = segment end, intermediate coordinates = waypoints capturing curves/alignment). Brussels coordinates range: lon 4.24-4.48°E, lat 50.79-50.91°N (WGS84). For <strong>MultiLineString</strong>: array of LineString coordinate arrays (nested structure grouping multiple paths). Coordinate density reflects geometric complexity: straight metro tunnel segments may have just 2 points (start/end), while curving tram segments through old-city streets may have dozens of waypoints accurately representing turns, curves, and alignment shifts. Precision (typically 5-6 decimal places) provides ~1 meter accuracy—sufficient for schematic network visualization while not overwhelming with unnecessary precision for transit-scale mapping (stop-level detail rather than centimeter-level surveying accuracy).</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Provider-defined metadata object containing segment attributes—keys and content vary by data source and snapshot version. Common expected properties might include: <strong>route identifiers</strong> (line/route ID or short name indicating which STIB line uses this segment—e.g., route="1" for metro M1, route="81" for tram 81), <strong>direction indicators</strong> (direction=0/1 specifying which direction this segment serves, enabling directional route rendering), <strong>endpoint references</strong> (from_stop/to_stop identifying segment start/end stops by stop_id, critical for graph topology construction), <strong>segment length</strong> (distance in meters, useful for network statistics without requiring coordinate-based calculation), <strong>infrastructure type</strong> (tunnel/surface/elevated for metro differentiation, dedicated-lane/mixed-traffic for tram/bus operational context). Variable schema reflects operational flexibility—segments sourced from different STIB systems or processing pipelines may emphasize different attributes. Users should inspect actual response properties to understand available metadata for their specific use case (network analysis, routing, visualization styling).</td></tr>
+    </table>
+    <p class="muted">
+      Property keys can vary by snapshot/provider configuration. Common examples include identifiers (line/route),
+      direction, endpoints, and length.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>One snapshot typically returns a full network graph: hundreds of segments (order of magnitude ~ few hundred).</li>
+      <li>Response size depends on geometry detail and number of segments.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <p>
+      Segments are derived from STIB/MIVB network data and serialized into GeoJSON for schematic visualization and analysis.
+      The platform maintains timestamped snapshots and returns the latest or closest (≤) snapshot as appropriate.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Network Maps: Render schematic bus/tram/metro lines as polylines.</li>
+      <li>Coverage Analysis: Combine with stop locations to evaluate service reach.</li>
+      <li>Routing/Topology: Use segments as edges in graph-based analyses.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3 style="border-left: 4px solid #0066CC; padding-left: 10px;">Operational Context for STIB/MIVB Network Segment Topology</h3>
+    <p>
+      This endpoint delivers the geometric skeleton of Brussels' public transport network—polyline segments representing the physical paths traversed by STIB/MIVB metro, tram, and bus vehicles across the Brussels-Capital Region. <em>For mapping applications and route visualization systems</em>, segments provide the essential geographic infrastructure for accurate transit maps: each LineString defines the actual path a vehicle follows between stops, enabling cartographically-correct rendering rather than schematic straight lines. Metro segments follow underground tunnel alignments (M1 from Gare de l'Ouest to Stockel follows precise tunnel geometry invisible on surface streets), tram segments trace street-level track centerlines (Line 81 following Boulevard Général Jacques curves matching actual dedicated-lane infrastructure), and bus segments follow street centerlines (buses sharing mixed-traffic roads). This geographic fidelity critical for: passenger wayfinding (showing routes matching physical geography passengers observe), construction impact visualization (rendering detours around infrastructure work zones), and multimodal integration (overlaying STIB segments with cycling infrastructure, pedestrian networks, or road traffic to analyze modal conflicts and synergies across shared street space).
+    </p>
+    <p>
+      <em>For network analysts and transport planners</em>, the segment-based decomposition enables sophisticated graph topology analysis and infrastructure evaluation. Treating segments as edges and stops as nodes constructs the transit network graph supporting: connectivity analysis (is entire network reachable from any starting point via transfers?), shortest-path routing (calculating optimal routes considering actual segment paths and transfer points), and redundancy assessment (identifying single-segment failures that would isolate network portions—critical for resilience planning). Segment properties (route identifiers, direction indicators, from_stop/to_stop endpoints) enable route-specific extraction: filtering segments by route="1" assembles complete M1 metro line geometry, directional filtering (direction=0 vs. 1) separates outbound/inbound paths revealing symmetric vs. asymmetric route alignments (do both directions follow same streets or use different paths?). Spatial queries identify infrastructure sharing: which segments overlap geometrically (multiple routes using same tunnel/street)? How much Brussels street network carries transit service (segment length totals by mode)? Which neighborhoods traversed by metro vs. tram vs. bus (spatial join with administrative boundaries)? Length metadata or coordinate-based distance calculations support: network scale statistics (total route-km by mode), stop spacing analysis (segment lengths reveal metro 500m, tram 300-400m, bus 200-300m typical inter-stop distances), and infrastructure replacement prioritization (aging segments requiring track/tunnel renewal identified by length-weighted importance).
+    </p>
+    <p>
+      <em>For schematic diagram generators and abstract network visualizations</em>, segment topology provides the foundation for creating simplified transit maps emphasizing connectivity over geography—the iconic Brussels metro map showing topological relationships rather than true-to-scale alignment. Segment endpoints (from_stop/to_stop properties if available, or coordinate endpoints) define the network graph structure: which stops connect to which, enabling automated schematic layout algorithms (force-directed graphs, orthogonal layouts, circle packing) that preserve connectivity while abstracting geometry. The hundreds of segments comprising Brussels STIB network (metro ~60-80 segments covering 6 lines, tram ~200+ segments spanning 17 lines, bus ~400+ segments for 50+ routes) provide comprehensive edge coverage essential for graph-theoretic analysis: detecting communities (clusters of highly-interconnected segments suggesting service concentration), measuring centrality (which segments most critical for network flow—typically downtown core segments shared by multiple lines), and planning service changes (adding/removing segments to test network robustness). Timestamped snapshots preserve network evolution—comparing segments across historical versions reveals: network extensions (new segments added from line expansions like metro M3 construction), route modifications (segment geometry changes from track realignments), and service reductions (segment removals from line discontinuations or seasonal service adjustments), supporting longitudinal studies of Brussels transit infrastructure development responding to urbanization, policy priorities (metro investments vs. surface transit), and fiscal constraints shaping capital versus operational expenditure decisions for expanding versus maintaining the STIB/MIVB network backbone.
+    </p>
+  </div>
+</div>

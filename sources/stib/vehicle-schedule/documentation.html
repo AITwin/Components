@@ -1,0 +1,128 @@
+<!-- Embedded fragment: STIB/MIVB — Vehicle Schedule -->
+<div id="stib-vehicle-schedule">
+  <style>
+    /* Scoped styles */
+    #stib-vehicle-schedule { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #stib-vehicle-schedule h1,
+    #stib-vehicle-schedule h2,
+    #stib-vehicle-schedule h3 { color: #16324a; margin-top: 1.1rem; }
+    #stib-vehicle-schedule code,
+    #stib-vehicle-schedule pre { background: #f6f8fa; border-radius: 6px; }
+    #stib-vehicle-schedule pre { padding: 12px; overflow: auto; }
+    #stib-vehicle-schedule table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #stib-vehicle-schedule th,
+    #stib-vehicle-schedule td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #stib-vehicle-schedule th { background: #f3f6f9; }
+    #stib-vehicle-schedule .muted { color:#566; font-size: 0.95rem; }
+    #stib-vehicle-schedule ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #stib-vehicle-schedule .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>STIB/MIVB — Vehicle Schedule</h1>
+  <pre><code>GET /stib/vehicle-schedule</code></pre>
+  <p class="muted">
+    Returns the scheduled stop times of STIB/MIVB vehicles within a given period.
+    Each record represents an expected arrival and departure at a stop for a specific line and direction.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      This endpoint provides scheduled information per vehicle and stop over a given time window.
+      It combines stop timing data from STIB’s GTFS feed with enriched metadata used by the MobilityTwin.Brussels platform.
+      The schedule can be used for performance monitoring, timetable reconstruction, and integration with live tracking.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+  <!-- Removed: Output Format -->
+  <!-- Removed: Response Schema -->
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+      <tr>
+        <td><code>start_timestamp</code></td>
+        <td>integer</td>
+        <td>Yes</td>
+        <td>Start timestamp in seconds since epoch. Defines the beginning of the time interval.</td>
+      </tr>
+      <tr>
+        <td><code>end_timestamp</code></td>
+        <td>integer</td>
+        <td>Yes</td>
+        <td>End timestamp in seconds since epoch. Defines the end of the time interval.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <p>The response is a GeoJSON <code>FeatureCollection</code> representing vehicle schedules at stops.</p>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>Always <code>FeatureCollection</code>. GeoJSON standard container format enabling direct integration with mapping libraries and spatial analysis tools. Each feature represents a scheduled stop event (vehicle arrival/departure at a specific stop), collectively forming a complete timetable view for the requested time window across STIB/MIVB's Brussels transit network.</td></tr>
+      <tr><td>features</td><td>array</td><td>Collection of scheduled stop events, each representing one vehicle's planned arrival/departure at a specific stop within the query time window. Array size depends on service frequency, number of active lines, and time window duration—a typical weekday hour might contain thousands of stop events across STIB's tram, bus, and metro network. Derived from GTFS-Static stop_times.txt enriched with MobilityTwin.Brussels platform metadata. Essential for timetable reconstruction, schedule adherence analysis (comparing actual vs. scheduled performance), and passenger information systems.</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>Always <code>Feature</code>. Standard GeoJSON designation for individual stop event entities, ensuring consistent geospatial structure for mapping scheduled service patterns, analyzing stop-level service frequency, and integrating with real-time vehicle positions.</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Unique identifier for this specific scheduled stop event, typically combining trip, stop, and sequence information to distinguish individual vehicle visits. Enables precise event tracking, de-duplication across multiple API calls, and cross-referencing with real-time arrival predictions or actual vehicle positions for schedule adherence calculation.</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON Point geometry containing the stop's geographic coordinates. Enables spatial visualization of scheduled service (mapping where vehicles are planned to stop), proximity-based queries ("all scheduled stops within 500m of my location"), and integration with other geospatial transit data (stop infrastructure, catchment areas, accessibility analysis). Coordinates sourced from GTFS-Static stops.txt.</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Scheduled event metadata bundle containing line identification, stop details, timing information, and directional context. These attributes enable filtering schedules by line/stop/direction, calculating service frequencies (headways between consecutive vehicles), identifying schedule gaps (periods without service), and supporting passenger journey planning (finding next scheduled departure from a stop).</td></tr>
+      <tr><td>properties.lineId</td><td>string</td><td>STIB/MIVB transit line identifier matching official line numbering (e.g., "81" for tram, "38" for bus, "5" for metro). Essential for filtering schedules by specific line ("show me all tram 81 scheduled stops"), analyzing line-level service patterns (frequency, coverage, operating hours), and joining with other line-specific datasets (vehicle positions, speed data, passenger counts). Maps to GTFS-Static routes.txt for detailed line metadata including mode, color, and full route name.</td></tr>
+      <tr><td>properties.stopId</td><td>string</td><td>Unique stop identifier from GTFS-Static stops.txt, referencing physical infrastructure (tram/bus stop, metro station platform). Enables stop-level schedule analysis ("how many vehicles per hour serve this stop?"), joining with stop attribute data (name, accessibility features, shelter availability), and aggregating service across multiple lines serving the same stop. Critical for passenger information displays showing "next departures from this location" across all lines.</td></tr>
+      <tr><td>properties.stopName</td><td>string</td><td>Human-readable stop name in STIB's official nomenclature (e.g., "Montgomery", "Gare du Midi", "Place Flagey"). Displayed in passenger-facing applications, timetables, and announcements. Names typically reference nearby landmarks, streets, or neighborhoods for intuitive wayfinding. Some stops have multilingual names reflecting Brussels' bilingual French/Dutch character (e.g., "Gare du Midi / Zuidstation"). Essential for user interfaces where passengers search or browse schedules by familiar location names rather than numeric stop IDs.</td></tr>
+      <tr><td>properties.arrival_time</td><td>string</td><td>Scheduled arrival time at this stop in 24-hour format (<code>HH:MM:SS</code>), e.g., "14:35:00" for 2:35 PM. Represents when the vehicle is planned to reach the stop according to the published timetable. For timing points (major stops where schedule adherence is measured), this is a contractual commitment; for intermediate stops, it's an estimated time based on average running times. Values may exceed 24:00:00 for service operating past midnight (e.g., "25:30:00" for 1:30 AM the next day), following GTFS convention. Used for calculating scheduled travel times between stops, identifying timetable irregularities (unrealistic speeds, excessive dwell times), and comparing with real-time data for delay detection.</td></tr>
+      <tr><td>properties.departure_time</td><td>string</td><td>Scheduled departure time from this stop in 24-hour format (<code>HH:MM:SS</code>). Represents when the vehicle is planned to leave the stop. For most intermediate stops, departure_time equals arrival_time (instantaneous pass-through); for major stops, terminals, and timing points, departure_time > arrival_time reflecting scheduled dwell time (passenger boarding/alighting, schedule recovery slack, driver breaks). The difference (departure - arrival) reveals planned stop dwell: typically 15-60 seconds at regular stops, 2-5 minutes at major interchanges, 5-15 minutes at terminals for schedule coordination. Essential for accurate journey time calculations including boarding/transfer times, and identifying schedule padding used for reliability improvement.</td></tr>
+      <tr><td>properties.direction_id</td><td>string</td><td>Direction identifier, typically "0" or "1", distinguishing the two opposite travel directions for this line (e.g., outbound vs. inbound, to terminus A vs. terminus B). Matches GTFS-Static trips.direction_id. Critical for filtering schedules by desired travel direction ("show northbound departures only"), calculating directional service frequencies (which direction has higher peak service?), and understanding bidirectional schedule symmetry or asymmetry. Direction semantics are line-specific and should be cross-referenced with GTFS-Static trips.txt for human-readable headsign/destination information.</td></tr>
+    </table>
+
+    <pre><code>{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "string",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [number, number]
+      },
+      "properties": {
+        "lineId": "string",
+        "stopId": "string",
+        "stopName": "string",
+        "arrival_time": "HH:MM:SS",
+        "departure_time": "HH:MM:SS",
+        "direction_id": "string"
+      }
+    }
+  ]
+}</code></pre>
+    
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #00a4e0; font-size: 0.95em;">
+      <strong>Operational Context:</strong> This schedule feed provides authoritative planned timetables for STIB/MIVB's Brussels transit network, combining GTFS-Static data with MobilityTwin.Brussels enrichments to enable comprehensive schedule analysis and real-time performance monitoring. 
+      <em>For passengers and trip planning applications</em>, it powers essential features: "what time does the next tram 81 arrive at Montgomery?" queries, multimodal journey planning (calculating optimal transfers between STIB lines and other Brussels transport modes), and schedule browsing for future travel ("plan my commute for tomorrow morning"). 
+      <em>For transit operations and performance analysts</em>, this data is the baseline for schedule adherence measurement—comparing actual vehicle arrival/departure times (from real-time feeds) against these planned schedules reveals delays, early departures, and service irregularities. Dwell time analysis (departure_time - arrival_time) identifies stops causing operational bottlenecks (excessive boarding times, infrastructure constraints) requiring intervention. 
+      <em>For service planning teams</em>, schedule data enables frequency analysis (headway calculations showing gaps or bunching in planned service), coverage analysis (identifying areas or time periods with inadequate service), and timetable optimization (comparing scheduled vs. actual running times to identify unrealistic schedules or excessive padding). 
+      <em>For researchers and urban mobility analysts</em>, the data supports accessibility studies (measuring transit service availability across neighborhoods and times), equity analyses (comparing service frequency in different socioeconomic areas), and integration with other mobility datasets (correlating transit schedules with traffic patterns, micromobility usage, parking demand). 
+      The time-windowed query structure (start_timestamp to end_timestamp) enables flexible retrieval—from short windows for real-time applications to full-day or multi-day extracts for comprehensive planning studies. Geospatial stop coordinates enable mapping scheduled service patterns and calculating coverage areas.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Data Information</h2>
+    <p class="muted">
+      No static information available for this component.  
+      Its availability and completeness depend on source data from the GTFS feed and real-time updates.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Building schedule dashboards and timetable visualizations</li>
+      <li>Comparing planned vs. actual vehicle times for delay analytics</li>
+      <li>Stop-level schedule reconstruction for transit planning</li>
+      <li>Temporal data joins with real-time position feeds</li>
+    </ul>
+  </div>
+</div>

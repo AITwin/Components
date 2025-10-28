@@ -1,0 +1,135 @@
+<!-- Embedded fragment: DE LIJN — Vehicle Schedule -->
+<div id="de-lijn-vehicle-schedule">
+  <style>
+    /* Scoped styles */
+    #de-lijn-vehicle-schedule { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #de-lijn-vehicle-schedule h1,
+    #de-lijn-vehicle-schedule h2,
+    #de-lijn-vehicle-schedule h3 { color: #16324a; margin-top: 1.1rem; }
+    #de-lijn-vehicle-schedule code,
+    #de-lijn-vehicle-schedule pre { background: #f6f8fa; border-radius: 6px; }
+    #de-lijn-vehicle-schedule pre { padding: 12px; overflow: auto; }
+    #de-lijn-vehicle-schedule table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #de-lijn-vehicle-schedule th,
+    #de-lijn-vehicle-schedule td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #de-lijn-vehicle-schedule th { background: #f3f6f9; }
+    #de-lijn-vehicle-schedule .muted { color:#566; font-size: 0.95rem; }
+    #de-lijn-vehicle-schedule ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #de-lijn-vehicle-schedule .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>DE LIJN — Vehicle Schedule</h1>
+  <pre><code>GET /de-lijn/vehicle-schedule</code></pre>
+  <p class="muted">
+    Returns the scheduled stop times of De Lijn vehicles within a given period for the Brussels-Capital Region service area.
+    Each record represents an expected arrival and departure at a stop for a specific line and direction.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      This endpoint provides scheduled information per vehicle and stop over a given time window for De Lijn, the Flemish public transport operator serving northern Brussels and surrounding Flanders region.
+      It combines stop timing data from De Lijn's GTFS feed with enriched metadata used by the MobilityTwin.Brussels platform.
+      The schedule enables timetable analysis, service planning evaluation, schedule adherence monitoring when combined with real-time data, and integration with multi-modal transport planning across Brussels' three regional operators (De Lijn, STIB/MIVB, TEC).
+      De Lijn operates bus services connecting Brussels municipalities with Flemish suburbs and cities, providing crucial suburban-urban connectivity for commuters, students, and regional travel.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+  <!-- Removed: Output Format -->
+  <!-- Removed: Response Schema -->
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+      <tr>
+        <td><code>start_timestamp</code></td>
+        <td>integer</td>
+        <td>Yes</td>
+        <td>Start timestamp in seconds since epoch. Defines the beginning of the time interval for schedule retrieval. Used to query historical schedule data or future planned timetables. Minimum value should be within De Lijn's data retention period.</td>
+      </tr>
+      <tr>
+        <td><code>end_timestamp</code></td>
+        <td>integer</td>
+        <td>Yes</td>
+        <td>End timestamp in seconds since epoch. Defines the end of the time interval. Together with start_timestamp, determines the query window. Recommended maximum span is 24 hours to balance response size with data completeness for daily schedule analysis.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <p>The response is a GeoJSON <code>FeatureCollection</code> representing vehicle schedules at stops within the Brussels-Capital Region service area.</p>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>Always <code>FeatureCollection</code>. GeoJSON standard container format enabling direct integration with mapping libraries (Leaflet, Mapbox, Google Maps API), spatial analysis tools (QGIS, PostGIS, GeoPandas), and web-based dashboards. Each feature represents a scheduled stop event (vehicle arrival/departure at a specific stop), collectively forming a complete timetable view for the requested time window across De Lijn's Brussels-area service network. Facilitates cross-operator schedule integration with STIB/MIVB metro/tram/bus and TEC Walloon services.</td></tr>
+      <tr><td>features</td><td>array</td><td>Collection of scheduled stop events, each representing one vehicle's planned arrival/departure at a specific stop within the query time window. Array size varies with service density, time of day, and day type (weekday vs. weekend)—typical weekday morning peak (07:00-09:00) contains hundreds of stop events across De Lijn's Brussels suburban routes. Feature count is influenced by line frequency (express routes vs. local services), number of stops per route (urban dense-stop patterns vs. regional limited-stop express), and seasonal variations (reduced summer service, special event schedules). Derived from GTFS-Static stop_times.txt joined with trips.txt, routes.txt, and stops.txt, enriched with MobilityTwin.Brussels geospatial metadata. Essential for timetable reconstruction, schedule adherence analysis (comparing planned vs. actual performance using real-time GTFS-RT data), headway analysis (time gaps between consecutive vehicles on same route), service coverage mapping, and passenger information systems.</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>Always <code>Feature</code>. Standard GeoJSON designation for individual stop event entities, ensuring consistent geospatial structure. Enables mapping scheduled service patterns (visualizing where and when buses are planned to serve), analyzing stop-level service frequency (stops/hour at each location), heatmap generation showing service density, and geospatial joins with other urban data layers (population density, employment centers, schools, hospitals) for accessibility analysis.</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Unique identifier for this specific scheduled stop event, typically constructed from trip_id, stop_id, and stop_sequence to distinguish individual vehicle visits across multiple trips. Format may be composite (e.g., "trip_12345_stop_678_seq_05") or hashed for compactness. Enables precise event tracking across API calls, de-duplication when combining multiple time windows, cross-referencing with real-time arrival predictions from GTFS-RT vehicle positions, and linking scheduled events to actual vehicle performance for on-time performance (OTP) metrics. Critical for data warehouse ETL processes building historical schedule adherence databases.</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON Point geometry containing the stop's geographic coordinates in WGS84 (EPSG:4326) decimal degrees. Longitude (X) typically 4.2-4.5°E for Brussels region, latitude (Y) 50.8-50.9°N. Enables spatial visualization of scheduled service (mapping where vehicles are planned to stop), proximity-based queries ("all scheduled stops within 500m walking distance of coordinate X,Y"), spatial joins with other datasets (building locations, demographics, land use), and catchment area analysis (population within 10-minute walk of scheduled service). Coordinates sourced from GTFS-Static stops.txt (stop_lat, stop_lon fields), representing physical stop infrastructure. For multi-platform stations, coordinates may point to platform centroid or station entrance. Essential for accessibility analysis, service coverage equity studies, and integration with trip planning applications requiring accurate stop geolocations.</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td>Always <code>Point</code>. GeoJSON geometry type for zero-dimensional stop locations. Unlike LineString geometries (used for vehicle trajectories or route shapes), Points represent discrete stop positions where passengers board/alight. Simplifies spatial indexing (R-tree, Quadtree) for fast proximity queries, enables straightforward distance calculations to other Points (stops, origins, destinations), and supports standard GIS point-in-polygon operations (e.g., "which stops fall within neighborhood X?").</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>Two-element numeric array <code>[longitude, latitude]</code> representing stop position. Order follows GeoJSON/WGS84 convention (longitude first, latitude second)—common source of integration errors when systems expect reverse order. Precision typically 6-7 decimal places (~0.1-1 meter accuracy), balancing geospatial fidelity with data payload size. Used directly by mapping libraries for marker placement, by spatial databases for indexing, and by routing algorithms for distance calculations. Example: <code>[4.3517, 50.8503]</code> for Brussels city center stop.</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Scheduled event metadata bundle containing trip identification, line details, stop information, timing data, and directional context. These attributes enable multi-dimensional schedule analysis: filtering by line/stop/direction ("show me all 410 bus northbound scheduled stops"), calculating service frequencies (headways between consecutive same-line vehicles), identifying schedule gaps (periods without service), temporal analysis (peak vs. off-peak service levels), and supporting passenger journey planning (finding next scheduled departure from a stop toward a destination). Properties also facilitate cross-referencing with other GTFS tables (calendar.txt for service days, shapes.txt for route geometry) and integration with real-time vehicle positions for schedule adherence monitoring.</td></tr>
+      <tr><td>properties.stop_id</td><td>string</td><td>Unique stop identifier from De Lijn's GTFS-Static stops.txt, typically numeric or alphanumeric code following De Lijn's internal stop numbering system. References physical bus stop infrastructure (pole, shelter, platform) where passengers wait and board. Stable identifier persisting across schedule updates (unless stop is relocated/closed). Enables stop-level schedule aggregation ("how many vehicles per hour serve stop X?"), joining with stop attribute data (name, accessibility features—wheelchair accessible, shelter presence, real-time display availability, transfer connections), and integrating with passenger count data or dwell time analysis. Critical for passenger information displays showing "next departures from this location" across all lines serving the stop. Also used in multi-modal journey planners to link De Lijn stops with nearby STIB/MIVB stops for seamless transfers.</td></tr>
+      <tr><td>properties.stop_name</td><td>string</td><td>Human-readable stop name in De Lijn's official nomenclature, typically in Dutch (primary Flemish language) but may include French for bilingual Brussels contexts or major landmarks. Format often combines street name with landmark, municipality, or direction context (e.g., "Brussel Noordstation", "Vilvoorde Centrum", "Mechelen Koning Albertplein"). Names reflect local geography, serving dual purposes: passenger wayfinding ("which stop for the hospital?") and administrative reference (complaints, service reports). Some stops use codes/abbreviations for brevity in timetables. Essential for user-facing applications where passengers search/browse schedules by familiar location names rather than numeric IDs. May include disambiguation suffixes when multiple stops share similar names in different municipalities (e.g., "Centrum (Zaventem)" vs. "Centrum (Vilvoorde)").</td></tr>
+      <tr><td>properties.stop_lat</td><td>number</td><td>Stop latitude in WGS84 decimal degrees (EPSG:4326), duplicating geometry.coordinates[1] for convenience. Range approximately 50.75-51.0°N covering Brussels and near Flemish suburbs. Precision typically 6-7 decimal places. Provided as standalone property for easier direct access without parsing nested geometry object, supporting legacy systems or simplified data pipelines. Used in direct distance calculations, bounding box queries, and spatial indexing. Sourced from GTFS-Static stops.txt stop_lat field.</td></tr>
+      <tr><td>properties.stop_lon</td><td>number</td><td>Stop longitude in WGS84 decimal degrees (EPSG:4326), duplicating geometry.coordinates[0] for convenience. Range approximately 4.2-4.7°E covering Brussels region. Paired with stop_lat for geospatial operations. Enables straightforward coordinate extraction for mapping libraries, distance calculations (haversine formula for great-circle distance), and geofencing (alerting when vehicle approaches scheduled stop). Sourced from GTFS-Static stops.txt stop_lon field.</td></tr>
+      <tr><td>properties.schedule</td><td>array</td><td>Array of scheduled trip events at this stop, each element representing one vehicle visit (arrival/departure) during the queried time window. Multiple array elements occur when: (a) same line visits stop multiple times in time window (normal scheduled service), (b) multiple lines serve the same stop (multi-line stops at intersections, terminals), (c) bidirectional service (both directions use same stop ID in some implementations). Array structure enables comprehensive stop-level schedule representation in single feature, reducing response size compared to one-feature-per-trip-stop approach. Each schedule element contains trip-specific details (arrival time, departure time, trip ID, route ID, headsign) enabling detailed schedule reconstruction and service frequency analysis. Essential for "departures board" displays showing next N vehicles from this stop, and for calculating service headways (time between consecutive departures on same route).</td></tr>
+      <tr><td>schedule[].arrival_time</td><td>string</td><td>Scheduled arrival time at this stop in 24-hour format (<code>HH:MM:SS</code>), e.g., "14:35:00" for 2:35 PM. Represents when the vehicle is planned to reach the stop according to published timetable, based on GTFS-Static stop_times.txt. For timing points (designated schedule control stops where punctuality is measured), this is a contractual commitment operators aim to meet; for intermediate stops, it's an estimated time interpolated from timing points using average travel speeds and historical performance data. Values may exceed 24:00:00 for service operating past midnight (e.g., "25:30:00" for 1:30 AM next calendar day), following GTFS convention to maintain schedule continuity for late-night and early-morning services. Used for calculating scheduled journey times between stops, identifying timetable irregularities (unrealistic speeds suggesting data errors, excessive interstop times indicating inefficient routing), comparing with real-time GTFS-RT data for delay detection and schedule adherence metrics (on-time performance = percentage of arrivals within ±5 minutes of scheduled time). Critical for passenger journey planning, showing expected arrival times, and for operations monitoring dashboards tracking schedule compliance.</td></tr>
+      <tr><td>schedule[].departure_time</td><td>string</td><td>Scheduled departure time from this stop in 24-hour format (<code>HH:MM:SS</code>). Represents when the vehicle is planned to leave the stop after passenger boarding/alighting. For most intermediate stops, departure_time equals arrival_time (zero dwell time, vehicle passes through), simplifying schedule representation; for timing points, major stops, transfer hubs, and terminals, departure_time > arrival_time reflecting planned dwell time. Dwell time (departure - arrival) serves multiple purposes: (1) passenger exchange time—allowing boarding/alighting without rushing, (2) schedule recovery slack—absorbing accumulated delays so vehicle "catches up" to schedule, (3) transfer coordination—holding vehicle for passengers arriving on connecting services, (4) driver breaks—mandated rest periods at terminals. Typical dwell: 15-30 seconds at regular stops (minimal passenger activity), 1-2 minutes at busy stops (high boardings), 3-5 minutes at major interchanges (transfer coordination), 5-15 minutes at terminals (schedule reset, driver change). Essential for accurate journey time calculations including stop time, identifying schedule padding strategies (some operators add buffer time to improve reliability), and detecting timetable inefficiencies (excessive terminal layover reducing revenue service).</td></tr>
+      <tr><td>schedule[].route_id</td><td>string</td><td>Route identifier from GTFS-Static routes.txt, uniquely identifying the transit line/service pattern. De Lijn uses numeric route IDs (e.g., "410", "272", "230") matching public-facing line numbers displayed on bus fronts, stop signs, and timetables. Route ID is stable across schedule updates (unless line is renumbered/discontinued), enabling longitudinal schedule analysis tracking service changes over time. Used for filtering schedules by specific line ("show only route 410 schedules"), aggregating line-level metrics (total daily trips, service hours, vehicle hours), joining with routes.txt for detailed line metadata (short/long name, route type = bus, agency = De Lijn), and integrating with vehicle position data tagged with route_id. Critical for operations planning (identifying underperforming routes needing schedule adjustment), passenger information (route-specific timetables, maps), and regulatory reporting (subsidized route performance metrics). Note: A single route_id may have multiple trip patterns (variants) serving different stop sequences—full route vs. short-turn services, peak-only extensions, diversion variations—distinguished by trip headsigns and shape_id.</td></tr>
+      <tr><td>schedule[].trip_headsign</td><td>string</td><td>Destination or directional description displayed on vehicle front/side (LED sign, roller curtain) and departure boards to inform passengers where vehicle is heading. Examples: "Vilvoorde Station", "Mechelen via Zaventem", "Luchthaven ↔ Airport" (bilingual). Headsign provides human-readable context beyond numeric route_id, essential for passengers selecting correct vehicle at multi-line stops. Format varies: major terminus name ("Brussel Noord"), neighborhood ("Haren Dorp"), or direction ("Richting Brussels" = "Towards Brussels"). Some headsigns include intermediate via-points for clarity on express routes skipping stops. For bidirectional routes, headsigns distinguish opposite directions (e.g., "Vilvoorde" vs. "Brussel"). Used in passenger-facing applications (mobile apps, web timetables, real-time displays), journey planning interfaces (showing destination on suggested trips), and operations monitoring (distinguishing trip patterns when multiple variants share same route_id). May be abbreviated in space-constrained displays. Sourced from GTFS-Static trips.txt trip_headsign field.</td></tr>
+      <tr><td>schedule[].trip_id</td><td>string</td><td>Unique identifier for this specific vehicle journey (trip) from GTFS-Static trips.txt. A trip represents one vehicle's complete journey along a route from start terminal to end terminal, consisting of sequential stop visits. Trip IDs are typically constructed from route, service day, departure time, and pattern (e.g., "410_WD_0730_V1" = route 410, weekday, 07:30 departure, variant 1). Used for precise schedule event identification, tracking vehicle progress along route (current stop vs. remaining stops), joining with GTFS-RT trip updates for real-time delay information, and linking vehicle positions to scheduled trips for adherence calculation. Essential for operations dashboards showing trip-level performance (early/late arrivals per trip), analytics identifying problematic trips requiring schedule adjustment, and passenger information showing trip-specific real-time updates. Also used in schedule optimization studies analyzing trip-level ridership, running times, and reliability for timetable redesign.</td></tr>
+      <tr><td>schedule[].trip_short_name</td><td>string</td><td>Short trip identifier or run number used internally by De Lijn operations, distinct from public-facing trip_headsign. May be alphanumeric code referencing crew schedules, vehicle assignments, or internal trip numbering (e.g., "T1234", "R05"). Not typically displayed to passengers but critical for driver instructions ("Run 23, route 410"), crew management (driver logs which run number they're operating), and vehicle dispatch (assigning bus to run). Used in operations systems integrating schedule with crew rostering, vehicle maintenance logs (tracking which vehicle operated which trips for mileage/service records), and incident reporting (referencing specific trip in delay reports, complaints, accidents). May be null/empty for trips without internal run numbering. Sourced from GTFS-Static trips.txt trip_short_name field, optional in GTFS spec.</td></tr>
+    </table>
+
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #28a745; font-size: 0.95em;">
+      <strong>Operational Context:</strong> De Lijn's vehicle schedule endpoint serves Brussels' northern and eastern suburban mobility needs, connecting Flemish municipalities (Vilvoorde, Zaventem, Machelen, Grimbergen) with Brussels city center and EU institutions. 
+      <em>For urban planners</em>, this data enables suburban-urban connectivity analysis, identifying gaps in regional transit coverage and informing land-use decisions (concentrating development along well-served corridors). 
+      <em>For transport operators</em>, schedule data supports multi-modal integration planning (coordinating De Lijn arrivals with STIB/MIVB metro departures at interchange stations), service benchmarking (comparing De Lijn suburban frequencies with urban core service levels), and cross-border service design (Brussels-Flanders administrative boundary coordination). 
+      <em>For researchers</em>, the data enables commuting pattern analysis (morning peak inbound flows to Brussels, evening reverse flows), schedule optimization studies (identifying underutilized trips, testing frequency adjustments), and transit equity analysis (comparing service levels in affluent vs. underserved suburbs). 
+      <em>For passengers</em>, accurate schedule data powers journey planning apps, real-time departure predictions (combining scheduled times with live vehicle positions), and transfer coordination (minimizing wait times between De Lijn buses and STIB/MIVB urban services). 
+      The time-windowed query approach enables focused analysis periods (morning peak, weekend service, special events) while managing data volumes. Integration with De Lijn's GTFS-RT feed allows comparing scheduled vs. actual performance, measuring punctuality, and identifying chronic delay patterns requiring schedule adjustment or infrastructure investment.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>No specific volume data available—depends on query time window and active routes serving Brussels region.</li>
+      <li>Typical weekday 2-hour morning peak (07:00-09:00) query: hundreds to low thousands of scheduled stop events across ~20-30 De Lijn routes serving Brussels.</li>
+      <li>Full 24-hour query: potentially 10,000-30,000+ events depending on service levels and number of stops.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>De Lijn GTFS-Static feed (stop_times.txt, trips.txt, routes.txt, stops.txt), published daily at <a href="https://data.delijn.be/" target="_blank" style="color: #0366d6;">https://data.delijn.be/</a></li>
+      <li>Schedule data reflects officially published timetables, updated for seasonal schedule changes (typically 2-3x yearly), service adjustments, and temporary diversions.</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>GTFS Ingestion:</strong> Daily download of De Lijn GTFS zip, extraction of relevant tables (stop_times.txt for arrival/departure records, trips.txt for trip metadata, routes.txt for line details, stops.txt for geolocation).</li>
+      <li><strong>Geospatial Enrichment:</strong> Convert stop lat/lon from stops.txt to GeoJSON Point geometries, validate coordinate precision and Brussels-region containment (filter out stops outside Brussels service area if desired).</li>
+      <li><strong>Temporal Filtering:</strong> Index stop_times.txt by arrival/departure times, filter records matching requested start_timestamp to end_timestamp window, join with service calendars (calendar.txt, calendar_dates.txt) to determine which trips operate on query date(s).</li>
+      <li><strong>Schedule Aggregation:</strong> Group stop_times records by stop_id, nest multiple trips visiting same stop into schedule array, attach stop geometry and attributes to create GeoJSON features.</li>
+      <li><strong>Output Formatting:</strong> Structure as GeoJSON FeatureCollection with standardized property schema, include response headers (X-Data-Timestamp for schedule version), compress for efficient API delivery.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li><strong>Suburban Commuter Planning:</strong> Identify morning peak De Lijn frequencies from Flemish suburbs to Brussels employment centers (EU Quarter, North Station, City Center), optimize park-and-ride locations based on service availability.</li>
+      <li><strong>Multi-Modal Journey Planning:</strong> Integrate De Lijn suburban schedules with STIB/MIVB urban services for seamless trip planning across operator boundaries, calculate optimal transfer points with minimal waiting.</li>
+      <li><strong>Service Coverage Analysis:</strong> Map scheduled service density (stops/hour) across Brussels region, identify underserved neighborhoods lacking frequent De Lijn connections, inform equity-based service expansion priorities.</li>
+      <li><strong>Schedule Adherence Monitoring:</strong> Compare scheduled arrival times with real-time GTFS-RT vehicle positions, calculate on-time performance metrics by line/time-of-day, identify chronic delay hotspots requiring schedule padding or infrastructure improvements.</li>
+      <li><strong>Temporal Service Patterns:</strong> Analyze service frequency variations (peak vs. off-peak, weekday vs. weekend), quantify schedule-driven accessibility changes throughout day, inform ridership modeling and demand forecasting.</li>
+      <li><strong>Airport Connectivity:</strong> Map scheduled De Lijn services connecting Brussels Airport (Zaventem) with surrounding municipalities and Brussels city center, assess schedule coordination with flight arrivals/departures, identify gaps in non-train airport access (complementing SNCB rail service).</li>
+    </ul>
+  </div>
+</div>

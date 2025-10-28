@@ -1,0 +1,3131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_b72dd580bec3d146ec711407b5a0c894 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+</head>
+<body>
+    
+    <style>html,body{height:100%;margin:0}.folium-map{height:100vh;width:100%}</style>
+    
+            <div class="folium-map" id="map_b72dd580bec3d146ec711407b5a0c894" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_b72dd580bec3d146ec711407b5a0c894 = L.map(
+                "map_b72dd580bec3d146ec711407b5a0c894",
+                {
+                    center: [51.020374444318165, 4.483255334197501],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_c7666c53fb22bb074e5650885ad95486 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_c7666c53fb22bb074e5650885ad95486.addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+            var circle_marker_0f78ed3ef712cde8b0846cab429fa305 = L.circleMarker(
+                [51.020374444318165, 4.483255334197501],
+                {"bubblingMouseEvents": true, "color": "#febd57ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#febd57ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_7ce30f10b3aae49c517bc728a3661fc1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_789df305faa323bb116a534170b18837 = $(`<div id="html_789df305faa323bb116a534170b18837" style="width: 100.0%; height: 100.0%;"><b>42R842 - Mechelen (Hendrik Speecqvest)</b><br>Nitrogen dioxide<br>Value: 20.50 µg/m³</div>`)[0];
+                popup_7ce30f10b3aae49c517bc728a3661fc1.setContent(html_789df305faa323bb116a534170b18837);
+            
+        
+
+        circle_marker_0f78ed3ef712cde8b0846cab429fa305.bindPopup(popup_7ce30f10b3aae49c517bc728a3661fc1)
+        ;
+
+        
+    
+    
+            circle_marker_0f78ed3ef712cde8b0846cab429fa305.bindTooltip(
+                `<div>
+                     42R842 - Mechelen (Hendrik Speecqvest) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_20c3cb8aaf5cca12737b9744b7df0731 = L.circleMarker(
+                [50.63797831100492, 5.571781423606139],
+                {"bubblingMouseEvents": true, "color": "#fed06cff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed06cff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_8c4b8b580248afeffe0ee6901ff95fb6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6959af756c44eec4f1ad3eb0f8989262 = $(`<div id="html_6959af756c44eec4f1ad3eb0f8989262" style="width: 100.0%; height: 100.0%;"><b>43R202 - Liège</b><br>Nitrogen dioxide<br>Value: 17.00 µg/m³</div>`)[0];
+                popup_8c4b8b580248afeffe0ee6901ff95fb6.setContent(html_6959af756c44eec4f1ad3eb0f8989262);
+            
+        
+
+        circle_marker_20c3cb8aaf5cca12737b9744b7df0731.bindPopup(popup_8c4b8b580248afeffe0ee6901ff95fb6)
+        ;
+
+        
+    
+    
+            circle_marker_20c3cb8aaf5cca12737b9744b7df0731.bindTooltip(
+                `<div>
+                     43R202 - Liège — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_085eeb9396ebd2e7f8931f06aacf266d = L.circleMarker(
+                [50.84356660319525, 4.367005785367071],
+                {"bubblingMouseEvents": true, "color": "#fd6a32ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd6a32ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_432330de2d71cc3f9d99f1b182fbe874 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cdfc7823d9071a072fde64d98d89582e = $(`<div id="html_cdfc7823d9071a072fde64d98d89582e" style="width: 100.0%; height: 100.0%;"><b>41REG1 - Brussel (Bld du Régent)</b><br>Nitrogen dioxide<br>Value: 33.50 µg/m³</div>`)[0];
+                popup_432330de2d71cc3f9d99f1b182fbe874.setContent(html_cdfc7823d9071a072fde64d98d89582e);
+            
+        
+
+        circle_marker_085eeb9396ebd2e7f8931f06aacf266d.bindPopup(popup_432330de2d71cc3f9d99f1b182fbe874)
+        ;
+
+        
+    
+    
+            circle_marker_085eeb9396ebd2e7f8931f06aacf266d.bindTooltip(
+                `<div>
+                     41REG1 - Brussel (Bld du Régent) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c33ad574d265146e412e1b7e70aa413f = L.circleMarker(
+                [50.87036591660655, 4.306158790881908],
+                {"bubblingMouseEvents": true, "color": "#ffe895ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffe895ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_dd25cfd2a5803e641254bdebe539d9e5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9dee40566ee6c54c23fe910d21b91a5e = $(`<div id="html_9dee40566ee6c54c23fe910d21b91a5e" style="width: 100.0%; height: 100.0%;"><b>41CHA1 - Brussel (Ganshoren)</b><br>Nitrogen dioxide<br>Value: 10.00 µg/m³</div>`)[0];
+                popup_dd25cfd2a5803e641254bdebe539d9e5.setContent(html_9dee40566ee6c54c23fe910d21b91a5e);
+            
+        
+
+        circle_marker_c33ad574d265146e412e1b7e70aa413f.bindPopup(popup_dd25cfd2a5803e641254bdebe539d9e5)
+        ;
+
+        
+    
+    
+            circle_marker_c33ad574d265146e412e1b7e70aa413f.bindTooltip(
+                `<div>
+                     41CHA1 - Brussel (Ganshoren) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a538dc1bc8740ff0faff899e42ebddde = L.circleMarker(
+                [51.2263885910435, 4.4487499033416125],
+                {"bubblingMouseEvents": true, "color": "#fd893aff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd893aff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_92a3225dedf174c15a712078e4b2fa25 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_028c402b4696fc9e4f20b4c9e08999fb = $(`<div id="html_028c402b4696fc9e4f20b4c9e08999fb" style="width: 100.0%; height: 100.0%;"><b>40DU07 - Deurne</b><br>Nitrogen dioxide<br>Value: 30.00 µg/m³</div>`)[0];
+                popup_92a3225dedf174c15a712078e4b2fa25.setContent(html_028c402b4696fc9e4f20b4c9e08999fb);
+            
+        
+
+        circle_marker_a538dc1bc8740ff0faff899e42ebddde.bindPopup(popup_92a3225dedf174c15a712078e4b2fa25)
+        ;
+
+        
+    
+    
+            circle_marker_a538dc1bc8740ff0faff899e42ebddde.bindTooltip(
+                `<div>
+                     40DU07 - Deurne — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_afbef00a5648a4e1b97394ca287c3b8d = L.circleMarker(
+                [50.451600180544055, 4.425464746587248],
+                {"bubblingMouseEvents": true, "color": "#fff7b7ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff7b7ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_b1ce67c2efe3d548c63afccc59eeb321 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e5160ad6869c89ef690bea196d40f255 = $(`<div id="html_e5160ad6869c89ef690bea196d40f255" style="width: 100.0%; height: 100.0%;"><b>48R515 - Aeroport 1</b><br>Nitrogen dioxide<br>Value: 4.50 µg/m³</div>`)[0];
+                popup_b1ce67c2efe3d548c63afccc59eeb321.setContent(html_e5160ad6869c89ef690bea196d40f255);
+            
+        
+
+        circle_marker_afbef00a5648a4e1b97394ca287c3b8d.bindPopup(popup_b1ce67c2efe3d548c63afccc59eeb321)
+        ;
+
+        
+    
+    
+            circle_marker_afbef00a5648a4e1b97394ca287c3b8d.bindTooltip(
+                `<div>
+                     48R515 - Aeroport 1 — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fcd050a6b03a208209e02775f56e5997 = L.circleMarker(
+                [50.469131603874, 4.484957959246505],
+                {"bubblingMouseEvents": true, "color": "#ffe083ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffe083ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_470e5cc1a9a0e8019000c1a73183b6b9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_bd5f56b45928ed9744d7b384a61aa6ff = $(`<div id="html_bd5f56b45928ed9744d7b384a61aa6ff" style="width: 100.0%; height: 100.0%;"><b>48R516 - Aeroport 2</b><br>Nitrogen dioxide<br>Value: 13.00 µg/m³</div>`)[0];
+                popup_470e5cc1a9a0e8019000c1a73183b6b9.setContent(html_bd5f56b45928ed9744d7b384a61aa6ff);
+            
+        
+
+        circle_marker_fcd050a6b03a208209e02775f56e5997.bindPopup(popup_470e5cc1a9a0e8019000c1a73183b6b9)
+        ;
+
+        
+    
+    
+            circle_marker_fcd050a6b03a208209e02775f56e5997.bindTooltip(
+                `<div>
+                     48R516 - Aeroport 2 — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f5194ab0cc877c01b1646f79aab3743f = L.circleMarker(
+                [51.2095187315834, 4.4317922307924436],
+                {"bubblingMouseEvents": true, "color": "#feca66ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#feca66ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_847c8b56976d668012a22baa807a7e5a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cb2b8eff410138228cc4ffe39764a8e5 = $(`<div id="html_cb2b8eff410138228cc4ffe39764a8e5" style="width: 100.0%; height: 100.0%;"><b>42R802 - Borgerhout</b><br>Nitrogen dioxide<br>Value: 18.00 µg/m³</div>`)[0];
+                popup_847c8b56976d668012a22baa807a7e5a.setContent(html_cb2b8eff410138228cc4ffe39764a8e5);
+            
+        
+
+        circle_marker_f5194ab0cc877c01b1646f79aab3743f.bindPopup(popup_847c8b56976d668012a22baa807a7e5a)
+        ;
+
+        
+    
+    
+            circle_marker_f5194ab0cc877c01b1646f79aab3743f.bindTooltip(
+                `<div>
+                     42R802 - Borgerhout — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ffad6892b8023c4cde4da30c0a6b175e = L.circleMarker(
+                [50.84078856650011, 4.376149069749031],
+                {"bubblingMouseEvents": true, "color": "#fd8038ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fd8038ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_6da3dbe25edd1083ec4c190be4826c94 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_35e8c1a3eadcdc3369ea1fab61ee0df7 = $(`<div id="html_35e8c1a3eadcdc3369ea1fab61ee0df7" style="width: 100.0%; height: 100.0%;"><b>41B008 - Brussel (Beliardstraat)</b><br>Nitrogen dioxide<br>Value: 31.00 µg/m³</div>`)[0];
+                popup_6da3dbe25edd1083ec4c190be4826c94.setContent(html_35e8c1a3eadcdc3369ea1fab61ee0df7);
+            
+        
+
+        circle_marker_ffad6892b8023c4cde4da30c0a6b175e.bindPopup(popup_6da3dbe25edd1083ec4c190be4826c94)
+        ;
+
+        
+    
+    
+            circle_marker_ffad6892b8023c4cde4da30c0a6b175e.bindTooltip(
+                `<div>
+                     41B008 - Brussel (Beliardstraat) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a2f27f6915752c58cdd7090e00d5be2d = L.circleMarker(
+                [50.658444416786566, 5.627835290852658],
+                {"bubblingMouseEvents": true, "color": "#fed572ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed572ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_1446ab0432bd000f1e8400a3d279707b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0e41472e472e16803a2c18649330ba3d = $(`<div id="html_0e41472e472e16803a2c18649330ba3d" style="width: 100.0%; height: 100.0%;"><b>43R221 - Liège</b><br>Nitrogen dioxide<br>Value: 16.00 µg/m³</div>`)[0];
+                popup_1446ab0432bd000f1e8400a3d279707b.setContent(html_0e41472e472e16803a2c18649330ba3d);
+            
+        
+
+        circle_marker_a2f27f6915752c58cdd7090e00d5be2d.bindPopup(popup_1446ab0432bd000f1e8400a3d279707b)
+        ;
+
+        
+    
+    
+            circle_marker_a2f27f6915752c58cdd7090e00d5be2d.bindTooltip(
+                `<div>
+                     43R221 - Liège — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a3fbddcb7eb59798c5d001967c7481c6 = L.circleMarker(
+                [51.04068941942742, 3.734971479685309],
+                {"bubblingMouseEvents": true, "color": "#ffdb7aff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffdb7aff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_f778588f1323823721948d1b2d96990d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_796f3d613b6d41ea0796ceb509e1c28a = $(`<div id="html_796f3d613b6d41ea0796ceb509e1c28a" style="width: 100.0%; height: 100.0%;"><b>44R702 - Gent (Carlierlaan)</b><br>Nitrogen dioxide<br>Value: 14.50 µg/m³</div>`)[0];
+                popup_f778588f1323823721948d1b2d96990d.setContent(html_796f3d613b6d41ea0796ceb509e1c28a);
+            
+        
+
+        circle_marker_a3fbddcb7eb59798c5d001967c7481c6.bindPopup(popup_f778588f1323823721948d1b2d96990d)
+        ;
+
+        
+    
+    
+            circle_marker_a3fbddcb7eb59798c5d001967c7481c6.bindTooltip(
+                `<div>
+                     44R702 - Gent (Carlierlaan) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_97e123c1257ffa68d5a681b0e42220c2 = L.circleMarker(
+                [51.08218722351401, 5.129718074812026],
+                {"bubblingMouseEvents": true, "color": "#fff2aaff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff2aaff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_c122d15f19202791d5705ae363f9a8eb = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_64e5c2b1c22dc3e613d92615dd24f3d3 = $(`<div id="html_64e5c2b1c22dc3e613d92615dd24f3d3" style="width: 100.0%; height: 100.0%;"><b>47E814 - Ham</b><br>Nitrogen dioxide<br>Value: 6.50 µg/m³</div>`)[0];
+                popup_c122d15f19202791d5705ae363f9a8eb.setContent(html_64e5c2b1c22dc3e613d92615dd24f3d3);
+            
+        
+
+        circle_marker_97e123c1257ffa68d5a681b0e42220c2.bindPopup(popup_c122d15f19202791d5705ae363f9a8eb)
+        ;
+
+        
+    
+    
+            circle_marker_97e123c1257ffa68d5a681b0e42220c2.bindTooltip(
+                `<div>
+                     47E814 - Ham — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6182cdeec5cb5ea1e43c327b6dd74f72 = L.circleMarker(
+                [51.22862981306364, 4.428454177535568],
+                {"bubblingMouseEvents": true, "color": "#ffe895ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffe895ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_a795125513e5c82814523478a072def2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c6a41d1e8df93d1ba7fe77bceb6d48d8 = $(`<div id="html_c6a41d1e8df93d1ba7fe77bceb6d48d8" style="width: 100.0%; height: 100.0%;"><b>42R803 - Antwerpen (Park Spoor Noord)</b><br>Nitrogen dioxide<br>Value: 10.00 µg/m³</div>`)[0];
+                popup_a795125513e5c82814523478a072def2.setContent(html_c6a41d1e8df93d1ba7fe77bceb6d48d8);
+            
+        
+
+        circle_marker_6182cdeec5cb5ea1e43c327b6dd74f72.bindPopup(popup_a795125513e5c82814523478a072def2)
+        ;
+
+        
+    
+    
+            circle_marker_6182cdeec5cb5ea1e43c327b6dd74f72.bindTooltip(
+                `<div>
+                     42R803 - Antwerpen (Park Spoor Noord) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_6b2ab8f2a7c78b8dde10d622459af3d6 = L.circleMarker(
+                [51.17713088779366, 4.4179486377777355],
+                {"bubblingMouseEvents": true, "color": "#ffdb7aff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffdb7aff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_986eae8308ded986c22a0557d02649b4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e2cdc74872d061e553460ef6d098abe7 = $(`<div id="html_e2cdc74872d061e553460ef6d098abe7" style="width: 100.0%; height: 100.0%;"><b>42R817 - Antwerpen (Groenenborgerlaan)</b><br>Nitrogen dioxide<br>Value: 14.50 µg/m³</div>`)[0];
+                popup_986eae8308ded986c22a0557d02649b4.setContent(html_e2cdc74872d061e553460ef6d098abe7);
+            
+        
+
+        circle_marker_6b2ab8f2a7c78b8dde10d622459af3d6.bindPopup(popup_986eae8308ded986c22a0557d02649b4)
+        ;
+
+        
+    
+    
+            circle_marker_6b2ab8f2a7c78b8dde10d622459af3d6.bindTooltip(
+                `<div>
+                     42R817 - Antwerpen (Groenenborgerlaan) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5856e9e3d4f3a9c60a2babd4b26fd50a = L.circleMarker(
+                [51.176100104067345, 3.86992817275221],
+                {"bubblingMouseEvents": true, "color": "#ffe186ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffe186ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_2b673e33f6ee8643af33c63186684c92 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_348d901d1ca0eea6974fbef13ff32d5b = $(`<div id="html_348d901d1ca0eea6974fbef13ff32d5b" style="width: 100.0%; height: 100.0%;"><b>47E704 - Wachtebeke</b><br>Nitrogen dioxide<br>Value: 12.50 µg/m³</div>`)[0];
+                popup_2b673e33f6ee8643af33c63186684c92.setContent(html_348d901d1ca0eea6974fbef13ff32d5b);
+            
+        
+
+        circle_marker_5856e9e3d4f3a9c60a2babd4b26fd50a.bindPopup(popup_2b673e33f6ee8643af33c63186684c92)
+        ;
+
+        
+    
+    
+            circle_marker_5856e9e3d4f3a9c60a2babd4b26fd50a.bindTooltip(
+                `<div>
+                     47E704 - Wachtebeke — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b3c6c1fc9268269b072179f6d88f647c = L.circleMarker(
+                [51.206303948654636, 4.441947090848597],
+                {"bubblingMouseEvents": true, "color": "#ea261fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ea261fff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_542356bf55dab2032fd2cb5e83c62299 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a6306486b4ac7de8d831ef165ea4d1e1 = $(`<div id="html_a6306486b4ac7de8d831ef165ea4d1e1" style="width: 100.0%; height: 100.0%;"><b>42R804 - Antwerpen (Ring)</b><br>Nitrogen dioxide<br>Value: 42.00 µg/m³</div>`)[0];
+                popup_542356bf55dab2032fd2cb5e83c62299.setContent(html_a6306486b4ac7de8d831ef165ea4d1e1);
+            
+        
+
+        circle_marker_b3c6c1fc9268269b072179f6d88f647c.bindPopup(popup_542356bf55dab2032fd2cb5e83c62299)
+        ;
+
+        
+    
+    
+            circle_marker_b3c6c1fc9268269b072179f6d88f647c.bindTooltip(
+                `<div>
+                     42R804 - Antwerpen (Ring) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ee78a0c9523bd73149a295521cfad0b6 = L.circleMarker(
+                [51.212258108540006, 4.350554534328846],
+                {"bubblingMouseEvents": true, "color": "#fed26fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed26fff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_809855311777f43183cc097650f4d82d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e03b8730dc0037125bd262a3e49635d1 = $(`<div id="html_e03b8730dc0037125bd262a3e49635d1" style="width: 100.0%; height: 100.0%;"><b>42R818 - Antwerpen (Burchtse Weel)</b><br>Nitrogen dioxide<br>Value: 16.50 µg/m³</div>`)[0];
+                popup_809855311777f43183cc097650f4d82d.setContent(html_e03b8730dc0037125bd262a3e49635d1);
+            
+        
+
+        circle_marker_ee78a0c9523bd73149a295521cfad0b6.bindPopup(popup_809855311777f43183cc097650f4d82d)
+        ;
+
+        
+    
+    
+            circle_marker_ee78a0c9523bd73149a295521cfad0b6.bindTooltip(
+                `<div>
+                     42R818 - Antwerpen (Burchtse Weel) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a38fa4199c6e4639746f8cdbb4eb301c = L.circleMarker(
+                [50.46242793960455, 4.865260946011648],
+                {"bubblingMouseEvents": true, "color": "#fff9bdff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff9bdff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_e4ec00a351061793c67ce3aec9c05a7e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6c43d9e707a95e37ee7a4f31883a2caa = $(`<div id="html_6c43d9e707a95e37ee7a4f31883a2caa" style="width: 100.0%; height: 100.0%;"><b>43R401 - Namur</b><br>Nitrogen dioxide<br>Value: 3.50 µg/m³</div>`)[0];
+                popup_e4ec00a351061793c67ce3aec9c05a7e.setContent(html_6c43d9e707a95e37ee7a4f31883a2caa);
+            
+        
+
+        circle_marker_a38fa4199c6e4639746f8cdbb4eb301c.bindPopup(popup_e4ec00a351061793c67ce3aec9c05a7e)
+        ;
+
+        
+    
+    
+            circle_marker_a38fa4199c6e4639746f8cdbb4eb301c.bindTooltip(
+                `<div>
+                     43R401 - Namur — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_01c0ed120be217592999beff846a899f = L.circleMarker(
+                [50.936189381853765, 5.354360289979902],
+                {"bubblingMouseEvents": true, "color": "#fff3adff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff3adff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_9e98c0695b49f3b0bf065304530fc107 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a5136ae274f75dc8cadf349dbc41cd64 = $(`<div id="html_a5136ae274f75dc8cadf349dbc41cd64" style="width: 100.0%; height: 100.0%;"><b>42N047 - Hasselt</b><br>Nitrogen dioxide<br>Value: 6.00 µg/m³</div>`)[0];
+                popup_9e98c0695b49f3b0bf065304530fc107.setContent(html_a5136ae274f75dc8cadf349dbc41cd64);
+            
+        
+
+        circle_marker_01c0ed120be217592999beff846a899f.bindPopup(popup_9e98c0695b49f3b0bf065304530fc107)
+        ;
+
+        
+    
+    
+            circle_marker_01c0ed120be217592999beff846a899f.bindTooltip(
+                `<div>
+                     42N047 - Hasselt — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_baa4e519edbf215f55fa52750ec50882 = L.circleMarker(
+                [51.22328680304353, 4.417539976113199],
+                {"bubblingMouseEvents": true, "color": "#800026ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#800026ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_2699ac233e0a778f594434910745a3a5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b6b336b64af75732291630b432bb0b67 = $(`<div id="html_b6b336b64af75732291630b432bb0b67" style="width: 100.0%; height: 100.0%;"><b>42R806 - Maerlant</b><br>Nitrogen dioxide<br>Value: 58.00 µg/m³</div>`)[0];
+                popup_2699ac233e0a778f594434910745a3a5.setContent(html_b6b336b64af75732291630b432bb0b67);
+            
+        
+
+        circle_marker_baa4e519edbf215f55fa52750ec50882.bindPopup(popup_2699ac233e0a778f594434910745a3a5)
+        ;
+
+        
+    
+    
+            circle_marker_baa4e519edbf215f55fa52750ec50882.bindTooltip(
+                `<div>
+                     42R806 - Maerlant — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5156688e95c323cdb3ee0afa324517d1 = L.circleMarker(
+                [51.20822947181707, 4.4215592510652755],
+                {"bubblingMouseEvents": true, "color": "#fec560ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fec560ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_86f7213635bf75072379c2d48ef2b79c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e2197e02da8c2322611f611e05754031 = $(`<div id="html_e2197e02da8c2322611f611e05754031" style="width: 100.0%; height: 100.0%;"><b>42R805 - Antwerpen (Belgiëlei)</b><br>Nitrogen dioxide<br>Value: 19.00 µg/m³</div>`)[0];
+                popup_86f7213635bf75072379c2d48ef2b79c.setContent(html_e2197e02da8c2322611f611e05754031);
+            
+        
+
+        circle_marker_5156688e95c323cdb3ee0afa324517d1.bindPopup(popup_86f7213635bf75072379c2d48ef2b79c)
+        ;
+
+        
+    
+    
+            circle_marker_5156688e95c323cdb3ee0afa324517d1.bindTooltip(
+                `<div>
+                     42R805 - Antwerpen (Belgiëlei) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_98d1ea2f3478b744daac1ae017006eb6 = L.circleMarker(
+                [50.837909259201666, 4.341821001555247],
+                {"bubblingMouseEvents": true, "color": "#fec560ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fec560ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_0d75ce906bae56c5faae8b1c028fcaa7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9629f441e869693e27e8fe2852659ff2 = $(`<div id="html_9629f441e869693e27e8fe2852659ff2" style="width: 100.0%; height: 100.0%;"><b>41BUL1 - Brussel (Bld du Midi)</b><br>Nitrogen dioxide<br>Value: 19.00 µg/m³</div>`)[0];
+                popup_0d75ce906bae56c5faae8b1c028fcaa7.setContent(html_9629f441e869693e27e8fe2852659ff2);
+            
+        
+
+        circle_marker_98d1ea2f3478b744daac1ae017006eb6.bindPopup(popup_0d75ce906bae56c5faae8b1c028fcaa7)
+        ;
+
+        
+    
+    
+            circle_marker_98d1ea2f3478b744daac1ae017006eb6.bindTooltip(
+                `<div>
+                     41BUL1 - Brussel (Bld du Midi) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ecd0d5643efce2c5566cf9c1b7f689c8 = L.circleMarker(
+                [50.846081614357004, 4.346090383271139],
+                {"bubblingMouseEvents": true, "color": "#ffefa4ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffefa4ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_a638aa1e36ed23a362a171a398953324 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_57759b9cbde2a149968e97dd926342e3 = $(`<div id="html_57759b9cbde2a149968e97dd926342e3" style="width: 100.0%; height: 100.0%;"><b>41VBX1 - Brussel (Rue de Grand Ile)</b><br>Nitrogen dioxide<br>Value: 7.50 µg/m³</div>`)[0];
+                popup_a638aa1e36ed23a362a171a398953324.setContent(html_57759b9cbde2a149968e97dd926342e3);
+            
+        
+
+        circle_marker_ecd0d5643efce2c5566cf9c1b7f689c8.bindPopup(popup_a638aa1e36ed23a362a171a398953324)
+        ;
+
+        
+    
+    
+            circle_marker_ecd0d5643efce2c5566cf9c1b7f689c8.bindTooltip(
+                `<div>
+                     41VBX1 - Brussel (Rue de Grand Ile) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1c463dc6342d0a886ff5447323d0e531 = L.circleMarker(
+                [50.84028350969499, 4.346831357738303],
+                {"bubblingMouseEvents": true, "color": "#fec763ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fec763ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_5bfdb8a92276f228a16b684d349a991d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d0f607a7722c3870c460bb2fb0259f32 = $(`<div id="html_d0f607a7722c3870c460bb2fb0259f32" style="width: 100.0%; height: 100.0%;"><b>41VBX2 - Brussel (Rue des Tanneurs)</b><br>Nitrogen dioxide<br>Value: 18.50 µg/m³</div>`)[0];
+                popup_5bfdb8a92276f228a16b684d349a991d.setContent(html_d0f607a7722c3870c460bb2fb0259f32);
+            
+        
+
+        circle_marker_1c463dc6342d0a886ff5447323d0e531.bindPopup(popup_5bfdb8a92276f228a16b684d349a991d)
+        ;
+
+        
+    
+    
+            circle_marker_1c463dc6342d0a886ff5447323d0e531.bindTooltip(
+                `<div>
+                     41VBX2 - Brussel (Rue des Tanneurs) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_094544ff7bf09317b633d1019ab281e3 = L.circleMarker(
+                [50.855018198788585, 4.352448633491195],
+                {"bubblingMouseEvents": true, "color": "#ffde80ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffde80ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_806e9173d0ddd63a55624247ddd82dd2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_60c37fc0edbbb97a645e5197b10faa64 = $(`<div id="html_60c37fc0edbbb97a645e5197b10faa64" style="width: 100.0%; height: 100.0%;"><b>41VBX3 - Brussel (Rue de Laeken)</b><br>Nitrogen dioxide<br>Value: 13.50 µg/m³</div>`)[0];
+                popup_806e9173d0ddd63a55624247ddd82dd2.setContent(html_60c37fc0edbbb97a645e5197b10faa64);
+            
+        
+
+        circle_marker_094544ff7bf09317b633d1019ab281e3.bindPopup(popup_806e9173d0ddd63a55624247ddd82dd2)
+        ;
+
+        
+    
+    
+            circle_marker_094544ff7bf09317b633d1019ab281e3.bindTooltip(
+                `<div>
+                     41VBX3 - Brussel (Rue de Laeken) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ca54573d763e19ab1370de38fe548062 = L.circleMarker(
+                [51.250507862508094, 4.427522934333513],
+                {"bubblingMouseEvents": true, "color": "#fe903dff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fe903dff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_bc403f46de12608c02d9f079ab8ff95d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_74153873011891001c72fdd99c60be15 = $(`<div id="html_74153873011891001c72fdd99c60be15" style="width: 100.0%; height: 100.0%;"><b>42MK02 - Merksem</b><br>Nitrogen dioxide<br>Value: 29.00 µg/m³</div>`)[0];
+                popup_bc403f46de12608c02d9f079ab8ff95d.setContent(html_74153873011891001c72fdd99c60be15);
+            
+        
+
+        circle_marker_ca54573d763e19ab1370de38fe548062.bindPopup(popup_bc403f46de12608c02d9f079ab8ff95d)
+        ;
+
+        
+    
+    
+            circle_marker_ca54573d763e19ab1370de38fe548062.bindTooltip(
+                `<div>
+                     42MK02 - Merksem — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_336790b013b77b98a1926a5dc9ba85a2 = L.circleMarker(
+                [50.91664840535989, 4.515181795705702],
+                {"bubblingMouseEvents": true, "color": "#fea747ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fea747ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_181fb8d305c3b046e0ad8ee4ff40d5f8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_032ad3fe70d8b1a8e362a9ec3c0b086e = $(`<div id="html_032ad3fe70d8b1a8e362a9ec3c0b086e" style="width: 100.0%; height: 100.0%;"><b>40SZ05 - Steenokkerzeel</b><br>Nitrogen dioxide<br>Value: 24.50 µg/m³</div>`)[0];
+                popup_181fb8d305c3b046e0ad8ee4ff40d5f8.setContent(html_032ad3fe70d8b1a8e362a9ec3c0b086e);
+            
+        
+
+        circle_marker_336790b013b77b98a1926a5dc9ba85a2.bindPopup(popup_181fb8d305c3b046e0ad8ee4ff40d5f8)
+        ;
+
+        
+    
+    
+            circle_marker_336790b013b77b98a1926a5dc9ba85a2.bindTooltip(
+                `<div>
+                     40SZ05 - Steenokkerzeel — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ad1b2a632f71c1c32ed3c3245819c4d8 = L.circleMarker(
+                [51.3139288941448, 4.403868139749611],
+                {"bubblingMouseEvents": true, "color": "#ffde80ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffde80ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_072afb53e1fa3c63454e14e8756afea3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fddec4393bd5eea737b172949a1413dd = $(`<div id="html_fddec4393bd5eea737b172949a1413dd" style="width: 100.0%; height: 100.0%;"><b>40SA04 - Hoevenen</b><br>Nitrogen dioxide<br>Value: 13.50 µg/m³</div>`)[0];
+                popup_072afb53e1fa3c63454e14e8756afea3.setContent(html_fddec4393bd5eea737b172949a1413dd);
+            
+        
+
+        circle_marker_ad1b2a632f71c1c32ed3c3245819c4d8.bindPopup(popup_072afb53e1fa3c63454e14e8756afea3)
+        ;
+
+        
+    
+    
+            circle_marker_ad1b2a632f71c1c32ed3c3245819c4d8.bindTooltip(
+                `<div>
+                     40SA04 - Hoevenen — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f80a0c99490c0cabb6542c99b7c7024b = L.circleMarker(
+                [50.65381476013357, 5.470383864868788],
+                {"bubblingMouseEvents": true, "color": "#fff4b0ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff4b0ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_689c502c3e7a362b89e34caa0097a7a0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c9c514905588cb7cbf8c6d524020c70c = $(`<div id="html_c9c514905588cb7cbf8c6d524020c70c" style="width: 100.0%; height: 100.0%;"><b>48R237 - Aeroport 1</b><br>Nitrogen dioxide<br>Value: 5.50 µg/m³</div>`)[0];
+                popup_689c502c3e7a362b89e34caa0097a7a0.setContent(html_c9c514905588cb7cbf8c6d524020c70c);
+            
+        
+
+        circle_marker_f80a0c99490c0cabb6542c99b7c7024b.bindPopup(popup_689c502c3e7a362b89e34caa0097a7a0)
+        ;
+
+        
+    
+    
+            circle_marker_f80a0c99490c0cabb6542c99b7c7024b.bindTooltip(
+                `<div>
+                     48R237 - Aeroport 1 — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ae751cd66ae71db94f210aae0e057d91 = L.circleMarker(
+                [50.619097009467374, 5.417128324921351],
+                {"bubblingMouseEvents": true, "color": "#ffe48cff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffe48cff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_bb11f011727ea3f48768b00487b0747d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_be6f7fedd33e817cd16e0c11c678ee84 = $(`<div id="html_be6f7fedd33e817cd16e0c11c678ee84" style="width: 100.0%; height: 100.0%;"><b>48R236 - Aeroport 2</b><br>Nitrogen dioxide<br>Value: 11.50 µg/m³</div>`)[0];
+                popup_bb11f011727ea3f48768b00487b0747d.setContent(html_be6f7fedd33e817cd16e0c11c678ee84);
+            
+        
+
+        circle_marker_ae751cd66ae71db94f210aae0e057d91.bindPopup(popup_bb11f011727ea3f48768b00487b0747d)
+        ;
+
+        
+    
+    
+            circle_marker_ae751cd66ae71db94f210aae0e057d91.bindTooltip(
+                `<div>
+                     48R236 - Aeroport 2 — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d90e29e0ea51f6383e74ec9a28167004 = L.circleMarker(
+                [51.32178391495644, 3.2182131043832807],
+                {"bubblingMouseEvents": true, "color": "#dd151dff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dd151dff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_813d86ab313880872af17dda2467682b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4afa0151e01dafc16efa2d880a48d7b1 = $(`<div id="html_4afa0151e01dafc16efa2d880a48d7b1" style="width: 100.0%; height: 100.0%;"><b>40ZB07 - Zeebrugge</b><br>Nitrogen dioxide<br>Value: 45.00 µg/m³</div>`)[0];
+                popup_813d86ab313880872af17dda2467682b.setContent(html_4afa0151e01dafc16efa2d880a48d7b1);
+            
+        
+
+        circle_marker_d90e29e0ea51f6383e74ec9a28167004.bindPopup(popup_813d86ab313880872af17dda2467682b)
+        ;
+
+        
+    
+    
+            circle_marker_d90e29e0ea51f6383e74ec9a28167004.bindTooltip(
+                `<div>
+                     40ZB07 - Zeebrugge — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a26f535393e09e9a0115a41e29103f81 = L.circleMarker(
+                [50.72088837560367, 4.494362377317611],
+                {"bubblingMouseEvents": true, "color": "#fff8baff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff8baff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_75bcb4d94cba5c0d7266a16e86369074 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7515c728de3109393b9386a4be843502 = $(`<div id="html_7515c728de3109393b9386a4be843502" style="width: 100.0%; height: 100.0%;"><b>43N064 - Rixensart</b><br>Nitrogen dioxide<br>Value: 4.00 µg/m³</div>`)[0];
+                popup_75bcb4d94cba5c0d7266a16e86369074.setContent(html_7515c728de3109393b9386a4be843502);
+            
+        
+
+        circle_marker_a26f535393e09e9a0115a41e29103f81.bindPopup(popup_75bcb4d94cba5c0d7266a16e86369074)
+        ;
+
+        
+    
+    
+            circle_marker_a26f535393e09e9a0115a41e29103f81.bindTooltip(
+                `<div>
+                     43N064 - Rixensart — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e2211ea5e6404ec11368940f47952f57 = L.circleMarker(
+                [51.330403831641554, 3.212604898952718],
+                {"bubblingMouseEvents": true, "color": "#ffe895ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffe895ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_604b8f3b7af0a9e90636413051079a82 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c7d7f8cae60c5e7941c3a43dd2f1e8c8 = $(`<div id="html_c7d7f8cae60c5e7941c3a43dd2f1e8c8" style="width: 100.0%; height: 100.0%;"><b>40ZB08 - Zeebrugge (Evendijk-Oost)</b><br>Nitrogen dioxide<br>Value: 10.00 µg/m³</div>`)[0];
+                popup_604b8f3b7af0a9e90636413051079a82.setContent(html_c7d7f8cae60c5e7941c3a43dd2f1e8c8);
+            
+        
+
+        circle_marker_e2211ea5e6404ec11368940f47952f57.bindPopup(popup_604b8f3b7af0a9e90636413051079a82)
+        ;
+
+        
+    
+    
+            circle_marker_e2211ea5e6404ec11368940f47952f57.bindTooltip(
+                `<div>
+                     40ZB08 - Zeebrugge (Evendijk-Oost) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_afa4e94a3ffc33edd27b2b28cbc0b82f = L.circleMarker(
+                [51.33980296164517, 4.304988727978888],
+                {"bubblingMouseEvents": true, "color": "#c50524ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#c50524ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_956f4d88ff78ecbe7f4b77ff305ef8a5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e36a9f004bda15b4ea55b5c418388f84 = $(`<div id="html_e36a9f004bda15b4ea55b5c418388f84" style="width: 100.0%; height: 100.0%;"><b>40AT83 - BERENDRECHT</b><br>Nitrogen dioxide<br>Value: 49.50 µg/m³</div>`)[0];
+                popup_956f4d88ff78ecbe7f4b77ff305ef8a5.setContent(html_e36a9f004bda15b4ea55b5c418388f84);
+            
+        
+
+        circle_marker_afa4e94a3ffc33edd27b2b28cbc0b82f.bindPopup(popup_956f4d88ff78ecbe7f4b77ff305ef8a5)
+        ;
+
+        
+    
+    
+            circle_marker_afa4e94a3ffc33edd27b2b28cbc0b82f.bindTooltip(
+                `<div>
+                     40AT83 - BERENDRECHT — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2798463874c6b058fcbf4cdc26100ca0 = L.circleMarker(
+                [51.120384137099414, 5.021545977609842],
+                {"bubblingMouseEvents": true, "color": "#ffec9eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffec9eff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_bc0509f7d168514c43d7dbf512b0069f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a9e90922a2dc221c7c1ec59383f21d6e = $(`<div id="html_a9e90922a2dc221c7c1ec59383f21d6e" style="width: 100.0%; height: 100.0%;"><b>40LD02 - Laakdal</b><br>Nitrogen dioxide<br>Value: 8.50 µg/m³</div>`)[0];
+                popup_bc0509f7d168514c43d7dbf512b0069f.setContent(html_a9e90922a2dc221c7c1ec59383f21d6e);
+            
+        
+
+        circle_marker_2798463874c6b058fcbf4cdc26100ca0.bindPopup(popup_bc0509f7d168514c43d7dbf512b0069f)
+        ;
+
+        
+    
+    
+            circle_marker_2798463874c6b058fcbf4cdc26100ca0.bindTooltip(
+                `<div>
+                     40LD02 - Laakdal — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fa1f3ce3ca576210ec3cf01e60259307 = L.circleMarker(
+                [50.84571510092836, 4.3686812234614925],
+                {"bubblingMouseEvents": true, "color": "#feaa48ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#feaa48ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_5f4135ad6d33e017eb9d3f4c4d5fff34 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e66eb7a7515c6928ca30bbfc7f845423 = $(`<div id="html_e66eb7a7515c6928ca30bbfc7f845423" style="width: 100.0%; height: 100.0%;"><b>41B001 - Arts-Loi</b><br>Nitrogen dioxide<br>Value: 24.00 µg/m³</div>`)[0];
+                popup_5f4135ad6d33e017eb9d3f4c4d5fff34.setContent(html_e66eb7a7515c6928ca30bbfc7f845423);
+            
+        
+
+        circle_marker_fa1f3ce3ca576210ec3cf01e60259307.bindPopup(popup_5f4135ad6d33e017eb9d3f4c4d5fff34)
+        ;
+
+        
+    
+    
+            circle_marker_fa1f3ce3ca576210ec3cf01e60259307.bindTooltip(
+                `<div>
+                     41B001 - Arts-Loi — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a9c21c4387da991b090e3640480f5599 = L.circleMarker(
+                [50.850810536794775, 4.348587474273884],
+                {"bubblingMouseEvents": true, "color": "#fe9f44ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fe9f44ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_00519124b31bd56ff2c938a14c259025 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5d4cf375bbaf23d83353fb2cfd0c61af = $(`<div id="html_5d4cf375bbaf23d83353fb2cfd0c61af" style="width: 100.0%; height: 100.0%;"><b>41B004 - Bruxelles (Sainte-Catherine)</b><br>Nitrogen dioxide<br>Value: 26.00 µg/m³</div>`)[0];
+                popup_00519124b31bd56ff2c938a14c259025.setContent(html_5d4cf375bbaf23d83353fb2cfd0c61af);
+            
+        
+
+        circle_marker_a9c21c4387da991b090e3640480f5599.bindPopup(popup_00519124b31bd56ff2c938a14c259025)
+        ;
+
+        
+    
+    
+            circle_marker_a9c21c4387da991b090e3640480f5599.bindTooltip(
+                `<div>
+                     41B004 - Bruxelles (Sainte-Catherine) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b10792e8bb5c1b5e356dcf1856f52ab1 = L.circleMarker(
+                [50.83863118763408, 4.374388283352737],
+                {"bubblingMouseEvents": true, "color": "#ffea98ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffea98ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_1ee862c01cd5ba852f9ce51d79c5e9e9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5ec9e17a6ad212cf3f53f5a8ac31b456 = $(`<div id="html_5ec9e17a6ad212cf3f53f5a8ac31b456" style="width: 100.0%; height: 100.0%;"><b>41B006 - Bruxelles (Parlement UE)</b><br>Nitrogen dioxide<br>Value: 9.50 µg/m³</div>`)[0];
+                popup_1ee862c01cd5ba852f9ce51d79c5e9e9.setContent(html_5ec9e17a6ad212cf3f53f5a8ac31b456);
+            
+        
+
+        circle_marker_b10792e8bb5c1b5e356dcf1856f52ab1.bindPopup(popup_1ee862c01cd5ba852f9ce51d79c5e9e9)
+        ;
+
+        
+    
+    
+            circle_marker_b10792e8bb5c1b5e356dcf1856f52ab1.bindTooltip(
+                `<div>
+                     41B006 - Bruxelles (Parlement UE) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_df64b52f7bc6cefa771cfd308d796838 = L.circleMarker(
+                [50.85803059327685, 4.288336366305905],
+                {"bubblingMouseEvents": true, "color": "#fff3adff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff3adff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_32dec5e7b1b78d916c295bf652cb7b1c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8faf5494f90c97ec81760660d7184d60 = $(`<div id="html_8faf5494f90c97ec81760660d7184d60" style="width: 100.0%; height: 100.0%;"><b>41B011 - Berchem-Sainte-Agathe</b><br>Nitrogen dioxide<br>Value: 6.00 µg/m³</div>`)[0];
+                popup_32dec5e7b1b78d916c295bf652cb7b1c.setContent(html_8faf5494f90c97ec81760660d7184d60);
+            
+        
+
+        circle_marker_df64b52f7bc6cefa771cfd308d796838.bindPopup(popup_32dec5e7b1b78d916c295bf652cb7b1c)
+        ;
+
+        
+    
+    
+            circle_marker_df64b52f7bc6cefa771cfd308d796838.bindTooltip(
+                `<div>
+                     41B011 - Berchem-Sainte-Agathe — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_92033819643168bc69c65e5cf9a2af23 = L.circleMarker(
+                [50.89510056203224, 4.392717697566157],
+                {"bubblingMouseEvents": true, "color": "#ffeb9bff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffeb9bff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_ef5604d7124e2fb3a8db884102d3723b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b9bdbcdc1ddc367fc7b76c4018d4b8bf = $(`<div id="html_b9bdbcdc1ddc367fc7b76c4018d4b8bf" style="width: 100.0%; height: 100.0%;"><b>41MEU1 - Meudon</b><br>Nitrogen dioxide<br>Value: 9.00 µg/m³</div>`)[0];
+                popup_ef5604d7124e2fb3a8db884102d3723b.setContent(html_b9bdbcdc1ddc367fc7b76c4018d4b8bf);
+            
+        
+
+        circle_marker_92033819643168bc69c65e5cf9a2af23.bindPopup(popup_ef5604d7124e2fb3a8db884102d3723b)
+        ;
+
+        
+    
+    
+            circle_marker_92033819643168bc69c65e5cf9a2af23.bindTooltip(
+                `<div>
+                     41MEU1 - Meudon — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_edc35e9c8e45543f0ade6dc6fc805f90 = L.circleMarker(
+                [50.883559811382206, 4.38296325180234],
+                {"bubblingMouseEvents": true, "color": "#ffdb7aff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffdb7aff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_043a41dd90cdafd26e85c37504d517b3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7bade8d846ecf05e014e3967e0fdde9c = $(`<div id="html_7bade8d846ecf05e014e3967e0fdde9c" style="width: 100.0%; height: 100.0%;"><b>41N043 - Haren</b><br>Nitrogen dioxide<br>Value: 14.50 µg/m³</div>`)[0];
+                popup_043a41dd90cdafd26e85c37504d517b3.setContent(html_7bade8d846ecf05e014e3967e0fdde9c);
+            
+        
+
+        circle_marker_edc35e9c8e45543f0ade6dc6fc805f90.bindPopup(popup_043a41dd90cdafd26e85c37504d517b3)
+        ;
+
+        
+    
+    
+            circle_marker_edc35e9c8e45543f0ade6dc6fc805f90.bindTooltip(
+                `<div>
+                     41N043 - Haren — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b6124a7a83bd0c81de30ae67c72789a7 = L.circleMarker(
+                [50.84966548806797, 4.333819707712016],
+                {"bubblingMouseEvents": true, "color": "#ffdd7dff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffdd7dff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_72c3059aa73ef825606b1ce89cd4c73e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ae72d3aa347b046ba9ea95715280853d = $(`<div id="html_ae72d3aa347b046ba9ea95715280853d" style="width: 100.0%; height: 100.0%;"><b>41R001 - Molenbeek-Saint-Jean</b><br>Nitrogen dioxide<br>Value: 14.00 µg/m³</div>`)[0];
+                popup_72c3059aa73ef825606b1ce89cd4c73e.setContent(html_ae72d3aa347b046ba9ea95715280853d);
+            
+        
+
+        circle_marker_b6124a7a83bd0c81de30ae67c72789a7.bindPopup(popup_72c3059aa73ef825606b1ce89cd4c73e)
+        ;
+
+        
+    
+    
+            circle_marker_b6124a7a83bd0c81de30ae67c72789a7.bindTooltip(
+                `<div>
+                     41R001 - Molenbeek-Saint-Jean — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0520fdc5bea6e5c284e4adf0d09f5992 = L.circleMarker(
+                [50.825127872957104, 4.384718841699584],
+                {"bubblingMouseEvents": true, "color": "#fed874ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed874ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_7f37702864cdf2c8d7ab309652b11fb3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_dc029f237e45fb69ef6ed1a39b5fcc8d = $(`<div id="html_dc029f237e45fb69ef6ed1a39b5fcc8d" style="width: 100.0%; height: 100.0%;"><b>41R002 - Ixelles</b><br>Nitrogen dioxide<br>Value: 15.50 µg/m³</div>`)[0];
+                popup_7f37702864cdf2c8d7ab309652b11fb3.setContent(html_dc029f237e45fb69ef6ed1a39b5fcc8d);
+            
+        
+
+        circle_marker_0520fdc5bea6e5c284e4adf0d09f5992.bindPopup(popup_7f37702864cdf2c8d7ab309652b11fb3)
+        ;
+
+        
+    
+    
+            circle_marker_0520fdc5bea6e5c284e4adf0d09f5992.bindTooltip(
+                `<div>
+                     41R002 - Ixelles — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3902bcd1a525ff0544a45b749a708bbf = L.circleMarker(
+                [50.796631638497885, 4.358538856351678],
+                {"bubblingMouseEvents": true, "color": "#fff2aaff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff2aaff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_1ed727cd4f62d2f1a00d4815817f9223 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_344b2eb46584d435a7eef1ac5ee510ea = $(`<div id="html_344b2eb46584d435a7eef1ac5ee510ea" style="width: 100.0%; height: 100.0%;"><b>41R012 - Uccle</b><br>Nitrogen dioxide<br>Value: 6.50 µg/m³</div>`)[0];
+                popup_1ed727cd4f62d2f1a00d4815817f9223.setContent(html_344b2eb46584d435a7eef1ac5ee510ea);
+            
+        
+
+        circle_marker_3902bcd1a525ff0544a45b749a708bbf.bindPopup(popup_1ed727cd4f62d2f1a00d4815817f9223)
+        ;
+
+        
+    
+    
+            circle_marker_3902bcd1a525ff0544a45b749a708bbf.bindTooltip(
+                `<div>
+                     41R012 - Uccle — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bdb1afefce0a0410e67b3b73857bcd35 = L.circleMarker(
+                [51.260989707467004, 4.424399006935333],
+                {"bubblingMouseEvents": true, "color": "#fe923eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fe923eff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_ff2dc37b5c0cf35a58d19e98812dc6a8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a74e0fd8aee227cd025e5e9a1531d24d = $(`<div id="html_a74e0fd8aee227cd025e5e9a1531d24d" style="width: 100.0%; height: 100.0%;"><b>42M802 - Antwerpen</b><br>Nitrogen dioxide<br>Value: 28.50 µg/m³</div>`)[0];
+                popup_ff2dc37b5c0cf35a58d19e98812dc6a8.setContent(html_a74e0fd8aee227cd025e5e9a1531d24d);
+            
+        
+
+        circle_marker_bdb1afefce0a0410e67b3b73857bcd35.bindPopup(popup_ff2dc37b5c0cf35a58d19e98812dc6a8)
+        ;
+
+        
+    
+    
+            circle_marker_bdb1afefce0a0410e67b3b73857bcd35.bindTooltip(
+                `<div>
+                     42M802 - Antwerpen — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2753455705bd06f66e361f542faaf291 = L.circleMarker(
+                [51.23365220616227, 5.1639788463317595],
+                {"bubblingMouseEvents": true, "color": "#ffefa4ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffefa4ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_f44c5626daa14809a4f4507c8c52c7be = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cabd61c3c6733a2b5d76811ce9d3a89c = $(`<div id="html_cabd61c3c6733a2b5d76811ce9d3a89c" style="width: 100.0%; height: 100.0%;"><b>42N016 - Dessel</b><br>Nitrogen dioxide<br>Value: 7.50 µg/m³</div>`)[0];
+                popup_f44c5626daa14809a4f4507c8c52c7be.setContent(html_cabd61c3c6733a2b5d76811ce9d3a89c);
+            
+        
+
+        circle_marker_2753455705bd06f66e361f542faaf291.bindPopup(popup_f44c5626daa14809a4f4507c8c52c7be)
+        ;
+
+        
+    
+    
+            circle_marker_2753455705bd06f66e361f542faaf291.bindTooltip(
+                `<div>
+                     42N016 - Dessel — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_faadf26d44609cac7bbb216791bb009b = L.circleMarker(
+                [51.13371669601295, 5.606659219704473],
+                {"bubblingMouseEvents": true, "color": "#ffeea1ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffeea1ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_055606c9c2408707638df35a6d3c49ff = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ffbb0dfd71a3e2ab3e1309c06b881dba = $(`<div id="html_ffbb0dfd71a3e2ab3e1309c06b881dba" style="width: 100.0%; height: 100.0%;"><b>42N027 - Bree</b><br>Nitrogen dioxide<br>Value: 8.00 µg/m³</div>`)[0];
+                popup_055606c9c2408707638df35a6d3c49ff.setContent(html_ffbb0dfd71a3e2ab3e1309c06b881dba);
+            
+        
+
+        circle_marker_faadf26d44609cac7bbb216791bb009b.bindPopup(popup_055606c9c2408707638df35a6d3c49ff)
+        ;
+
+        
+    
+    
+            circle_marker_faadf26d44609cac7bbb216791bb009b.bindTooltip(
+                `<div>
+                     42N027 - Bree — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_681b4bdb157852ebc2ecfcb74f442f66 = L.circleMarker(
+                [50.97754137811419, 4.837618015698616],
+                {"bubblingMouseEvents": true, "color": "#ffeb9bff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffeb9bff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_09bec61493575c51f85cd8ad586889dc = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c9d66a088b41126c8baa00a65f0f5df9 = $(`<div id="html_c9d66a088b41126c8baa00a65f0f5df9" style="width: 100.0%; height: 100.0%;"><b>42N035 - Aarschot</b><br>Nitrogen dioxide<br>Value: 9.00 µg/m³</div>`)[0];
+                popup_09bec61493575c51f85cd8ad586889dc.setContent(html_c9d66a088b41126c8baa00a65f0f5df9);
+            
+        
+
+        circle_marker_681b4bdb157852ebc2ecfcb74f442f66.bindPopup(popup_09bec61493575c51f85cd8ad586889dc)
+        ;
+
+        
+    
+    
+            circle_marker_681b4bdb157852ebc2ecfcb74f442f66.bindTooltip(
+                `<div>
+                     42N035 - Aarschot — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4361e183570acc4983e22bf230ab06a9 = L.circleMarker(
+                [50.76813751325527, 4.225194246746715],
+                {"bubblingMouseEvents": true, "color": "#fff7b7ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff7b7ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_0247f5b98f4ec10436a0c7db95d332bb = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1375dddd71fb6509721e820655855715 = $(`<div id="html_1375dddd71fb6509721e820655855715" style="width: 100.0%; height: 100.0%;"><b>42N040 - Sint-Pieters-Leeuw (3m)</b><br>Nitrogen dioxide<br>Value: 4.50 µg/m³</div>`)[0];
+                popup_0247f5b98f4ec10436a0c7db95d332bb.setContent(html_1375dddd71fb6509721e820655855715);
+            
+        
+
+        circle_marker_4361e183570acc4983e22bf230ab06a9.bindPopup(popup_0247f5b98f4ec10436a0c7db95d332bb)
+        ;
+
+        
+    
+    
+            circle_marker_4361e183570acc4983e22bf230ab06a9.bindTooltip(
+                `<div>
+                     42N040 - Sint-Pieters-Leeuw (3m) — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_184f6473d9de982bdd7df9ea408c6a51 = L.circleMarker(
+                [50.711706093733504, 5.103158609453958],
+                {"bubblingMouseEvents": true, "color": "#fff8baff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff8baff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_588910d34b7492278b526b0c195f7033 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_14d91bbba5e6db17461b62503833fd99 = $(`<div id="html_14d91bbba5e6db17461b62503833fd99" style="width: 100.0%; height: 100.0%;"><b>42N054 - Walshoutem</b><br>Nitrogen dioxide<br>Value: 4.00 µg/m³</div>`)[0];
+                popup_588910d34b7492278b526b0c195f7033.setContent(html_14d91bbba5e6db17461b62503833fd99);
+            
+        
+
+        circle_marker_184f6473d9de982bdd7df9ea408c6a51.bindPopup(popup_588910d34b7492278b526b0c195f7033)
+        ;
+
+        
+    
+    
+            circle_marker_184f6473d9de982bdd7df9ea408c6a51.bindTooltip(
+                `<div>
+                     42N054 - Walshoutem — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_db7a7c791b998ae2a06e9f752c0842da = L.circleMarker(
+                [50.94138711459387, 4.436720763534069],
+                {"bubblingMouseEvents": true, "color": "#ffe792ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffe792ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_b503097d30ec2834d7b94dc67a19b2ab = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_dd9178c904aece3807efc712e38d9425 = $(`<div id="html_dd9178c904aece3807efc712e38d9425" style="width: 100.0%; height: 100.0%;"><b>42R020 - Vilvoorde</b><br>Nitrogen dioxide<br>Value: 10.50 µg/m³</div>`)[0];
+                popup_b503097d30ec2834d7b94dc67a19b2ab.setContent(html_dd9178c904aece3807efc712e38d9425);
+            
+        
+
+        circle_marker_db7a7c791b998ae2a06e9f752c0842da.bindPopup(popup_b503097d30ec2834d7b94dc67a19b2ab)
+        ;
+
+        
+    
+    
+            circle_marker_db7a7c791b998ae2a06e9f752c0842da.bindTooltip(
+                `<div>
+                     42R020 - Vilvoorde — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_35342c36a1aaa03e90fcab3dbaf24f10 = L.circleMarker(
+                [51.20966253090992, 4.431821046968845],
+                {"bubblingMouseEvents": true, "color": "#fed572ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed572ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_97da779772a6a01d1476dddac8ef867d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_23c1da6f7219dfe5375383b38cf1c1e1 = $(`<div id="html_23c1da6f7219dfe5375383b38cf1c1e1" style="width: 100.0%; height: 100.0%;"><b>42R801 - Borgerhout</b><br>Nitrogen dioxide<br>Value: 16.00 µg/m³</div>`)[0];
+                popup_97da779772a6a01d1476dddac8ef867d.setContent(html_23c1da6f7219dfe5375383b38cf1c1e1);
+            
+        
+
+        circle_marker_35342c36a1aaa03e90fcab3dbaf24f10.bindPopup(popup_97da779772a6a01d1476dddac8ef867d)
+        ;
+
+        
+    
+    
+            circle_marker_35342c36a1aaa03e90fcab3dbaf24f10.bindTooltip(
+                `<div>
+                     42R801 - Borgerhout — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_62f772e5466001a37cad68f435de7658 = L.circleMarker(
+                [51.26428978424859, 4.341279992464667],
+                {"bubblingMouseEvents": true, "color": "#feba54ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#feba54ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_7ef8de0ab6b0d3c8018789f7c31fef34 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1e4832d8ce4f0977f0226101e0dc6f84 = $(`<div id="html_1e4832d8ce4f0977f0226101e0dc6f84" style="width: 100.0%; height: 100.0%;"><b>40R822 - Antwerpen</b><br>Nitrogen dioxide<br>Value: 21.00 µg/m³</div>`)[0];
+                popup_7ef8de0ab6b0d3c8018789f7c31fef34.setContent(html_1e4832d8ce4f0977f0226101e0dc6f84);
+            
+        
+
+        circle_marker_62f772e5466001a37cad68f435de7658.bindPopup(popup_7ef8de0ab6b0d3c8018789f7c31fef34)
+        ;
+
+        
+    
+    
+            circle_marker_62f772e5466001a37cad68f435de7658.bindTooltip(
+                `<div>
+                     40R822 - Antwerpen — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_01476e3e2795d630479e65e867d3bc44 = L.circleMarker(
+                [51.31822863028199, 4.26263372958256],
+                {"bubblingMouseEvents": true, "color": "#fff5b4ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff5b4ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_d8d0590a0459328465f822ac4511819b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ab2fa43ca10d5e5433573efd97f618a3 = $(`<div id="html_ab2fa43ca10d5e5433573efd97f618a3" style="width: 100.0%; height: 100.0%;"><b>42R830 - Doel</b><br>Nitrogen dioxide<br>Value: 5.00 µg/m³</div>`)[0];
+                popup_d8d0590a0459328465f822ac4511819b.setContent(html_ab2fa43ca10d5e5433573efd97f618a3);
+            
+        
+
+        circle_marker_01476e3e2795d630479e65e867d3bc44.bindPopup(popup_d8d0590a0459328465f822ac4511819b)
+        ;
+
+        
+    
+    
+            circle_marker_01476e3e2795d630479e65e867d3bc44.bindTooltip(
+                `<div>
+                     42R830 - Doel — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ee63027ece024155778e1e5a4530b865 = L.circleMarker(
+                [51.34879529193204, 4.339709947119868],
+                {"bubblingMouseEvents": true, "color": "#feac49ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#feac49ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_3ac64f07c12b184d9ea14e1b38b7e076 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3f95748abf97398f508fda1ed4302c54 = $(`<div id="html_3f95748abf97398f508fda1ed4302c54" style="width: 100.0%; height: 100.0%;"><b>42R831 - Berendrecht</b><br>Nitrogen dioxide<br>Value: 23.50 µg/m³</div>`)[0];
+                popup_3ac64f07c12b184d9ea14e1b38b7e076.setContent(html_3f95748abf97398f508fda1ed4302c54);
+            
+        
+
+        circle_marker_ee63027ece024155778e1e5a4530b865.bindPopup(popup_3ac64f07c12b184d9ea14e1b38b7e076)
+        ;
+
+        
+    
+    
+            circle_marker_ee63027ece024155778e1e5a4530b865.bindTooltip(
+                `<div>
+                     42R831 - Berendrecht — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d7e732bd5a481b1da4034b4634df81ac = L.circleMarker(
+                [51.25580664431452, 4.385359826049382],
+                {"bubblingMouseEvents": true, "color": "#f64026ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f64026ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_e7066d8980a3e3245fb5427da9a486ce = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cfb6ac8489c1fa41c8e7d93c867e84b5 = $(`<div id="html_cfb6ac8489c1fa41c8e7d93c867e84b5" style="width: 100.0%; height: 100.0%;"><b>40R891 - Antwerpen</b><br>Nitrogen dioxide<br>Value: 38.50 µg/m³</div>`)[0];
+                popup_e7066d8980a3e3245fb5427da9a486ce.setContent(html_cfb6ac8489c1fa41c8e7d93c867e84b5);
+            
+        
+
+        circle_marker_d7e732bd5a481b1da4034b4634df81ac.bindPopup(popup_e7066d8980a3e3245fb5427da9a486ce)
+        ;
+
+        
+    
+    
+            circle_marker_d7e732bd5a481b1da4034b4634df81ac.bindTooltip(
+                `<div>
+                     40R891 - Antwerpen — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f22ac096bd09ad345c49a327e8b4f2ab = L.circleMarker(
+                [51.263036822814854, 4.278889976505927],
+                {"bubblingMouseEvents": true, "color": "#feaf4aff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#feaf4aff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_731aa249ebace604103c2081e94bd959 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_76415287b759e342db7a693932e8c42c = $(`<div id="html_76415287b759e342db7a693932e8c42c" style="width: 100.0%; height: 100.0%;"><b>40R892 - Kallo</b><br>Nitrogen dioxide<br>Value: 23.00 µg/m³</div>`)[0];
+                popup_731aa249ebace604103c2081e94bd959.setContent(html_76415287b759e342db7a693932e8c42c);
+            
+        
+
+        circle_marker_f22ac096bd09ad345c49a327e8b4f2ab.bindPopup(popup_731aa249ebace604103c2081e94bd959)
+        ;
+
+        
+    
+    
+            circle_marker_f22ac096bd09ad345c49a327e8b4f2ab.bindTooltip(
+                `<div>
+                     40R892 - Kallo — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b892288689d0afa9ac0752b3b0842691 = L.circleMarker(
+                [51.25010649830707, 4.342104511322139],
+                {"bubblingMouseEvents": true, "color": "#fed572ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed572ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_96fc70e006f7a30acb853282ceab8581 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_960cbf3487f31ef0514113cc4681ac97 = $(`<div id="html_960cbf3487f31ef0514113cc4681ac97" style="width: 100.0%; height: 100.0%;"><b>40R897 - Antwerpen</b><br>Nitrogen dioxide<br>Value: 16.00 µg/m³</div>`)[0];
+                popup_96fc70e006f7a30acb853282ceab8581.setContent(html_960cbf3487f31ef0514113cc4681ac97);
+            
+        
+
+        circle_marker_b892288689d0afa9ac0752b3b0842691.bindPopup(popup_96fc70e006f7a30acb853282ceab8581)
+        ;
+
+        
+    
+    
+            circle_marker_b892288689d0afa9ac0752b3b0842691.bindTooltip(
+                `<div>
+                     40R897 - Antwerpen — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4f1343153bbb1f314ea3a385357c1704 = L.circleMarker(
+                [50.61671840179383, 3.4576244271817296],
+                {"bubblingMouseEvents": true, "color": "#fff7b7ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff7b7ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_fab0c0b1388c1cc1e1bbd277ec984593 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e40fa7c1d734cc74fe03f0b10065c81b = $(`<div id="html_e40fa7c1d734cc74fe03f0b10065c81b" style="width: 100.0%; height: 100.0%;"><b>43N060 - Havinnes</b><br>Nitrogen dioxide<br>Value: 4.50 µg/m³</div>`)[0];
+                popup_fab0c0b1388c1cc1e1bbd277ec984593.setContent(html_e40fa7c1d734cc74fe03f0b10065c81b);
+            
+        
+
+        circle_marker_4f1343153bbb1f314ea3a385357c1704.bindPopup(popup_fab0c0b1388c1cc1e1bbd277ec984593)
+        ;
+
+        
+    
+    
+            circle_marker_4f1343153bbb1f314ea3a385357c1704.bindTooltip(
+                `<div>
+                     43N060 - Havinnes — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e70e5da082f352cba290daaef8b6ad24 = L.circleMarker(
+                [50.65543910340045, 4.668287682824639],
+                {"bubblingMouseEvents": true, "color": "#fff8baff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff8baff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_ec2cf7c48f6531bc1c3e16a479e9d617 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4c4ef4a1b1de625dd6ddad1e9cdf0263 = $(`<div id="html_4c4ef4a1b1de625dd6ddad1e9cdf0263" style="width: 100.0%; height: 100.0%;"><b>43N063 - Corroy-Le-Grand</b><br>Nitrogen dioxide<br>Value: 4.00 µg/m³</div>`)[0];
+                popup_ec2cf7c48f6531bc1c3e16a479e9d617.setContent(html_4c4ef4a1b1de625dd6ddad1e9cdf0263);
+            
+        
+
+        circle_marker_e70e5da082f352cba290daaef8b6ad24.bindPopup(popup_ec2cf7c48f6531bc1c3e16a479e9d617)
+        ;
+
+        
+    
+    
+            circle_marker_e70e5da082f352cba290daaef8b6ad24.bindTooltip(
+                `<div>
+                     43N063 - Corroy-Le-Grand — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a47bb0159dee0a762a39dd47aaa60de1 = L.circleMarker(
+                [50.62886025981777, 6.002328686936966],
+                {"bubblingMouseEvents": true, "color": "#ffffccff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffffccff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_3e79685446cb42aacebf1495497c2881 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_38b805eca393d077a17df505dc64baa8 = $(`<div id="html_38b805eca393d077a17df505dc64baa8" style="width: 100.0%; height: 100.0%;"><b>43N066 - Eupen</b><br>Nitrogen dioxide<br>Value: 1.00 µg/m³</div>`)[0];
+                popup_3e79685446cb42aacebf1495497c2881.setContent(html_38b805eca393d077a17df505dc64baa8);
+            
+        
+
+        circle_marker_a47bb0159dee0a762a39dd47aaa60de1.bindPopup(popup_3e79685446cb42aacebf1495497c2881)
+        ;
+
+        
+    
+    
+            circle_marker_a47bb0159dee0a762a39dd47aaa60de1.bindTooltip(
+                `<div>
+                     43N066 - Eupen — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0adbd01cf37cbe6418694859f2233483 = L.circleMarker(
+                [50.46519215642684, 3.9397143255238394],
+                {"bubblingMouseEvents": true, "color": "#ffe186ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffe186ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_5b9d5aec31164857ed80ca120a3f9b0f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cd165040b51dadd897f5d70dfc75bc58 = $(`<div id="html_cd165040b51dadd897f5d70dfc75bc58" style="width: 100.0%; height: 100.0%;"><b>43N070 - Mons</b><br>Nitrogen dioxide<br>Value: 12.50 µg/m³</div>`)[0];
+                popup_5b9d5aec31164857ed80ca120a3f9b0f.setContent(html_cd165040b51dadd897f5d70dfc75bc58);
+            
+        
+
+        circle_marker_0adbd01cf37cbe6418694859f2233483.bindPopup(popup_5b9d5aec31164857ed80ca120a3f9b0f)
+        ;
+
+        
+    
+    
+            circle_marker_0adbd01cf37cbe6418694859f2233483.bindTooltip(
+                `<div>
+                     43N070 - Mons — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_58de4cb4307e234435b589913efda70e = L.circleMarker(
+                [50.502716341042564, 4.9884229540925205],
+                {"bubblingMouseEvents": true, "color": "#fffac0ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffac0ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_06e579ed2e12d2fe55a22f5687bde280 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_09fc66f515f5cade0ba1080f48e55be4 = $(`<div id="html_09fc66f515f5cade0ba1080f48e55be4" style="width: 100.0%; height: 100.0%;"><b>43N073 - Vezin</b><br>Nitrogen dioxide<br>Value: 3.00 µg/m³</div>`)[0];
+                popup_06e579ed2e12d2fe55a22f5687bde280.setContent(html_09fc66f515f5cade0ba1080f48e55be4);
+            
+        
+
+        circle_marker_58de4cb4307e234435b589913efda70e.bindPopup(popup_06e579ed2e12d2fe55a22f5687bde280)
+        ;
+
+        
+    
+    
+            circle_marker_58de4cb4307e234435b589913efda70e.bindTooltip(
+                `<div>
+                     43N073 - Vezin — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_be5fa7f08c2dec7e20a7d2edd04c9496 = L.circleMarker(
+                [50.30320782818856, 6.001736288537825],
+                {"bubblingMouseEvents": true, "color": "#fff5b4ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff5b4ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_b44ac4db4d98fb4b6e3f3ff492ba12e2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_373191812eceafb6397463844d2614c1 = $(`<div id="html_373191812eceafb6397463844d2614c1" style="width: 100.0%; height: 100.0%;"><b>43N085 - Vielsalm</b><br>Nitrogen dioxide<br>Value: 5.00 µg/m³</div>`)[0];
+                popup_b44ac4db4d98fb4b6e3f3ff492ba12e2.setContent(html_373191812eceafb6397463844d2614c1);
+            
+        
+
+        circle_marker_be5fa7f08c2dec7e20a7d2edd04c9496.bindPopup(popup_b44ac4db4d98fb4b6e3f3ff492ba12e2)
+        ;
+
+        
+    
+    
+            circle_marker_be5fa7f08c2dec7e20a7d2edd04c9496.bindTooltip(
+                `<div>
+                     43N085 - Vielsalm — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b3133c7da19ec82e4f91eca8d5e0d5eb = L.circleMarker(
+                [50.27447751094961, 5.235168654774107],
+                {"bubblingMouseEvents": true, "color": "#fffcc3ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffcc3ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_643208e521615e864a03ee04b9be4090 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_16fd90844fcac125cb648da099e70c4f = $(`<div id="html_16fd90844fcac125cb648da099e70c4f" style="width: 100.0%; height: 100.0%;"><b>43N093 - Sinsin</b><br>Nitrogen dioxide<br>Value: 2.50 µg/m³</div>`)[0];
+                popup_643208e521615e864a03ee04b9be4090.setContent(html_16fd90844fcac125cb648da099e70c4f);
+            
+        
+
+        circle_marker_b3133c7da19ec82e4f91eca8d5e0d5eb.bindPopup(popup_643208e521615e864a03ee04b9be4090)
+        ;
+
+        
+    
+    
+            circle_marker_b3133c7da19ec82e4f91eca8d5e0d5eb.bindTooltip(
+                `<div>
+                     43N093 - Sinsin — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_91bc859c2577924e54da096bce535fa6 = L.circleMarker(
+                [50.09568343419101, 4.594762762155877],
+                {"bubblingMouseEvents": true, "color": "#fffec9ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffec9ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_8c430528f9ea285626c2ec55a8b60179 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_49d787730998cec7b05c3388f019ecf9 = $(`<div id="html_49d787730998cec7b05c3388f019ecf9" style="width: 100.0%; height: 100.0%;"><b>43N100 - Dourbes</b><br>Nitrogen dioxide<br>Value: 1.50 µg/m³</div>`)[0];
+                popup_8c430528f9ea285626c2ec55a8b60179.setContent(html_49d787730998cec7b05c3388f019ecf9);
+            
+        
+
+        circle_marker_91bc859c2577924e54da096bce535fa6.bindPopup(popup_8c430528f9ea285626c2ec55a8b60179)
+        ;
+
+        
+    
+    
+            circle_marker_91bc859c2577924e54da096bce535fa6.bindTooltip(
+                `<div>
+                     43N100 - Dourbes — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5bffdd6db234b0b29f5e64acde2205d9 = L.circleMarker(
+                [50.027029017347836, 5.593016914066444],
+                {"bubblingMouseEvents": true, "color": "#fff9bdff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff9bdff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_64ff4b9df8ef44a1ff224b569ab37914 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_79e0509cf61900e138a38274a3c8f0a0 = $(`<div id="html_79e0509cf61900e138a38274a3c8f0a0" style="width: 100.0%; height: 100.0%;"><b>43N113 - Sainte-Ode</b><br>Nitrogen dioxide<br>Value: 3.50 µg/m³</div>`)[0];
+                popup_64ff4b9df8ef44a1ff224b569ab37914.setContent(html_79e0509cf61900e138a38274a3c8f0a0);
+            
+        
+
+        circle_marker_5bffdd6db234b0b29f5e64acde2205d9.bindPopup(popup_64ff4b9df8ef44a1ff224b569ab37914)
+        ;
+
+        
+    
+    
+            circle_marker_5bffdd6db234b0b29f5e64acde2205d9.bindTooltip(
+                `<div>
+                     43N113 - Sainte-Ode — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_93879c384507b564b62bba0e2b54a7ad = L.circleMarker(
+                [49.877128491329344, 5.202387466800063],
+                {"bubblingMouseEvents": true, "color": "#fffdc6ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffdc6ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_aefc51fd5a639cb094c748f61406dec4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3f0b80dfbef846258bc86276f12a5ebd = $(`<div id="html_3f0b80dfbef846258bc86276f12a5ebd" style="width: 100.0%; height: 100.0%;"><b>43N121 - Offagne</b><br>Nitrogen dioxide<br>Value: 2.00 µg/m³</div>`)[0];
+                popup_aefc51fd5a639cb094c748f61406dec4.setContent(html_3f0b80dfbef846258bc86276f12a5ebd);
+            
+        
+
+        circle_marker_93879c384507b564b62bba0e2b54a7ad.bindPopup(popup_aefc51fd5a639cb094c748f61406dec4)
+        ;
+
+        
+    
+    
+            circle_marker_93879c384507b564b62bba0e2b54a7ad.bindTooltip(
+                `<div>
+                     43N121 - Offagne — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cb1423b41822802ed06e2ea1ffb3d2ec = L.circleMarker(
+                [49.71928118788111, 5.630397740609144],
+                {"bubblingMouseEvents": true, "color": "#fff9bdff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff9bdff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_4686c059d0cd1d7810391e8cb1876d50 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b9e7106f4bbb7b480745b7b63a43ff2c = $(`<div id="html_b9e7106f4bbb7b480745b7b63a43ff2c" style="width: 100.0%; height: 100.0%;"><b>43N132 - Habay-La-Neuve</b><br>Nitrogen dioxide<br>Value: 3.50 µg/m³</div>`)[0];
+                popup_4686c059d0cd1d7810391e8cb1876d50.setContent(html_b9e7106f4bbb7b480745b7b63a43ff2c);
+            
+        
+
+        circle_marker_cb1423b41822802ed06e2ea1ffb3d2ec.bindPopup(popup_4686c059d0cd1d7810391e8cb1876d50)
+        ;
+
+        
+    
+    
+            circle_marker_cb1423b41822802ed06e2ea1ffb3d2ec.bindTooltip(
+                `<div>
+                     43N132 - Habay-La-Neuve — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c6d235421e8e83e43f515d2fa34fc562 = L.circleMarker(
+                [50.61341250148189, 5.570222814112581],
+                {"bubblingMouseEvents": true, "color": "#fff7b7ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff7b7ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_f63b011bf8c0fbfaa4bbc3028c683344 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_22ebc4224cc7674ce24517699f407cea = $(`<div id="html_22ebc4224cc7674ce24517699f407cea" style="width: 100.0%; height: 100.0%;"><b>43R222 - Seraing</b><br>Nitrogen dioxide<br>Value: 4.50 µg/m³</div>`)[0];
+                popup_f63b011bf8c0fbfaa4bbc3028c683344.setContent(html_22ebc4224cc7674ce24517699f407cea);
+            
+        
+
+        circle_marker_c6d235421e8e83e43f515d2fa34fc562.bindPopup(popup_f63b011bf8c0fbfaa4bbc3028c683344)
+        ;
+
+        
+    
+    
+            circle_marker_c6d235421e8e83e43f515d2fa34fc562.bindTooltip(
+                `<div>
+                     43R222 - Seraing — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_bcb2ce14b8de1b63e812786792843186 = L.circleMarker(
+                [50.6206708788392, 5.516404755142998],
+                {"bubblingMouseEvents": true, "color": "#febd57ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#febd57ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_a0d40fa9beb527b0ccf429c28cc7eb82 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5b3489703ccdf47961584f5aca004882 = $(`<div id="html_5b3489703ccdf47961584f5aca004882" style="width: 100.0%; height: 100.0%;"><b>43R223 - Jemeppe</b><br>Nitrogen dioxide<br>Value: 20.50 µg/m³</div>`)[0];
+                popup_a0d40fa9beb527b0ccf429c28cc7eb82.setContent(html_5b3489703ccdf47961584f5aca004882);
+            
+        
+
+        circle_marker_bcb2ce14b8de1b63e812786792843186.bindPopup(popup_a0d40fa9beb527b0ccf429c28cc7eb82)
+        ;
+
+        
+    
+    
+            circle_marker_bcb2ce14b8de1b63e812786792843186.bindTooltip(
+                `<div>
+                     43R223 - Jemeppe — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8c6e6ac965536920e89fc00a51ffbf81 = L.circleMarker(
+                [50.58361434736863, 5.397446050127331],
+                {"bubblingMouseEvents": true, "color": "#fed06cff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed06cff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_4222b3e07f18d97cbb743c2530befd2f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0c42eca8f16584993a6d58b7e2eb52a6 = $(`<div id="html_0c42eca8f16584993a6d58b7e2eb52a6" style="width: 100.0%; height: 100.0%;"><b>43R240 - Engis</b><br>Nitrogen dioxide<br>Value: 17.00 µg/m³</div>`)[0];
+                popup_4222b3e07f18d97cbb743c2530befd2f.setContent(html_0c42eca8f16584993a6d58b7e2eb52a6);
+            
+        
+
+        circle_marker_8c6e6ac965536920e89fc00a51ffbf81.bindPopup(popup_4222b3e07f18d97cbb743c2530befd2f)
+        ;
+
+        
+    
+    
+            circle_marker_8c6e6ac965536920e89fc00a51ffbf81.bindTooltip(
+                `<div>
+                     43R240 - Engis — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_10d78632eb671ffb5d540fb489bc865b = L.circleMarker(
+                [50.94535924135039, 3.152401590470013],
+                {"bubblingMouseEvents": true, "color": "#ffe186ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffe186ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_9a7255e3bc1af41824125749ec883231 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a1433349fef2d297666d737ec44ad598 = $(`<div id="html_a1433349fef2d297666d737ec44ad598" style="width: 100.0%; height: 100.0%;"><b>44M705 - Roeselare</b><br>Nitrogen dioxide<br>Value: 12.50 µg/m³</div>`)[0];
+                popup_9a7255e3bc1af41824125749ec883231.setContent(html_a1433349fef2d297666d737ec44ad598);
+            
+        
+
+        circle_marker_10d78632eb671ffb5d540fb489bc865b.bindPopup(popup_9a7255e3bc1af41824125749ec883231)
+        ;
+
+        
+    
+    
+            circle_marker_10d78632eb671ffb5d540fb489bc865b.bindTooltip(
+                `<div>
+                     44M705 - Roeselare — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ac9dbd6157ac09633f74316b7a97f10e = L.circleMarker(
+                [51.01628011113793, 2.582322781489744],
+                {"bubblingMouseEvents": true, "color": "#fff8baff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff8baff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_111180d1a2ce8ad4b78756dc41b0802f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ca4315cc73e8a23da3c8bf4a2f077201 = $(`<div id="html_ca4315cc73e8a23da3c8bf4a2f077201" style="width: 100.0%; height: 100.0%;"><b>44N029 - Houtem</b><br>Nitrogen dioxide<br>Value: 4.00 µg/m³</div>`)[0];
+                popup_111180d1a2ce8ad4b78756dc41b0802f.setContent(html_ca4315cc73e8a23da3c8bf4a2f077201);
+            
+        
+
+        circle_marker_ac9dbd6157ac09633f74316b7a97f10e.bindPopup(popup_111180d1a2ce8ad4b78756dc41b0802f)
+        ;
+
+        
+    
+    
+            circle_marker_ac9dbd6157ac09633f74316b7a97f10e.bindTooltip(
+                `<div>
+                     44N029 - Houtem — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_65a48e1f7ee0698966e7dd65394291f1 = L.circleMarker(
+                [50.814873869919765, 3.3224943190372773],
+                {"bubblingMouseEvents": true, "color": "#fff2aaff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff2aaff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_3bdd9c9c112618aabfdd2c70071d8e2f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ac2574c9850a918dc96d261afcced54e = $(`<div id="html_ac2574c9850a918dc96d261afcced54e" style="width: 100.0%; height: 100.0%;"><b>44N052 - Zwevegem</b><br>Nitrogen dioxide<br>Value: 6.50 µg/m³</div>`)[0];
+                popup_3bdd9c9c112618aabfdd2c70071d8e2f.setContent(html_ac2574c9850a918dc96d261afcced54e);
+            
+        
+
+        circle_marker_65a48e1f7ee0698966e7dd65394291f1.bindPopup(popup_3bdd9c9c112618aabfdd2c70071d8e2f)
+        ;
+
+        
+    
+    
+            circle_marker_65a48e1f7ee0698966e7dd65394291f1.bindTooltip(
+                `<div>
+                     44N052 - Zwevegem — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3282a192d606c46cfe863029224e8aad = L.circleMarker(
+                [51.05833171626477, 3.729298171690588],
+                {"bubblingMouseEvents": true, "color": "#ffec9eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffec9eff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_2c7420a8fee7b1a1d6f7872d963f71b9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_462aab39b7c77d3f4f8b7a5f7fed696d = $(`<div id="html_462aab39b7c77d3f4f8b7a5f7fed696d" style="width: 100.0%; height: 100.0%;"><b>44R701 - Gent</b><br>Nitrogen dioxide<br>Value: 8.50 µg/m³</div>`)[0];
+                popup_2c7420a8fee7b1a1d6f7872d963f71b9.setContent(html_462aab39b7c77d3f4f8b7a5f7fed696d);
+            
+        
+
+        circle_marker_3282a192d606c46cfe863029224e8aad.bindPopup(popup_2c7420a8fee7b1a1d6f7872d963f71b9)
+        ;
+
+        
+    
+    
+            circle_marker_3282a192d606c46cfe863029224e8aad.bindTooltip(
+                `<div>
+                     44R701 - Gent — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_80f84a00ccdf7f9b099e1997e504b663 = L.circleMarker(
+                [51.124690511899885, 3.739504220441929],
+                {"bubblingMouseEvents": true, "color": "#fff5b4ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff5b4ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_4818d70183f18e0c38c18e3afc3b9a07 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0ef72533f478e0e93d26bf3f34e6d8aa = $(`<div id="html_0ef72533f478e0e93d26bf3f34e6d8aa" style="width: 100.0%; height: 100.0%;"><b>44R731 - Evergem</b><br>Nitrogen dioxide<br>Value: 5.00 µg/m³</div>`)[0];
+                popup_4818d70183f18e0c38c18e3afc3b9a07.setContent(html_0ef72533f478e0e93d26bf3f34e6d8aa);
+            
+        
+
+        circle_marker_80f84a00ccdf7f9b099e1997e504b663.bindPopup(popup_4818d70183f18e0c38c18e3afc3b9a07)
+        ;
+
+        
+    
+    
+            circle_marker_80f84a00ccdf7f9b099e1997e504b663.bindTooltip(
+                `<div>
+                     44R731 - Evergem — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fccfe2d418066f3df119e10cb594f865 = L.circleMarker(
+                [51.1501360900007, 3.808735430412745],
+                {"bubblingMouseEvents": true, "color": "#fed874ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fed874ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_a4c321c71eb04d4595d2f2e79a18df54 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ef690d6e9c8b74860372ed0644c92b9a = $(`<div id="html_ef690d6e9c8b74860372ed0644c92b9a" style="width: 100.0%; height: 100.0%;"><b>44R740 - Sint-Kruiswinkel</b><br>Nitrogen dioxide<br>Value: 15.50 µg/m³</div>`)[0];
+                popup_a4c321c71eb04d4595d2f2e79a18df54.setContent(html_ef690d6e9c8b74860372ed0644c92b9a);
+            
+        
+
+        circle_marker_fccfe2d418066f3df119e10cb594f865.bindPopup(popup_a4c321c71eb04d4595d2f2e79a18df54)
+        ;
+
+        
+    
+    
+            circle_marker_fccfe2d418066f3df119e10cb594f865.bindTooltip(
+                `<div>
+                     44R740 - Sint-Kruiswinkel — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b9045f24acbc986c6baeeac008e841d3 = L.circleMarker(
+                [51.19606326849923, 3.8229200468043354],
+                {"bubblingMouseEvents": true, "color": "#ffea98ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffea98ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_00f6e82e043c3c4bf5432af144bdf105 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d75b35636046a81d76881bfdcd43785e = $(`<div id="html_d75b35636046a81d76881bfdcd43785e" style="width: 100.0%; height: 100.0%;"><b>44R750 - Zelzate</b><br>Nitrogen dioxide<br>Value: 9.50 µg/m³</div>`)[0];
+                popup_00f6e82e043c3c4bf5432af144bdf105.setContent(html_d75b35636046a81d76881bfdcd43785e);
+            
+        
+
+        circle_marker_b9045f24acbc986c6baeeac008e841d3.bindPopup(popup_00f6e82e043c3c4bf5432af144bdf105)
+        ;
+
+        
+    
+    
+            circle_marker_b9045f24acbc986c6baeeac008e841d3.bindTooltip(
+                `<div>
+                     44R750 - Zelzate — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4910a7a4b061fc2dc5a61354bc14d95b = L.circleMarker(
+                [50.40931145201488, 4.452171781049859],
+                {"bubblingMouseEvents": true, "color": "#ffec9eff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffec9eff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_5c0a4e0de782abd05803883bba2656e1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7ce09265c1f2da036811b6b10b7d8524 = $(`<div id="html_7ce09265c1f2da036811b6b10b7d8524" style="width: 100.0%; height: 100.0%;"><b>45R501 - Charleroi</b><br>Nitrogen dioxide<br>Value: 8.50 µg/m³</div>`)[0];
+                popup_5c0a4e0de782abd05803883bba2656e1.setContent(html_7ce09265c1f2da036811b6b10b7d8524);
+            
+        
+
+        circle_marker_4910a7a4b061fc2dc5a61354bc14d95b.bindPopup(popup_5c0a4e0de782abd05803883bba2656e1)
+        ;
+
+        
+    
+    
+            circle_marker_4910a7a4b061fc2dc5a61354bc14d95b.bindTooltip(
+                `<div>
+                     45R501 - Charleroi — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_8fb436057579b9f253a88090c463a4be = L.circleMarker(
+                [50.42899539289616, 4.4586808580217205],
+                {"bubblingMouseEvents": true, "color": "#ffe58fff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffe58fff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_ce4a0c8be63397523647cc9b80574a95 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_81e69381c7c0065b6e7e90c691c80fea = $(`<div id="html_81e69381c7c0065b6e7e90c691c80fea" style="width: 100.0%; height: 100.0%;"><b>45R502 - Lodelinsart</b><br>Nitrogen dioxide<br>Value: 11.00 µg/m³</div>`)[0];
+                popup_ce4a0c8be63397523647cc9b80574a95.setContent(html_81e69381c7c0065b6e7e90c691c80fea);
+            
+        
+
+        circle_marker_8fb436057579b9f253a88090c463a4be.bindPopup(popup_ce4a0c8be63397523647cc9b80574a95)
+        ;
+
+        
+    
+    
+            circle_marker_8fb436057579b9f253a88090c463a4be.bindTooltip(
+                `<div>
+                     45R502 - Lodelinsart — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b9175be18e724476ad88d7a30a0f1a1d = L.circleMarker(
+                [50.407810199416645, 4.395897117039241],
+                {"bubblingMouseEvents": true, "color": "#ffe792ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffe792ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_054a553ce9e2339dd995aa6be046a477 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c526f155b77ba8acac58f5096308942b = $(`<div id="html_c526f155b77ba8acac58f5096308942b" style="width: 100.0%; height: 100.0%;"><b>45R512 - Marchienne</b><br>Nitrogen dioxide<br>Value: 10.50 µg/m³</div>`)[0];
+                popup_054a553ce9e2339dd995aa6be046a477.setContent(html_c526f155b77ba8acac58f5096308942b);
+            
+        
+
+        circle_marker_b9175be18e724476ad88d7a30a0f1a1d.bindPopup(popup_054a553ce9e2339dd995aa6be046a477)
+        ;
+
+        
+    
+    
+            circle_marker_b9175be18e724476ad88d7a30a0f1a1d.bindTooltip(
+                `<div>
+                     45R512 - Marchienne — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2bfb5a40cd1503de611cd6d9549a55e7 = L.circleMarker(
+                [50.79529862668806, 4.25262845287286],
+                {"bubblingMouseEvents": true, "color": "#fff8baff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff8baff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_bfc1931e813351c298f04b8dd6c21f02 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4e2aa014460f8bcdeed5b1f8980a54dc = $(`<div id="html_4e2aa014460f8bcdeed5b1f8980a54dc" style="width: 100.0%; height: 100.0%;"><b>47E007 - Sint-Pieters-Leeuw</b><br>Nitrogen dioxide<br>Value: 4.00 µg/m³</div>`)[0];
+                popup_bfc1931e813351c298f04b8dd6c21f02.setContent(html_4e2aa014460f8bcdeed5b1f8980a54dc);
+            
+        
+
+        circle_marker_2bfb5a40cd1503de611cd6d9549a55e7.bindPopup(popup_bfc1931e813351c298f04b8dd6c21f02)
+        ;
+
+        
+    
+    
+            circle_marker_2bfb5a40cd1503de611cd6d9549a55e7.bindTooltip(
+                `<div>
+                     47E007 - Sint-Pieters-Leeuw — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5a9f25808537ffb6ccff8c7d1e08c6d4 = L.circleMarker(
+                [50.9260951160919, 4.39592001413703],
+                {"bubblingMouseEvents": true, "color": "#fff2aaff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff2aaff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_080e4069a501f60a5100993b68767bc2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0a99511be53b18c468309a3c9e215553 = $(`<div id="html_0a99511be53b18c468309a3c9e215553" style="width: 100.0%; height: 100.0%;"><b>47E008 - Grimbergen</b><br>Nitrogen dioxide<br>Value: 6.50 µg/m³</div>`)[0];
+                popup_080e4069a501f60a5100993b68767bc2.setContent(html_0a99511be53b18c468309a3c9e215553);
+            
+        
+
+        circle_marker_5a9f25808537ffb6ccff8c7d1e08c6d4.bindPopup(popup_080e4069a501f60a5100993b68767bc2)
+        ;
+
+        
+    
+    
+            circle_marker_5a9f25808537ffb6ccff8c7d1e08c6d4.bindTooltip(
+                `<div>
+                     47E008 - Grimbergen — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f513b065b7f78400d5c498cef94252d6 = L.circleMarker(
+                [50.95491668793444, 4.435416984927747],
+                {"bubblingMouseEvents": true, "color": "#fff5b4ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff5b4ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_6780db83913e6ebcfe313db7f6f23da3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a9e2dc7d58912dd032778f5ff6bb2ffe = $(`<div id="html_a9e2dc7d58912dd032778f5ff6bb2ffe" style="width: 100.0%; height: 100.0%;"><b>47E009 - Zemst</b><br>Nitrogen dioxide<br>Value: 5.00 µg/m³</div>`)[0];
+                popup_6780db83913e6ebcfe313db7f6f23da3.setContent(html_a9e2dc7d58912dd032778f5ff6bb2ffe);
+            
+        
+
+        circle_marker_f513b065b7f78400d5c498cef94252d6.bindPopup(popup_6780db83913e6ebcfe313db7f6f23da3)
+        ;
+
+        
+    
+    
+            circle_marker_f513b065b7f78400d5c498cef94252d6.bindTooltip(
+                `<div>
+                     47E009 - Zemst — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_36ce0c9b02c70564f7eeaa74e6348f7a = L.circleMarker(
+                [50.81170089402065, 4.328384665101025],
+                {"bubblingMouseEvents": true, "color": "#ffeb9bff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffeb9bff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_8fce7fc1683c171d7b4aba9567c87962 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_81577c7fb839458d820170460ce90801 = $(`<div id="html_81577c7fb839458d820170460ce90801" style="width: 100.0%; height: 100.0%;"><b>47E013 - Vorst</b><br>Nitrogen dioxide<br>Value: 9.00 µg/m³</div>`)[0];
+                popup_8fce7fc1683c171d7b4aba9567c87962.setContent(html_81577c7fb839458d820170460ce90801);
+            
+        
+
+        circle_marker_36ce0c9b02c70564f7eeaa74e6348f7a.bindPopup(popup_8fce7fc1683c171d7b4aba9567c87962)
+        ;
+
+        
+    
+    
+            circle_marker_36ce0c9b02c70564f7eeaa74e6348f7a.bindTooltip(
+                `<div>
+                     47E013 - Vorst — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f52a0920e524be1442182935eab57d11 = L.circleMarker(
+                [51.190317041572506, 3.6872957563519915],
+                {"bubblingMouseEvents": true, "color": "#fff8baff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff8baff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_7f76808aca5e73a6d5837db4ef051bfc = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b3f87f022b4bf5bf8cf6c9ec0d804ae6 = $(`<div id="html_b3f87f022b4bf5bf8cf6c9ec0d804ae6" style="width: 100.0%; height: 100.0%;"><b>47E703 - Oosteeklo</b><br>Nitrogen dioxide<br>Value: 4.00 µg/m³</div>`)[0];
+                popup_7f76808aca5e73a6d5837db4ef051bfc.setContent(html_b3f87f022b4bf5bf8cf6c9ec0d804ae6);
+            
+        
+
+        circle_marker_f52a0920e524be1442182935eab57d11.bindPopup(popup_7f76808aca5e73a6d5837db4ef051bfc)
+        ;
+
+        
+    
+    
+            circle_marker_f52a0920e524be1442182935eab57d11.bindTooltip(
+                `<div>
+                     47E703 - Oosteeklo — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a1cce13eaf8bf505f06214287fff1128 = L.circleMarker(
+                [51.27896330355744, 3.2486240629411953],
+                {"bubblingMouseEvents": true, "color": "#fff7b7ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fff7b7ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_6c2a95d6127aad2ca31639250517ef7f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b1c697353decd3da74d4ce1110643b99 = $(`<div id="html_b1c697353decd3da74d4ce1110643b99" style="width: 100.0%; height: 100.0%;"><b>47E714 - Dudzele</b><br>Nitrogen dioxide<br>Value: 4.50 µg/m³</div>`)[0];
+                popup_6c2a95d6127aad2ca31639250517ef7f.setContent(html_b1c697353decd3da74d4ce1110643b99);
+            
+        
+
+        circle_marker_a1cce13eaf8bf505f06214287fff1128.bindPopup(popup_6c2a95d6127aad2ca31639250517ef7f)
+        ;
+
+        
+    
+    
+            circle_marker_a1cce13eaf8bf505f06214287fff1128.bindTooltip(
+                `<div>
+                     47E714 - Dudzele — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cc6ac7ffefbd372be09fea3ea30da676 = L.circleMarker(
+                [51.2458642166758, 3.174984201680889],
+                {"bubblingMouseEvents": true, "color": "#fffac0ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffac0ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_ccd766fec593fd7cc3d97089dfc7eca4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_556f3aec91afd6801dede4e2199a4a6d = $(`<div id="html_556f3aec91afd6801dede4e2199a4a6d" style="width: 100.0%; height: 100.0%;"><b>47E715 - Zuienkerke</b><br>Nitrogen dioxide<br>Value: 3.00 µg/m³</div>`)[0];
+                popup_ccd766fec593fd7cc3d97089dfc7eca4.setContent(html_556f3aec91afd6801dede4e2199a4a6d);
+            
+        
+
+        circle_marker_cc6ac7ffefbd372be09fea3ea30da676.bindPopup(popup_ccd766fec593fd7cc3d97089dfc7eca4)
+        ;
+
+        
+    
+    
+            circle_marker_cc6ac7ffefbd372be09fea3ea30da676.bindTooltip(
+                `<div>
+                     47E715 - Zuienkerke — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c676dd4b6d46d555ee9de104d0c2bc14 = L.circleMarker(
+                [51.066987901521564, 3.682813017203125],
+                {"bubblingMouseEvents": true, "color": "#fffac0ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#fffac0ff", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_b72dd580bec3d146ec711407b5a0c894);
+        
+    
+        var popup_247bbabb2d0ad65362b864823dd20d2d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c0320006c08e24b4ec15ea0b1e8ac659 = $(`<div id="html_c0320006c08e24b4ec15ea0b1e8ac659" style="width: 100.0%; height: 100.0%;"><b>47E716 - Mariakerke</b><br>Nitrogen dioxide<br>Value: 3.00 µg/m³</div>`)[0];
+                popup_247bbabb2d0ad65362b864823dd20d2d.setContent(html_c0320006c08e24b4ec15ea0b1e8ac659);
+            
+        
+
+        circle_marker_c676dd4b6d46d555ee9de104d0c2bc14.bindPopup(popup_247bbabb2d0ad65362b864823dd20d2d)
+        ;
+
+        
+    
+    
+            circle_marker_c676dd4b6d46d555ee9de104d0c2bc14.bindTooltip(
+                `<div>
+                     47E716 - Mariakerke — Nitrogen dioxide
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+    var color_map_bc562d7ef69f5ebaf9ede5173203eabe = {};
+
+    
+    color_map_bc562d7ef69f5ebaf9ede5173203eabe.color = d3.scale.threshold()
+              .domain([1.0, 1.1142284569138277, 1.2284569138276553, 1.342685370741483, 1.4569138276553106, 1.5711422845691383, 1.685370741482966, 1.7995991983967936, 1.9138276553106213, 2.0280561122244487, 2.1422845691382766, 2.2565130260521045, 2.370741482965932, 2.4849699398797593, 2.599198396793587, 2.713426853707415, 2.8276553106212425, 2.94188376753507, 3.056112224448898, 3.1703406813627253, 3.284569138276553, 3.3987975951903806, 3.5130260521042085, 3.627254509018036, 3.741482965931864, 3.8557114228456912, 3.969939879759519, 4.084168336673347, 4.198396793587174, 4.312625250501002, 4.42685370741483, 4.541082164328657, 4.655310621242485, 4.7695390781563125, 4.88376753507014, 4.997995991983968, 5.112224448897796, 5.226452905811623, 5.340681362725451, 5.454909819639279, 5.569138276553106, 5.683366733466934, 5.797595190380761, 5.9118236472945895, 6.026052104208417, 6.140280561122244, 6.254509018036072, 6.3687374749499, 6.482965931863728, 6.597194388777555, 6.7114228456913825, 6.825651302605211, 6.939879759519038, 7.054108216432866, 7.168336673346693, 7.282565130260521, 7.396793587174349, 7.511022044088176, 7.625250501002004, 7.739478957915832, 7.8537074148296595, 7.967935871743487, 8.082164328657313, 8.196392785571142, 8.31062124248497, 8.424849699398798, 8.539078156312625, 8.653306613226453, 8.76753507014028, 8.881763527054108, 8.995991983967937, 9.110220440881763, 9.224448897795591, 9.338677354709418, 9.452905811623246, 9.567134268537075, 9.681362725450901, 9.79559118236473, 9.909819639278558, 10.024048096192384, 10.138276553106213, 10.25250501002004, 10.366733466933868, 10.480961923847696, 10.595190380761522, 10.70941883767535, 10.823647294589179, 10.937875751503006, 11.052104208416834, 11.16633266533066, 11.280561122244489, 11.394789579158317, 11.509018036072144, 11.623246492985972, 11.7374749498998, 11.851703406813627, 11.965931863727455, 12.080160320641282, 12.19438877755511, 12.308617234468938, 12.422845691382765, 12.537074148296593, 12.651302605210422, 12.765531062124248, 12.879759519038076, 12.993987975951903, 13.108216432865731, 13.22244488977956, 13.336673346693386, 13.450901803607215, 13.565130260521043, 13.67935871743487, 13.793587174348698, 13.907815631262524, 14.022044088176353, 14.136272545090181, 14.250501002004007, 14.364729458917836, 14.478957915831664, 14.59318637274549, 14.707414829659319, 14.821643286573146, 14.935871743486974, 15.050100200400802, 15.164328657314629, 15.278557114228457, 15.392785571142285, 15.507014028056112, 15.62124248496994, 15.735470941883767, 15.849699398797595, 15.963927855711423, 16.07815631262525, 16.19238476953908, 16.306613226452907, 16.42084168336673, 16.53507014028056, 16.649298597194388, 16.763527054108216, 16.877755511022045, 16.991983967935873, 17.106212424849698, 17.220440881763526, 17.334669338677354, 17.448897795591183, 17.56312625250501, 17.677354709418836, 17.791583166332664, 17.905811623246493, 18.02004008016032, 18.13426853707415, 18.248496993987978, 18.362725450901802, 18.47695390781563, 18.59118236472946, 18.705410821643287, 18.819639278557116, 18.93386773547094, 19.04809619238477, 19.162324649298597, 19.276553106212425, 19.390781563126254, 19.50501002004008, 19.619238476953907, 19.733466933867735, 19.847695390781563, 19.96192384769539, 20.07615230460922, 20.190380761523045, 20.304609218436873, 20.4188376753507, 20.53306613226453, 20.647294589178358, 20.761523046092183, 20.87575150300601, 20.98997995991984, 21.104208416833668, 21.218436873747496, 21.33266533066132, 21.44689378757515, 21.561122244488978, 21.675350701402806, 21.789579158316634, 21.903807615230463, 22.018036072144287, 22.132264529058116, 22.246492985971944, 22.360721442885772, 22.4749498997996, 22.589178356713425, 22.703406813627254, 22.817635270541082, 22.93186372745491, 23.04609218436874, 23.160320641282564, 23.274549098196392, 23.38877755511022, 23.50300601202405, 23.617234468937877, 23.731462925851705, 23.84569138276553, 23.95991983967936, 24.074148296593187, 24.188376753507015, 24.302605210420843, 24.416833667334668, 24.531062124248496, 24.645290581162325, 24.759519038076153, 24.87374749498998, 24.987975951903806, 25.102204408817634, 25.216432865731463, 25.33066132264529, 25.44488977955912, 25.559118236472944, 25.673346693386772, 25.7875751503006, 25.90180360721443, 26.016032064128257, 26.130260521042086, 26.24448897795591, 26.35871743486974, 26.472945891783567, 26.587174348697395, 26.701402805611224, 26.81563126252505, 26.929859719438877, 27.044088176352705, 27.158316633266534, 27.272545090180362, 27.386773547094187, 27.501002004008015, 27.615230460921843, 27.72945891783567, 27.8436873747495, 27.95791583166333, 28.072144288577153, 28.18637274549098, 28.30060120240481, 28.414829659318638, 28.529058116232466, 28.64328657314629, 28.75751503006012, 28.871743486973948, 28.985971943887776, 29.100200400801604, 29.21442885771543, 29.328657314629258, 29.442885771543086, 29.557114228456914, 29.671342685370742, 29.78557114228457, 29.899799599198396, 30.014028056112224, 30.128256513026052, 30.24248496993988, 30.35671342685371, 30.470941883767534, 30.585170340681362, 30.69939879759519, 30.81362725450902, 30.927855711422847, 31.04208416833667, 31.1563126252505, 31.27054108216433, 31.384769539078157, 31.498997995991985, 31.613226452905813, 31.727454909819638, 31.841683366733466, 31.955911823647295, 32.07014028056112, 32.184368737474955, 32.298597194388776, 32.412825651302605, 32.52705410821643, 32.64128256513026, 32.75551102204409, 32.86973947895791, 32.983967935871746, 33.098196392785574, 33.212424849699396, 33.326653306613224, 33.44088176352705, 33.55511022044088, 33.66933867735471, 33.78356713426854, 33.897795591182366, 34.012024048096194, 34.12625250501002, 34.24048096192385, 34.35470941883767, 34.4689378757515, 34.58316633266533, 34.69739478957916, 34.811623246492985, 34.92585170340681, 35.04008016032064, 35.15430861723447, 35.2685370741483, 35.38276553106213, 35.496993987975955, 35.611222444889776, 35.725450901803605, 35.83967935871743, 35.95390781563126, 36.06813627254509, 36.18236472945892, 36.296593186372746, 36.410821643286575, 36.5250501002004, 36.63927855711423, 36.75350701402806, 36.86773547094188, 36.98196392785571, 37.09619238476954, 37.210420841683366, 37.324649298597194, 37.43887775551102, 37.55310621242485, 37.66733466933868, 37.78156312625251, 37.895791583166336, 38.01002004008016, 38.124248496993985, 38.23847695390781, 38.35270541082164, 38.46693386773547, 38.5811623246493, 38.69539078156313, 38.809619238476955, 38.92384769539078, 39.03807615230461, 39.15230460921844, 39.26653306613226, 39.38076152304609, 39.49498997995992, 39.609218436873746, 39.723446893787575, 39.8376753507014, 39.95190380761523, 40.06613226452906, 40.18036072144289, 40.294589178356716, 40.408817635270545, 40.523046092184366, 40.637274549098194, 40.75150300601202, 40.86573146292585, 40.97995991983968, 41.09418837675351, 41.208416833667336, 41.322645290581164, 41.43687374749499, 41.55110220440882, 41.66533066132264, 41.77955911823647, 41.8937875751503, 42.00801603206413, 42.122244488977955, 42.236472945891784, 42.35070140280561, 42.46492985971944, 42.57915831663327, 42.6933867735471, 42.807615230460925, 42.921843687374746, 43.036072144288575, 43.1503006012024, 43.26452905811623, 43.37875751503006, 43.49298597194389, 43.607214428857716, 43.721442885771545, 43.83567134268537, 43.9498997995992, 44.06412825651302, 44.17835671342685, 44.29258517034068, 44.40681362725451, 44.521042084168336, 44.635270541082164, 44.74949899799599, 44.86372745490982, 44.97795591182365, 45.09218436873748, 45.206412825651306, 45.32064128256513, 45.434869739478955, 45.549098196392784, 45.66332665330661, 45.77755511022044, 45.89178356713427, 46.0060120240481, 46.120240480961925, 46.234468937875754, 46.34869739478958, 46.46292585170341, 46.57715430861723, 46.69138276553106, 46.80561122244489, 46.91983967935872, 47.034068136272545, 47.14829659318637, 47.2625250501002, 47.37675350701403, 47.49098196392786, 47.605210420841686, 47.71943887775551, 47.833667334669336, 47.947895791583164, 48.06212424849699, 48.17635270541082, 48.29058116232465, 48.40480961923848, 48.519038076152306, 48.633266533066134, 48.74749498997996, 48.86172344689379, 48.97595190380761, 49.09018036072144, 49.20440881763527, 49.3186372745491, 49.432865731462925, 49.547094188376754, 49.66132264529058, 49.77555110220441, 49.88977955911824, 50.00400801603207, 50.11823647294589, 50.23246492985972, 50.346693386773545, 50.46092184368737, 50.5751503006012, 50.68937875751503, 50.80360721442886, 50.91783567134269, 51.032064128256515, 51.14629258517034, 51.26052104208417, 51.37474949899799, 51.48897795591182, 51.60320641282565, 51.71743486973948, 51.831663326653306, 51.945891783567134, 52.06012024048096, 52.17434869739479, 52.28857715430862, 52.40280561122245, 52.517034068136276, 52.6312625250501, 52.745490981963925, 52.859719438877754, 52.97394789579158, 53.08817635270541, 53.20240480961924, 53.31663326653307, 53.430861723446895, 53.545090180360724, 53.65931863727455, 53.77354709418837, 53.8877755511022, 54.00200400801603, 54.11623246492986, 54.23046092184369, 54.344689378757515, 54.45891783567134, 54.57314629258517, 54.687374749499, 54.80160320641283, 54.91583166332666, 55.03006012024048, 55.144288577154306, 55.258517034068134, 55.37274549098196, 55.48697394789579, 55.60120240480962, 55.71543086172345, 55.829659318637276, 55.943887775551104, 56.05811623246493, 56.17234468937876, 56.28657314629258, 56.40080160320641, 56.51503006012024, 56.62925851703407, 56.743486973947896, 56.857715430861724, 56.97194388777555, 57.08617234468938, 57.20040080160321, 57.31462925851704, 57.42885771543086, 57.54308617234469, 57.657314629258515, 57.77154308617234, 57.88577154308617, 58.0])
+              .range(['#ffffccff', '#ffffccff', '#ffffcbff', '#ffffcaff', '#fffec9ff', '#fffec9ff', '#fffec8ff', '#fffdc7ff', '#fffdc7ff', '#fffdc6ff', '#fffdc5ff', '#fffcc5ff', '#fffcc4ff', '#fffcc3ff', '#fffbc2ff', '#fffbc2ff', '#fffbc1ff', '#fffbc0ff', '#fffac0ff', '#fffabfff', '#fffabeff', '#fff9bdff', '#fff9bdff', '#fff9bcff', '#fff9bbff', '#fff8bbff', '#fff8baff', '#fff8b9ff', '#fff7b8ff', '#fff7b8ff', '#fff7b7ff', '#fff7b6ff', '#fff6b6ff', '#fff6b5ff', '#fff6b4ff', '#fff5b4ff', '#fff5b3ff', '#fff5b2ff', '#fff4b1ff', '#fff4b1ff', '#fff4b0ff', '#fff4afff', '#fff3afff', '#fff3aeff', '#fff3adff', '#fff2acff', '#fff2acff', '#fff2abff', '#fff2aaff', '#fff1aaff', '#fff1a9ff', '#fff1a8ff', '#fff0a7ff', '#fff0a7ff', '#fff0a6ff', '#fff0a5ff', '#ffefa5ff', '#ffefa4ff', '#ffefa3ff', '#ffeea3ff', '#ffeea2ff', '#ffeea1ff', '#ffeea0ff', '#ffeda0ff', '#ffed9fff', '#ffed9eff', '#ffec9eff', '#ffec9dff', '#ffec9cff', '#ffeb9cff', '#ffeb9bff', '#ffeb9aff', '#ffea9aff', '#ffea99ff', '#ffea98ff', '#ffe998ff', '#ffe997ff', '#ffe996ff', '#ffe896ff', '#ffe895ff', '#ffe894ff', '#ffe794ff', '#ffe793ff', '#ffe792ff', '#ffe692ff', '#ffe691ff', '#ffe690ff', '#ffe68fff', '#ffe58fff', '#ffe58eff', '#ffe58dff', '#ffe48dff', '#ffe48cff', '#ffe48bff', '#ffe38bff', '#ffe38aff', '#ffe389ff', '#ffe289ff', '#ffe288ff', '#ffe287ff', '#ffe187ff', '#ffe186ff', '#ffe185ff', '#ffe085ff', '#ffe084ff', '#ffe083ff', '#ffdf83ff', '#ffdf82ff', '#ffdf81ff', '#ffde81ff', '#ffde80ff', '#ffde7fff', '#ffdd7fff', '#ffdd7eff', '#ffdd7dff', '#ffdc7dff', '#ffdc7cff', '#ffdc7bff', '#ffdc7bff', '#ffdb7aff', '#ffdb79ff', '#ffdb78ff', '#ffda78ff', '#ffda77ff', '#ffda76ff', '#fed976ff', '#fed975ff', '#fed874ff', '#fed774ff', '#fed773ff', '#fed672ff', '#fed572ff', '#fed571ff', '#fed470ff', '#fed470ff', '#fed36fff', '#fed26eff', '#fed26eff', '#fed16dff', '#fed06cff', '#fed06cff', '#fecf6bff', '#fecf6aff', '#fece6aff', '#fecd69ff', '#fecd68ff', '#fecc68ff', '#fecb67ff', '#fecb66ff', '#feca66ff', '#feca65ff', '#fec964ff', '#fec864ff', '#fec863ff', '#fec762ff', '#fec662ff', '#fec661ff', '#fec560ff', '#fec45fff', '#fec45fff', '#fec35eff', '#fec35dff', '#fec25dff', '#fec15cff', '#fec15bff', '#fec05bff', '#febf5aff', '#febf59ff', '#febe59ff', '#febe58ff', '#febd57ff', '#febc57ff', '#febc56ff', '#febb55ff', '#feba55ff', '#feba54ff', '#feb953ff', '#feb953ff', '#feb852ff', '#feb751ff', '#feb751ff', '#feb650ff', '#feb54fff', '#feb54fff', '#feb44eff', '#feb44dff', '#feb34dff', '#feb24cff', '#feb24cff', '#feb14bff', '#feb04bff', '#feb04bff', '#feaf4bff', '#feaf4aff', '#feae4aff', '#feae4aff', '#fead4aff', '#feac49ff', '#feac49ff', '#feab49ff', '#feab48ff', '#feaa48ff', '#fea948ff', '#fea948ff', '#fea847ff', '#fea847ff', '#fea747ff', '#fea647ff', '#fea646ff', '#fea546ff', '#fea546ff', '#fea446ff', '#fea345ff', '#fea345ff', '#fea245ff', '#fea245ff', '#fea144ff', '#fea044ff', '#fea044ff', '#fe9f44ff', '#fe9f43ff', '#fe9e43ff', '#fe9d43ff', '#fe9d43ff', '#fe9c42ff', '#fe9c42ff', '#fe9b42ff', '#fe9a42ff', '#fe9a41ff', '#fe9941ff', '#fe9941ff', '#fe9840ff', '#fe9740ff', '#fe9740ff', '#fe9640ff', '#fe963fff', '#fe953fff', '#fe943fff', '#fe943fff', '#fe933eff', '#fe933eff', '#fe923eff', '#fe923eff', '#fe913dff', '#fe903dff', '#fe903dff', '#fe8f3dff', '#fe8f3cff', '#fe8e3cff', '#fe8d3cff', '#fd8d3cff', '#fd8c3bff', '#fd8b3bff', '#fd8a3bff', '#fd883aff', '#fd873aff', '#fd863aff', '#fd853aff', '#fd8439ff', '#fd8339ff', '#fd8239ff', '#fd8138ff', '#fd8038ff', '#fd7f38ff', '#fd7e38ff', '#fd7d37ff', '#fd7c37ff', '#fd7b37ff', '#fd7a36ff', '#fd7936ff', '#fd7836ff', '#fd7736ff', '#fd7635ff', '#fd7535ff', '#fd7435ff', '#fd7334ff', '#fd7234ff', '#fd7134ff', '#fd7033ff', '#fd6f33ff', '#fd6e33ff', '#fd6d33ff', '#fd6c32ff', '#fd6b32ff', '#fd6a32ff', '#fd6931ff', '#fd6831ff', '#fd6731ff', '#fd6631ff', '#fd6530ff', '#fd6430ff', '#fd6330ff', '#fd622fff', '#fd612fff', '#fd602fff', '#fd5f2fff', '#fd5e2eff', '#fd5d2eff', '#fd5c2eff', '#fd5b2dff', '#fd5a2dff', '#fd592dff', '#fd582dff', '#fd572cff', '#fd562cff', '#fd552cff', '#fd542bff', '#fd532bff', '#fd522bff', '#fd512aff', '#fd502aff', '#fd4f2aff', '#fc4e2aff', '#fc4d29ff', '#fc4c29ff', '#fb4b29ff', '#fb4a29ff', '#fa4a29ff', '#fa4928ff', '#fa4828ff', '#f94728ff', '#f94628ff', '#f84527ff', '#f84427ff', '#f84427ff', '#f74327ff', '#f74226ff', '#f64126ff', '#f64026ff', '#f63f26ff', '#f53f26ff', '#f53e25ff', '#f43d25ff', '#f43c25ff', '#f43b25ff', '#f33a24ff', '#f33a24ff', '#f23924ff', '#f23824ff', '#f23724ff', '#f13623ff', '#f13523ff', '#f03523ff', '#f03423ff', '#f03322ff', '#ef3222ff', '#ef3122ff', '#ee3022ff', '#ee3022ff', '#ee2f21ff', '#ed2e21ff', '#ed2d21ff', '#ec2c21ff', '#ec2b20ff', '#ec2b20ff', '#eb2a20ff', '#eb2920ff', '#ea281fff', '#ea271fff', '#ea261fff', '#e9261fff', '#e9251fff', '#e8241eff', '#e8231eff', '#e8221eff', '#e7211eff', '#e7211dff', '#e6201dff', '#e61f1dff', '#e61e1dff', '#e51d1dff', '#e51c1cff', '#e41b1cff', '#e41b1cff', '#e31a1cff', '#e3191cff', '#e2191cff', '#e2181cff', '#e1181cff', '#e0181cff', '#e0171dff', '#df171dff', '#df161dff', '#de161dff', '#dd161dff', '#dd151dff', '#dc151eff', '#dc141eff', '#db141eff', '#da131eff', '#da131eff', '#d9131eff', '#d9121eff', '#d8121fff', '#d7111fff', '#d7111fff', '#d6111fff', '#d5101fff', '#d5101fff', '#d40f20ff', '#d40f20ff', '#d30e20ff', '#d20e20ff', '#d20e20ff', '#d10d20ff', '#d10d21ff', '#d00c21ff', '#cf0c21ff', '#cf0b21ff', '#ce0b21ff', '#ce0b21ff', '#cd0a22ff', '#cc0a22ff', '#cc0922ff', '#cb0922ff', '#ca0922ff', '#ca0822ff', '#c90822ff', '#c90723ff', '#c80723ff', '#c70623ff', '#c70623ff', '#c60623ff', '#c60523ff', '#c50524ff', '#c40424ff', '#c40424ff', '#c30424ff', '#c30324ff', '#c20324ff', '#c10225ff', '#c10225ff', '#c00125ff', '#bf0125ff', '#bf0125ff', '#be0025ff', '#be0026ff', '#bd0026ff', '#bc0026ff', '#bb0026ff', '#ba0026ff', '#b90026ff', '#b80026ff', '#b70026ff', '#b60026ff', '#b50026ff', '#b40026ff', '#b30026ff', '#b20026ff', '#b10026ff', '#b00026ff', '#af0026ff', '#ae0026ff', '#ad0026ff', '#ac0026ff', '#ab0026ff', '#aa0026ff', '#a90026ff', '#a80026ff', '#a70026ff', '#a60026ff', '#a50026ff', '#a40026ff', '#a30026ff', '#a20026ff', '#a10026ff', '#a00026ff', '#9f0026ff', '#9e0026ff', '#9d0026ff', '#9c0026ff', '#9b0026ff', '#9b0026ff', '#9a0026ff', '#990026ff', '#980026ff', '#970026ff', '#960026ff', '#950026ff', '#940026ff', '#930026ff', '#920026ff', '#910026ff', '#900026ff', '#8f0026ff', '#8e0026ff', '#8d0026ff', '#8c0026ff', '#8b0026ff', '#8a0026ff', '#890026ff', '#880026ff', '#870026ff', '#860026ff', '#850026ff', '#840026ff', '#830026ff', '#820026ff', '#810026ff', '#800026ff']);
+    
+
+    color_map_bc562d7ef69f5ebaf9ede5173203eabe.x = d3.scale.linear()
+              .domain([1.0, 58.0])
+              .range([0, 450 - 50]);
+
+    color_map_bc562d7ef69f5ebaf9ede5173203eabe.legend = L.control({position: 'topright'});
+    color_map_bc562d7ef69f5ebaf9ede5173203eabe.legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
+    color_map_bc562d7ef69f5ebaf9ede5173203eabe.legend.addTo(map_b72dd580bec3d146ec711407b5a0c894);
+
+    color_map_bc562d7ef69f5ebaf9ede5173203eabe.xAxis = d3.svg.axis()
+        .scale(color_map_bc562d7ef69f5ebaf9ede5173203eabe.x)
+        .orient("top")
+        .tickSize(1)
+        .tickValues([1.0, 8.125, 15.25, 22.375, 29.5, 36.625, 43.75, 50.875, 58.0]);
+
+    color_map_bc562d7ef69f5ebaf9ede5173203eabe.svg = d3.select(".legend.leaflet-control").append("svg")
+        .attr("id", 'legend')
+        .attr("width", 450)
+        .attr("height", 40);
+
+    color_map_bc562d7ef69f5ebaf9ede5173203eabe.g = color_map_bc562d7ef69f5ebaf9ede5173203eabe.svg.append("g")
+        .attr("class", "key")
+        .attr("fill", "black")
+        .attr("transform", "translate(25,16)");
+
+    color_map_bc562d7ef69f5ebaf9ede5173203eabe.g.selectAll("rect")
+        .data(color_map_bc562d7ef69f5ebaf9ede5173203eabe.color.range().map(function(d, i) {
+          return {
+            x0: i ? color_map_bc562d7ef69f5ebaf9ede5173203eabe.x(color_map_bc562d7ef69f5ebaf9ede5173203eabe.color.domain()[i - 1]) : color_map_bc562d7ef69f5ebaf9ede5173203eabe.x.range()[0],
+            x1: i < color_map_bc562d7ef69f5ebaf9ede5173203eabe.color.domain().length ? color_map_bc562d7ef69f5ebaf9ede5173203eabe.x(color_map_bc562d7ef69f5ebaf9ede5173203eabe.color.domain()[i]) : color_map_bc562d7ef69f5ebaf9ede5173203eabe.x.range()[1],
+            z: d
+          };
+        }))
+      .enter().append("rect")
+        .attr("height", 40 - 30)
+        .attr("x", function(d) { return d.x0; })
+        .attr("width", function(d) { return d.x1 - d.x0; })
+        .style("fill", function(d) { return d.z; });
+
+    color_map_bc562d7ef69f5ebaf9ede5173203eabe.g.call(color_map_bc562d7ef69f5ebaf9ede5173203eabe.xAxis).append("text")
+        .attr("class", "caption")
+        .attr("y", 21)
+        .attr("fill", "black")
+        .text("Nitrogen dioxide (\u00b5g/m\u00b3)");
+    
+            map_b72dd580bec3d146ec711407b5a0c894.fitBounds(
+                [[49.71928118788111, 2.582322781489744], [51.34879529193204, 6.002328686936966]],
+                {}
+            );
+        
+</script>
+</html>

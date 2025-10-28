@@ -1,0 +1,82 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "traverse.1054",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.37535,
+          50.87864
+        ],
+        "geometry_name": "geom"
+      },
+      "properties": {
+        "descr_en": "TUVPRA_VP___A12",
+        "descr_fr": "TUVPRA_VP___A12",
+        "descr_nl": "TUVPRA_VP___A12",
+        "detectors": [
+          "VP_203_1",
+          "VP_203_2"
+        ],
+        "number_of_lanes": 2,
+        "orientation": 10,
+        "traverse_name": "VP_203",
+        "type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "traverse.997",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.35554,
+          50.8561
+        ],
+        "geometry_name": "geom"
+      },
+      "properties": {
+        "descr_en": "TUPCKR_ROG__BAS",
+        "descr_fr": "TUPCKR_ROG__BAS",
+        "descr_nl": "TUPCKR_ROG__BAS",
+        "detectors": [
+          "ROG_TD2_1",
+          "ROG_TD2_2"
+        ],
+        "number_of_lanes": 2,
+        "orientation": 295,
+        "traverse_name": "ROG_TD2",
+        "type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "traverse.999",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.35696,
+          50.83659
+        ],
+        "geometry_name": "geom"
+      },
+      "properties": {
+        "descr_en": "TUPCKR_LOUI__MC",
+        "descr_fr": "TUPCKR_LOUI__MC",
+        "descr_nl": "TUPCKR_LOUI__MC",
+        "detectors": [
+          "LOU_TD1_1",
+          "LOU_TD1_2"
+        ],
+        "number_of_lanes": 2,
+        "orientation": 230,
+        "traverse_name": "LOU_TD1",
+        "type": null
+      }
+    }
+  ],
+  "requestDate": "2025/08/14 06:00:00",
+  "totalFeatures": 88
+}

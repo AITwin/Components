@@ -1,0 +1,79 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                4.23903,
+                51.01865
+              ],
+              [
+                4.53101,
+                51.00757
+              ],
+              [
+                4.71777,
+                50.8847
+              ],
+              [
+                4.71983,
+                50.73849
+              ],
+              [
+                4.52345,
+                50.64932
+              ],
+              [
+                4.38063,
+                50.64801
+              ],
+              [
+                4.16983,
+                50.67239
+              ],
+              [
+                4.04349,
+                50.72632
+              ],
+              [
+                3.99336,
+                50.81838
+              ],
+              [
+                4.01122,
+                50.90203
+              ],
+              [
+                4.07919,
+                50.98336
+              ],
+              [
+                4.23903,
+                51.01865
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "operating_zone",
+        "rules": [
+          {
+            "maximum_speed_kph": null,
+            "ride_allowed": true,
+            "ride_through_allowed": true,
+            "station_parking": false,
+            "vehicle_type_id": [
+              "scooter"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

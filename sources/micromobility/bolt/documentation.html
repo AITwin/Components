@@ -1,0 +1,99 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="micromobility-bolt">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #micromobility-bolt { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #micromobility-bolt h1,
+    #micromobility-bolt h2,
+    #micromobility-bolt h3 { color: #16324a; margin-top: 1.1rem; }
+    #micromobility-bolt code,
+    #micromobility-bolt pre { background: #f6f8fa; border-radius: 6px; }
+    #micromobility-bolt pre { padding: 12px; overflow: auto; }
+    #micromobility-bolt table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #micromobility-bolt th,
+    #micromobility-bolt td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #micromobility-bolt th { background: #f3f6f9; }
+    #micromobility-bolt .muted { color:#566; font-size: 0.95rem; }
+    #micromobility-bolt ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #micromobility-bolt .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>Micromobility — Bolt</h1>
+  <pre><code>GET /micromobility/bolt</code></pre>
+  <p class="muted">Real-time and historical positions and statuses of Bolt micromobility vehicles in Brussels, returned as GeoJSON.</p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      This endpoint delivers vehicle locations and operational attributes (availability, range, type) for Bolt services. Data originates from Bolt’s GBFS feeds and is exposed through MobilityTwin.Brussels as a GeoJSON snapshot for mapping, analytics, and monitoring. If no timestamp is specified elsewhere, the latest snapshot is returned; otherwise the closest available snapshot is used.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type (always <code>FeatureCollection</code>)</td></tr>
+      <tr><td>features</td><td>array</td><td>List of features (each = one vehicle)</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>GeoJSON feature type (<code>Feature</code>)</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Unique identifier of the vehicle/feature</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON geometry</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td><code>Point</code></td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>[longitude, latitude]</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Operational metadata for the vehicle</td></tr>
+      <tr><td>properties.bike_id</td><td>string</td><td>Bolt internal vehicle ID</td></tr>
+      <tr><td>properties.vehicle_type_id</td><td>string</td><td>Internal type ID of the vehicle</td></tr>
+      <tr><td>properties.current_range_meters</td><td>number</td><td>Remaining vehicle range (meters)</td></tr>
+      <tr><td>properties.is_disabled</td><td>boolean</td><td>Vehicle currently disabled</td></tr>
+      <tr><td>properties.is_reserved</td><td>boolean</td><td>Vehicle reserved</td></tr>
+      <tr><td>properties.pricing_plan_id</td><td>string</td><td>ID of the active pricing plan</td></tr>
+      <tr><td>properties.rental_uris.android</td><td>string</td><td>Android deep link for renting</td></tr>
+      <tr><td>properties.rental_uris.ios</td><td>string</td><td>iOS deep link for renting</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Live snapshots typically: hundreds to thousands of vehicles</li>
+      <li class="muted">Observed dataset stats (historical): ~79,675 entries aggregated between 2024-08-21 and 2025-08-04</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Bolt official GBFS (<code>free_bike_status.json</code>) for the Brussels region</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Ingest:</strong> periodically fetch GBFS vehicle availability.</li>
+      <li><strong>Archive:</strong> store snapshots by timestamp for historical queries.</li>
+      <li><strong>Resolve:</strong> on request, select the latest or nearest snapshot.</li>
+      <li><strong>Emit:</strong> return vehicles as GeoJSON <code>Feature</code> points with operational properties.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Real-time fleet monitoring</li>
+      <li>Urban mobility planning &amp; coverage analysis</li>
+      <li>Service performance and distribution trends</li>
+      <li>Rider experience with deep-link rentals</li>
+    </ul>
+  </div>
+
+  <div class="section" style="border-left: 4px solid #FF6B35; padding: 15px; margin: 20px 0; background-color: #f8f9fa;">
+    <h3>Operational Context for Brussels Micromobility Ecosystem</h3>
+    <p>The Micromobility Bolt endpoint aggregates real-time and historical vehicle availability data from Bolt's Brussels fleet—enabling <em>urban mobility planners</em> to analyze provider-specific coverage patterns, service density, and operational strategies across Brussels neighborhoods. The GeoJSON format with vehicle properties (bike_id, vehicle_type_id, current_range_meters, availability flags) supports <em>comparative provider analysis</em>: how does Bolt's fleet size and distribution compare with Dott, Lime, and Pony across Brussels? Does Bolt concentrate vehicles in European Quarter business district or distribute evenly across communes? The ~79,675 historical vehicle observations (Aug 2024-Aug 2025) enable <em>temporal pattern analysis</em>: does Bolt rebalance vehicles overnight for morning commute positioning, do weekend distributions differ from weekdays (leisure vs. commuter trip patterns), have fleet sizes changed over time (market expansion or contraction)? For <em>policy compliance monitoring</em>, Brussels Region regulations require equitable geographic distribution and parking zone adherence—aggregated Bolt data reveals whether vehicles concentrate in wealthy/central areas while avoiding peripheral/lower-income communes (service equity concern). The current_range_meters field enables <em>operational efficiency analysis</em>: what percentage of Bolt fleet shows low battery requiring charging (operational overhead), do range patterns suggest battery degradation over vehicle lifetime, are charging strategies optimized (vehicles recharged before reaching critically low range)? <em>Competition researchers</em> use multi-provider comparison: if Bolt shows 800 vehicles while Lime shows 1,200, market share estimates inform business strategy and regulatory capacity decisions. The rental_uris deep links reflect <em>digital integration</em>: Brussels mobility apps can embed provider-specific rental flows, though multi-provider aggregation requires standardized GBFS enabling users to compare availability/pricing across Bolt/Dott/Lime/Pony before selecting provider—critical for competitive market dynamics and consumer choice supporting Brussels sustainable mobility goals.</p>
+  </div>
+</div>

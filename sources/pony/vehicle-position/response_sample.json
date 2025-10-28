@@ -1,0 +1,77 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "0",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.32715,
+          50.86147
+        ]
+      },
+      "properties": {
+        "bike_id": "pony_aaf7c67015d64402beecf92ad013e7ce",
+        "vehicle_type_id": "scooter",
+        "system_id": "f190d330-b49e-4590-871b-0bcbec565a8c",
+        "current_fuel_percent": 0.0,
+        "current_range_meters": 0.0,
+        "is_disabled": true,
+        "is_reserved": false,
+        "last_reported": 1755170707,
+        "pricing_plan_id": "Brussels_scooter",
+        "rental_uris.android": null,
+        "rental_uris.ios": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.13583,
+          49.23597
+        ]
+      },
+      "properties": {
+        "bike_id": "pony_bb9b611176b240fb8e803b5d300fb820",
+        "vehicle_type_id": "scooter",
+        "system_id": "f190d330-b49e-4590-871b-0bcbec565a8c",
+        "current_fuel_percent": 0.0,
+        "current_range_meters": 0.0,
+        "is_disabled": true,
+        "is_reserved": false,
+        "last_reported": 1755170707,
+        "pricing_plan_id": "Brussels_scooter",
+        "rental_uris.android": null,
+        "rental_uris.ios": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "2",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.2251,
+          48.95253
+        ]
+      },
+      "properties": {
+        "bike_id": "pony_b0d3285cb2aa45f5b334341b09cfde6b",
+        "vehicle_type_id": "scooter",
+        "system_id": "f190d330-b49e-4590-871b-0bcbec565a8c",
+        "current_fuel_percent": 0.0,
+        "current_range_meters": 0.0,
+        "is_disabled": true,
+        "is_reserved": false,
+        "last_reported": 1755170707,
+        "pricing_plan_id": "Brussels_scooter",
+        "rental_uris.android": null,
+        "rental_uris.ios": null
+      }
+    }
+  ]
+}

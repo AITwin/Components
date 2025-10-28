@@ -1,0 +1,101 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="lime-vehicle-position">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #lime-vehicle-position { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #lime-vehicle-position h1,
+    #lime-vehicle-position h2,
+    #lime-vehicle-position h3 { color: #16324a; margin-top: 1.1rem; }
+    #lime-vehicle-position code,
+    #lime-vehicle-position pre { background: #f6f8fa; border-radius: 6px; }
+    #lime-vehicle-position pre { padding: 12px; overflow: auto; }
+    #lime-vehicle-position table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #lime-vehicle-position th,
+    #lime-vehicle-position td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #lime-vehicle-position th { background: #f3f6f9; }
+    #lime-vehicle-position .muted { color:#566; font-size: 0.95rem; }
+    #lime-vehicle-position ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #lime-vehicle-position .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>Lime — Vehicle Position</h1>
+  <pre><code>GET /lime/vehicle-position</code></pre>
+  <p class="muted">Real-time and historical positions and statuses of Lime micromobility vehicles in Brussels, returned as GeoJSON.</p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      This endpoint delivers vehicle locations and operational attributes (availability, range, type) for Lime services. Data originates from Lime’s GBFS feeds and is exposed through MobilityTwin.Brussels as a GeoJSON snapshot for mapping, analytics, and monitoring. If no timestamp is specified elsewhere, the latest snapshot is returned; otherwise the closest available snapshot is used.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type, always <code>FeatureCollection</code>. This industry-standard format enables direct integration with mapping libraries (Leaflet, Mapbox, OpenLayers), GIS platforms, and spatial analysis tools for visualizing real-time fleet distributions, generating density heatmaps, and conducting availability analyses across Lime's Brussels deployment.</td></tr>
+      <tr><td>features</td><td>array</td><td>Collection of vehicle features, each representing one physical Lime asset (e-scooter or e-bike) available in Brussels at the snapshot time. Array length reflects current operational fleet size and fluctuates dynamically based on demand patterns, rebalancing operations, maintenance schedules, battery swapping cycles, and regulatory deployment constraints (city permit caps, seasonal adjustments).</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>GeoJSON feature type, always <code>Feature</code>. Standard GeoJSON designation for individual geographic entities, ensuring consistent structure across geospatial applications and enabling uniform parsing by mapping libraries and spatial databases.</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Ephemeral feature identifier unique within this specific snapshot, used primarily for GeoJSON rendering, client-side map indexing, and short-lived session tracking. For persistent vehicle tracking across time, rental sessions, maintenance events, and longitudinal analysis, always use <code>properties.bike_id</code>, which remains constant throughout the asset's operational lifecycle.</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON geometry object describing the vehicle's current geographic location. Always contains a <code>type</code> field (Point for vehicles) and <code>coordinates</code> array. This structure enables standardized spatial operations: proximity searches, geofence containment checks, spatial clustering analysis, and seamless integration with geographic information systems.</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td>Geometry type, always <code>Point</code>. Vehicles are represented as discrete GPS coordinates reflecting their last reported position, typically updated every few minutes while parked or actively rented. This point representation enables efficient real-time map rendering, proximity-based availability searches ("find nearest scooter"), and temporal analysis of vehicle movements and deployment patterns.</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>Geographic position as [longitude, latitude] in decimal degrees using the WGS84 datum (EPSG:4326), the global standard for GPS coordinates. For Brussels: longitude approximately 4.24–4.48°E, latitude 50.79–50.91°N. Position accuracy reflects onboard GPS hardware quality and may be intentionally generalized (rounded to ~10-50m precision) by Lime for competitive positioning, privacy protection, or payload optimization. Essential for proximity searches, geofence compliance validation, coverage gap analysis, and availability mapping.</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Operational metadata bundle containing vehicle state, availability status, categorization, and temporal information. These attributes power rider-facing features (availability displays, vehicle type filtering, range-based search), fleet management operations (rebalancing priorities based on battery levels, maintenance scheduling for disabled units), and regulatory compliance reporting (fleet composition disclosure, utilization metrics, operational area validation).</td></tr>
+      <tr><td>properties.bike_id</td><td>string</td><td>Lime's persistent, globally unique identifier for this physical vehicle (retaining historical "bike" terminology from GBFS specification origins, though applicable to all vehicle types including scooters). This ID remains constant across rental sessions, battery replacements, maintenance interventions, geographic redeployments, and firmware updates—enabling longitudinal asset tracking, utilization analytics, maintenance history analysis, and performance benchmarking. Critical for data joins with trip records, service logs, compliance audits, and cross-temporal studies of fleet health and operational efficiency.</td></tr>
+      <tr><td>properties.vehicle_type</td><td>string</td><td>Human-readable vehicle category displayed to end users in Lime's app and partner platforms (e.g., "scooter", "bike", "e-bike"). Helps riders quickly identify appropriate transportation options based on their needs (speed, physical effort, cargo capacity) and preferences. This user-facing label complements the technical <code>vehicle_type_id</code> used for internal categorization and business logic.</td></tr>
+      <tr><td>properties.vehicle_type_id</td><td>string</td><td>Internal classification code referencing specific Lime vehicle models, hardware generations, or capability tiers (e.g., "gen4_scooter", "cargo_bike_xl"). Distinguishes technical specifications (max speed, range, load capacity, terrain suitability, feature sets like swappable batteries or integrated locks) and drives type-specific operational rules (differentiated pricing tiers, geofence restrictions by vehicle class, parking regulations). Operators leverage this for fleet composition optimization (matching vehicle types to neighborhood characteristics), strategic planning (phasing in new models, retiring aging hardware), and performance analysis (comparing utilization rates across vehicle categories).</td></tr>
+      <tr><td>properties.current_range_meters</td><td>number</td><td>Estimated remaining travel distance in meters before battery depletion or service intervention required, calculated from current battery state-of-charge, historical consumption patterns, and local terrain characteristics (Brussels' hills, typical stop-and-go urban traffic). Typical range: 0–50,000m depending on battery size and vehicle efficiency. Riders depend on this for trip feasibility assessment ("Can I reach my destination and return home?"), while operators use it to prioritize vehicles for battery swapping (targeting low-range units before they become unusable), optimize charging infrastructure placement, and maximize effective fleet availability by preventing mid-trip battery failures.</td></tr>
+      <tr><td>properties.is_disabled</td><td>boolean</td><td><code>true</code> when the vehicle is unavailable for public rental due to operational, safety, or regulatory constraints: active maintenance or repair, physical damage requiring service, battery depleted below minimum operational threshold, positioned in geofence-restricted zones (no-parking areas, exclusion zones), or administratively locked by Lime (e.g., compliance investigation, theft recovery). Disabled vehicles remain visible in Lime's fleet management systems for rebalancing teams and service crews but are hidden from customer-facing apps. Essential for calculating effective fleet size (actually rentable vehicles) versus nominal deployed count (total assets in field).</td></tr>
+      <tr><td>properties.is_reserved</td><td>boolean</td><td><code>true</code> when a rider has reserved this vehicle through the Lime app (or partner platform) but has not yet started the rental trip. Reservations typically hold the vehicle for 10–15 minutes, during which it remains locked to that specific user and excluded from availability for others. Useful for real-time supply-demand analysis (high reservation rates indicate tight supply or popular locations), rider behavior studies (reservation-to-rental conversion rates), and optimizing reservation policy parameters (hold duration, penalty structures).</td></tr>
+      <tr><td>properties.last_reported</td><td>number</td><td>Unix timestamp (seconds since epoch, 1970-01-01 00:00:00 UTC) indicating when Lime's backend last received telemetry from this vehicle's onboard systems. Used to assess data freshness, vehicle connectivity health, and operational status. Significant time gaps (>30-60 minutes for parked vehicles, >5-10 minutes for active rentals) may indicate connectivity issues (GPS/cellular failure), battery depletion, theft, vandalism, or environmental interference. Operators monitor reporting latency for fleet health diagnostics; data consumers filter stale records to ensure availability metrics reflect current reality rather than outdated states.</td></tr>
+    </table>
+    
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #00d632; font-size: 0.95em;">
+      <strong>Operational Context:</strong> This real-time vehicle position feed forms the foundation of Lime's Brussels operations and third-party integrations. 
+      <em>For riders and mobility aggregators</em>, it powers critical features: nearest-vehicle discovery, range-based filtering ("show scooters with 5km+ range"), multimodal journey planning (solving first/last-mile connections to metro/tram), and predictive availability ("when will vehicles appear in this neighborhood?"). 
+      <em>For Lime's operations teams</em>, this data drives intelligent fleet management: algorithmic rebalancing (identifying demand hotspots requiring vehicle redistribution), proactive maintenance scheduling (flagging frequently-disabled units for inspection), battery logistics (routing swapper teams to low-range clusters), and regulatory compliance (demonstrating operational area adherence, deployment density limits). 
+      <em>For urban planners and researchers</em>, longitudinal aggregation reveals micromobility's role in Brussels' transportation ecosystem: modal shift patterns (reducing car trips), infrastructure needs (popular routes suggesting bike lane extensions), equity analysis (service coverage across neighborhoods), and seasonal/weather impacts on usage. 
+      The dual identifiers (<code>bike_id</code> for persistence, <code>last_reported</code> for freshness) enable both real-time operational dashboards and historical asset performance studies tracking vehicle lifecycles from deployment through retirement.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Live snapshots typically: hundreds to thousands of vehicles</li>
+      <li class="muted">Observed dataset stats: 2024-08-21 14:59:47 → 2025-08-04 20:59:04, ~87,521 records aggregated</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Lime official GBFS (<code>free_bike_status.json</code>) for the Brussels region</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Ingest:</strong> periodically pull GBFS vehicle availability.</li>
+      <li><strong>Archive:</strong> store snapshots by timestamp for historical queries.</li>
+      <li><strong>Resolve:</strong> on request, select the latest or nearest snapshot.</li>
+      <li><strong>Emit:</strong> return vehicles as GeoJSON <code>Feature</code> points with operational properties.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Real-time monitoring of vehicle availability</li>
+      <li>Urban planning and coverage analysis</li>
+      <li>Fleet management and saturation trends</li>
+      <li>User experience integrations with deep links</li>
+    </ul>
+  </div>
+</div>

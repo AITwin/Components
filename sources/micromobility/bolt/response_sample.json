@@ -1,0 +1,68 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "0",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.43104,
+          50.81673
+        ]
+      },
+      "properties": {
+        "bike_id": "71dcd14b-4f01-4917-9dfc-3763937cded9",
+        "vehicle_type_id": "0fe72a8b-1cf8-53f8-bfb1-0a02528b8b99",
+        "current_range_meters": 19840,
+        "is_disabled": false,
+        "is_reserved": false,
+        "pricing_plan_id": "03139b94-9edc-5ac0-8a93-411ecf55dffe",
+        "rental_uris.android": null,
+        "rental_uris.ios": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.28655,
+          50.86851
+        ]
+      },
+      "properties": {
+        "bike_id": "803694cf-1e0d-47ea-aaa7-81bd6594f54f",
+        "vehicle_type_id": "0fe72a8b-1cf8-53f8-bfb1-0a02528b8b99",
+        "current_range_meters": 21080,
+        "is_disabled": false,
+        "is_reserved": false,
+        "pricing_plan_id": "03139b94-9edc-5ac0-8a93-411ecf55dffe",
+        "rental_uris.android": null,
+        "rental_uris.ios": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "2",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.31323,
+          50.80484
+        ]
+      },
+      "properties": {
+        "bike_id": "a3f8dd62-7c53-496c-a475-d8a7be550fee",
+        "vehicle_type_id": "0fe72a8b-1cf8-53f8-bfb1-0a02528b8b99",
+        "current_range_meters": 14880,
+        "is_disabled": false,
+        "is_reserved": false,
+        "pricing_plan_id": "03139b94-9edc-5ac0-8a93-411ecf55dffe",
+        "rental_uris.android": null,
+        "rental_uris.ios": null
+      }
+    }
+  ]
+}

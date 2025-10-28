@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_5a5bc573c520a8a2ff3c06be75d6756a {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+</head>
+<body>
+    
+    <style>html,body{height:100%;margin:0}.folium-map{height:100vh;width:100%}</style>
+    
+            <div class="folium-map" id="map_5a5bc573c520a8a2ff3c06be75d6756a" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_5a5bc573c520a8a2ff3c06be75d6756a = L.map(
+                "map_5a5bc573c520a8a2ff3c06be75d6756a",
+                {
+                    center: [50.873961, 4.506959],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_13edd6d11e8b2cc766eb8a6a4a030432 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_13edd6d11e8b2cc766eb8a6a4a030432.addTo(map_5a5bc573c520a8a2ff3c06be75d6756a);
+        
+    
+            var circle_marker_ab125dcc40135edf234573c7d6e3a4aa = L.circleMarker(
+                [50.873961, 4.506959],
+                {"bubblingMouseEvents": true, "color": "#ffffd9ff", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#ffffd9ff", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(map_5a5bc573c520a8a2ff3c06be75d6756a);
+        
+    
+            circle_marker_ab125dcc40135edf234573c7d6e3a4aa.bindTooltip(
+                `<div>
+                     scooter — 1.8 km
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+    var color_map_26143e58f71d23600f9a0fed2fa95133 = {};
+
+    
+    color_map_26143e58f71d23600f9a0fed2fa95133.color = d3.scale.threshold()
+              .domain([1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843])
+              .range(['#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff', '#ffffd9ff']);
+    
+
+    color_map_26143e58f71d23600f9a0fed2fa95133.x = d3.scale.linear()
+              .domain([1.843, 1.843])
+              .range([0, 450 - 50]);
+
+    color_map_26143e58f71d23600f9a0fed2fa95133.legend = L.control({position: 'topright'});
+    color_map_26143e58f71d23600f9a0fed2fa95133.legend.onAdd = function (map) {var div = L.DomUtil.create('div', 'legend'); return div};
+    color_map_26143e58f71d23600f9a0fed2fa95133.legend.addTo(map_5a5bc573c520a8a2ff3c06be75d6756a);
+
+    color_map_26143e58f71d23600f9a0fed2fa95133.xAxis = d3.svg.axis()
+        .scale(color_map_26143e58f71d23600f9a0fed2fa95133.x)
+        .orient("top")
+        .tickSize(1)
+        .tickValues([1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843, 1.843]);
+
+    color_map_26143e58f71d23600f9a0fed2fa95133.svg = d3.select(".legend.leaflet-control").append("svg")
+        .attr("id", 'legend')
+        .attr("width", 450)
+        .attr("height", 40);
+
+    color_map_26143e58f71d23600f9a0fed2fa95133.g = color_map_26143e58f71d23600f9a0fed2fa95133.svg.append("g")
+        .attr("class", "key")
+        .attr("fill", "black")
+        .attr("transform", "translate(25,16)");
+
+    color_map_26143e58f71d23600f9a0fed2fa95133.g.selectAll("rect")
+        .data(color_map_26143e58f71d23600f9a0fed2fa95133.color.range().map(function(d, i) {
+          return {
+            x0: i ? color_map_26143e58f71d23600f9a0fed2fa95133.x(color_map_26143e58f71d23600f9a0fed2fa95133.color.domain()[i - 1]) : color_map_26143e58f71d23600f9a0fed2fa95133.x.range()[0],
+            x1: i < color_map_26143e58f71d23600f9a0fed2fa95133.color.domain().length ? color_map_26143e58f71d23600f9a0fed2fa95133.x(color_map_26143e58f71d23600f9a0fed2fa95133.color.domain()[i]) : color_map_26143e58f71d23600f9a0fed2fa95133.x.range()[1],
+            z: d
+          };
+        }))
+      .enter().append("rect")
+        .attr("height", 40 - 30)
+        .attr("x", function(d) { return d.x0; })
+        .attr("width", function(d) { return d.x1 - d.x0; })
+        .style("fill", function(d) { return d.z; });
+
+    color_map_26143e58f71d23600f9a0fed2fa95133.g.call(color_map_26143e58f71d23600f9a0fed2fa95133.xAxis).append("text")
+        .attr("class", "caption")
+        .attr("y", 21)
+        .attr("fill", "black")
+        .text("Range (km)");
+</script>
+</html>

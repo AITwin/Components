@@ -1,0 +1,173 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                4.3626,
+                50.84667
+              ],
+              [
+                4.36139,
+                50.84445
+              ],
+              [
+                4.3608,
+                50.84327
+              ],
+              [
+                4.36472,
+                50.84248
+              ],
+              [
+                4.36654,
+                50.84588
+              ],
+              [
+                4.3626,
+                50.84667
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Parc Royal ",
+        "rules": [
+          {
+            "maximum_speed_kph": null,
+            "ride_allowed": false,
+            "ride_through_allowed": false,
+            "station_parking": false,
+            "vehicle_type_id": [
+              "dott_bicycle",
+              "dott_scooter"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                4.34799,
+                50.82836
+              ],
+              [
+                4.34919,
+                50.82918
+              ],
+              [
+                4.34909,
+                50.82935
+              ],
+              [
+                4.34853,
+                50.82961
+              ],
+              [
+                4.34753,
+                50.82957
+              ],
+              [
+                4.34704,
+                50.82918
+              ],
+              [
+                4.34745,
+                50.82868
+              ],
+              [
+                4.34772,
+                50.82849
+              ],
+              [
+                4.34799,
+                50.82836
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "NRZ Pierre Paulus",
+        "rules": [
+          {
+            "maximum_speed_kph": null,
+            "ride_allowed": false,
+            "ride_through_allowed": false,
+            "station_parking": false,
+            "vehicle_type_id": [
+              "dott_bicycle",
+              "dott_scooter"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                4.32353,
+                50.87281
+              ],
+              [
+                4.32391,
+                50.87228
+              ],
+              [
+                4.32582,
+                50.87271
+              ],
+              [
+                4.32572,
+                50.87299
+              ],
+              [
+                4.32534,
+                50.87314
+              ],
+              [
+                4.32469,
+                50.87307
+              ],
+              [
+                4.32353,
+                50.87281
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Low Speed => place Reine Astrid - Jette",
+        "rules": [
+          {
+            "maximum_speed_kph": 7,
+            "ride_allowed": true,
+            "ride_through_allowed": true,
+            "station_parking": false,
+            "vehicle_type_id": [
+              "dott_scooter"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

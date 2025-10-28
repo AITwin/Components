@@ -1,0 +1,107 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "device.CAT17",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.30199,
+          50.82062
+        ],
+        "geometry_name": "geom"
+      },
+      "properties": {
+        "active": true,
+        "device_name": "CAT17",
+        "descr_en": "Quai de Veeweyde 11 - 1070 Anderlecht",
+        "road_en": "Quai de Veeweyde 11 - 1070 Anderlecht",
+        "road_fr": "Quai de Veeweyde 11 - 1070 Anderlecht",
+        "road_nl": "Veeweidekaai 11 - 1070 Anderlecht"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "device.CB02411",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.37396,
+          50.88185
+        ],
+        "geometry_name": "geom"
+      },
+      "properties": {
+        "active": true,
+        "device_name": "CB02411",
+        "descr_en": "Chaussée de Vilvorde - 1020 Bruxelles",
+        "road_en": "Chaussée de Vilvorde - 1020 Bruxelles",
+        "road_fr": "Chaussée de Vilvorde - 1020 Bruxelles",
+        "road_nl": "Vilvoordsesteenweg - 1020 Brussel"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "device.CB1101",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.36858,
+          50.84534
+        ],
+        "geometry_name": "geom"
+      },
+      "properties": {
+        "active": true,
+        "device_name": "CB1101",
+        "descr_en": "Avenue des Arts 26 - 1000 Bruxelles",
+        "road_en": "Avenue des Arts 26 - 1000 Bruxelles",
+        "road_fr": "Avenue des Arts 26 - 1000 Bruxelles",
+        "road_nl": "Kunstlaan 26 - 1000 Brussel"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "device.CB1142",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.37874,
+          50.84357
+        ],
+        "geometry_name": "geom"
+      },
+      "properties": {
+        "active": true,
+        "device_name": "CB1142",
+        "descr_en": "Wetstraat 130 - 1000 Brussel",
+        "road_en": "Rue de la Loi 130 - 1000 Bruxelles",
+        "road_fr": "Rue de la Loi 130 - 1000 Bruxelles",
+        "road_nl": "Wetstraat 130 - 1000 Brussel"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "device.CB1143",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.37881,
+          50.84337
+        ],
+        "geometry_name": "geom"
+      },
+      "properties": {
+        "active": true,
+        "device_name": "CB1143",
+        "descr_en": "Rue de la Loi 145 - 1000 Bruxelles",
+        "road_en": "Rue de la Loi 145 - 1000 Bruxelles",
+        "road_fr": "Rue de la Loi 145 - 1000 Bruxelles",
+        "road_nl": "Wetstraat 145 - 1000 Brussel"
+      }
+    }
+  ],
+  "requestDate": "2025/08/14 06:00:00",
+  "totalFeatures": 18
+}

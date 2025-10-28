@@ -1,0 +1,83 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "0",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.691642,
+          50.747729
+        ]
+      },
+      "properties": {
+        "stop_id": "Barcast2",
+        "stop_name": "ARCHENNES Ancienne Station",
+        "stop_lat": 50.747729,
+        "stop_lon": 4.691642,
+        "schedule": [
+          {
+            "arrival_time": "19:55:00",
+            "departure_time": "19:55:00",
+            "route_id": "B0023-22544",
+            "trip_id": "45974928-B_2025-BW_A_P4-Sem-Vac-09",
+            "trip_short_name": "34"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.295791,
+          50.578466
+        ]
+      },
+      "properties": {
+        "stop_id": "Barqbar1",
+        "stop_name": "ARQUENNES Bois d'Arpes",
+        "stop_lat": 50.578466,
+        "stop_lon": 4.295791,
+        "schedule": [
+          {
+            "arrival_time": "20:00:00",
+            "departure_time": "20:00:00",
+            "route_id": "B0072-19675",
+            "trip_id": "45976416-B_2025-BW_A_P4-Sem-Vac-09",
+            "trip_short_name": "49"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "2",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.296069,
+          50.578529
+        ]
+      },
+      "properties": {
+        "stop_id": "Barqbar2",
+        "stop_name": "ARQUENNES Bois d'Arpes",
+        "stop_lat": 50.578529,
+        "stop_lon": 4.296069,
+        "schedule": [
+          {
+            "arrival_time": "20:02:00",
+            "departure_time": "20:02:00",
+            "route_id": "B0072-19675",
+            "trip_id": "45976400-B_2025-BW_A_P4-Sem-Vac-09",
+            "trip_short_name": "40"
+          }
+        ]
+      }
+    }
+  ]
+}

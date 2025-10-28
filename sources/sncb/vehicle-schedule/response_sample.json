@@ -1,0 +1,94 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "0",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          6.09139,
+          50.76776
+        ]
+      },
+      "properties": {
+        "stop_id": "8015345",
+        "stop_name": "Aachen Hbf (DE)",
+        "stop_lat": 50.76776,
+        "stop_lon": 6.09139,
+        "schedule": [
+          {
+            "trip_id": "88____:L72::8841004:8015345:15:1642:20251213",
+            "trip_headsign": "Aachen Hbf (DE)",
+            "route_id": "196",
+            "arrival_time": "16:42:00",
+            "departure_time": "16:42:00",
+            "trip_short_name": "18949"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          6.133333,
+          49.6
+        ]
+      },
+      "properties": {
+        "stop_id": "8200100",
+        "stop_name": "Luxembourg (LU)",
+        "stop_lat": 49.6,
+        "stop_lon": 6.133333,
+        "schedule": [
+          {
+            "trip_id": "88____:007::8814001:8200100:54:1649:20251212",
+            "trip_headsign": "Luxembourg (LU)",
+            "route_id": "239",
+            "arrival_time": "16:49:00",
+            "departure_time": "16:49:00",
+            "trip_short_name": "2113"
+          },
+          {
+            "trip_id": "88____:007::8200100:8814001:54:2028:20251212",
+            "trip_headsign": "Bruxelles-Midi",
+            "route_id": "239",
+            "arrival_time": "17:11:00",
+            "departure_time": "17:11:00",
+            "trip_short_name": "2140"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "2",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          6.132853,
+          49.619126
+        ]
+      },
+      "properties": {
+        "stop_id": "8200102",
+        "stop_name": "Pfaffenthal-Kirchberg (LU)",
+        "stop_lat": 49.619126,
+        "stop_lon": 6.132853,
+        "schedule": [
+          {
+            "trip_id": "88____:007::8845203:8200100:14:1646:20250824",
+            "trip_headsign": "Luxembourg (LU)",
+            "route_id": "559",
+            "arrival_time": "16:41:00",
+            "departure_time": "16:42:00",
+            "trip_short_name": "5314"
+          }
+        ]
+      }
+    }
+  ]
+}

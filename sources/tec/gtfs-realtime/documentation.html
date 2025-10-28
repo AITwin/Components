@@ -1,0 +1,107 @@
+<!-- Embedded fragment: TEC — GTFS-RT -->
+<div id="tec-gtfs-rt">
+  <style>
+    /* Scoped styles */
+    #tec-gtfs-rt { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #tec-gtfs-rt h1,
+    #tec-gtfs-rt h2,
+    #tec-gtfs-rt h3 { color: #16324a; margin-top: 1.1rem; }
+    #tec-gtfs-rt code,
+    #tec-gtfs-rt pre { background: #f6f8fa; border-radius: 6px; }
+    #tec-gtfs-rt pre { padding: 12px; overflow: auto; }
+    #tec-gtfs-rt table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #tec-gtfs-rt th,
+    #tec-gtfs-rt td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #tec-gtfs-rt th { background: #f3f6f9; }
+    #tec-gtfs-rt .muted { color:#566; font-size: 0.95rem; }
+    #tec-gtfs-rt ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #tec-gtfs-rt .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>TEC — GTFS-RT</h1>
+  <pre><code>GET /tec/gtfs-realtime</code></pre>
+  <p class="muted">
+    Returns the live TEC GTFS-Realtime feed as a binary Protocol Buffers (<code>FeedMessage</code>) payload,
+    following the official GTFS-RT specification.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      TEC (Wallonia) publishes a GTFS-Realtime feed containing live updates for vehicles, trips, and alerts.
+      This endpoint serves the raw GTFS-RT payload as provided by TEC, timestamped and indexed by MobilityTwin.Brussels.
+      It supports historical queries using ≤ timestamp logic for replay or analysis.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication / Response Schema / Other Status Codes -->
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+      <tr>
+        <td><code>timestamp</code></td>
+        <td>integer</td>
+        <td>No</td>
+        <td>If omitted, returns the latest snapshot; otherwise returns the closest snapshot ≤ the given timestamp.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Output Format</h2>
+    <p><strong>Content-Type:</strong> <code>application/octet-stream</code></p>
+    <p>
+      Binary Protocol Buffers stream representing a GTFS-RT <code>FeedMessage</code> object.  
+      Use an appropriate GTFS-RT parser or library to deserialize the message into structured data.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Conceptual Structure of GTFS-RT Feed</h2>
+    <p>Clients typically parse the binary feed into one or more of the following message types:</p>
+    <ul>
+      <li><strong>VehiclePositions</strong> — real-time coordinates, bearing, and timestamps per vehicle.</li>
+      <li><strong>TripUpdates</strong> — stop-time updates and delays, linked to scheduled trips.</li>
+      <li><strong>Alerts</strong> — service disruptions, closures, or advisories with effective periods.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Snapshot frequency: sub-minute (varies by source).</li>
+      <li>Typical payload size: tens to hundreds of KB.</li>
+      <li>Historical snapshots available for replay and analytics.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <p><strong>Provider:</strong> TEC (Wallonia) — official GTFS-Realtime feed.</p>
+
+    <h3>Pipeline</h3>
+    <ol>
+      <li><strong>Ingestion:</strong> MobilityTwin periodically fetches live GTFS-RT snapshots.</li>
+      <li><strong>Versioning:</strong> Snapshots are indexed by timestamp for historical access.</li>
+      <li><strong>Serving:</strong> Binary payloads are returned verbatim via this endpoint (≤ timestamp logic).</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Real-time vehicle tracking and visualization.</li>
+      <li>Arrival predictions by combining GTFS and GTFS-RT data.</li>
+      <li>Monitoring service alerts and disruptions.</li>
+      <li>Replaying or analyzing historical operational data.</li>
+    </ul>
+  </div>
+
+  <div class="section" style="border-left: 4px solid #9B59B6; padding: 15px; margin: 20px 0; background-color: #f8f9fa;">
+    <h3>Operational Context for Wallonia Regional Transit Ecosystem</h3>
+    <p>The TEC GTFS-Realtime endpoint delivers live operational data for Wallonia's regional bus network in standard protobuf format—enabling <em>passenger information systems</em> across Liège, Namur, Charleroi, and Mons to display accurate bus arrival predictions, <em>operations controllers</em> to monitor service delivery across dispersed rural routes, and <em>mobile applications</em> to provide real-time updates for commuters and rural residents. The VehiclePosition entities show actual bus locations across Wallonia's diverse geography: urban routes in Liège navigating dense city streets, interurban lines connecting regional centers (Charleroi-Mons, Namur-Dinant), and rural services threading through Ardennes valleys where GPS positioning helps passengers in areas with limited infrastructure confirm bus approach. TripUpdate delay messages are critical for <em>rural mobility reliability</em>: when single daily bus serving remote village shows +15 minute delay, affected passengers (often elderly or car-free households) receive notification enabling schedule adjustments—particularly important where missed bus means no alternative until next day. Alert entities communicate service disruptions relevant to Wallonia's context: winter weather affecting Ardennes mountain routes (snow/ice causing delays or cancellations), road closures from Belgian highway maintenance, labor actions by TEC operators, and special event services (festival shuttles, concert reinforcements). For <em>multi-modal integration</em>, TEC GTFS-RT joins with SNCB rail real-time data at transfer points: bus delayed arriving at Ottignies or Charleroi-Sud railway station affects onward train connections—integrated systems notify passengers of connection risks enabling alternative route planning. The sub-minute update frequency supports responsive passenger information critical for <em>rural equity</em>: residents without cars depending on infrequent TEC buses benefit from accurate arrival times reducing wait anxiety and exposure to weather at unsheltered rural stops.</p>
+  </div>
+</div>

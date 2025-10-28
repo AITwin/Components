@@ -1,0 +1,56 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "string",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": []
+      },
+      "properties": {
+        "trip_headsign": "Bruxelles-Midi",
+        "trip_id": "88____:007::8200100:8814001:54:1928:20251212",
+        "name_start": "GROENENDAAL",
+        "name_end": "BOITSFORT",
+        "ptcarid_start": "486",
+        "ptcarid_end": "183",
+        "timestamps": "string"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "string",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": []
+      },
+      "properties": {
+        "trip_headsign": "Bruxelles-Midi",
+        "trip_id": "88____:007::8200100:8814001:54:2028:20251212",
+        "name_start": "CINEY",
+        "name_end": "NATOYE",
+        "ptcarid_start": "272",
+        "ptcarid_end": "897",
+        "timestamps": "string"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "string",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": []
+      },
+      "properties": {
+        "trip_headsign": "Bruxelles-Midi",
+        "trip_id": "88____:007::8200100:8814001:54:2128:20251212",
+        "name_start": "MARBEHAN",
+        "name_end": "NEUFCHÂTEAU",
+        "ptcarid_start": "786",
+        "ptcarid_end": "752",
+        "timestamps": "string"
+      }
+    }
+  ]
+}

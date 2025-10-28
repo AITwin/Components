@@ -1,0 +1,107 @@
+<!-- Embedded fragment: STIB/MIVB — Shapefile -->
+<div id="stib-shapefile">
+  <style>
+    /* Scoped styles */
+    #stib-shapefile { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #stib-shapefile h1,
+    #stib-shapefile h2,
+    #stib-shapefile h3 { color: #16324a; margin-top: 1.1rem; }
+    #stib-shapefile code,
+    #stib-shapefile pre { background: #f6f8fa; border-radius: 6px; }
+    #stib-shapefile pre { padding: 12px; overflow: auto; }
+    #stib-shapefile table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #stib-shapefile th,
+    #stib-shapefile td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #stib-shapefile th { background: #f3f6f9; }
+    #stib-shapefile .muted { color:#566; font-size: 0.95rem; }
+    #stib-shapefile ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #stib-shapefile .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>STIB/MIVB — Shapefile</h1>
+  <pre><code>GET /stib/shapefile</code></pre>
+  <p class="muted">
+    Returns the official STIB/MIVB network shapefile dataset as GeoJSON.  
+    Each feature represents a line or route variant, suitable for mapping, GIS integration, and analysis.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      The STIB/MIVB Shapefile API provides geospatial vector data describing the transport network lines and route variants.
+      The data can be retrieved as GeoJSON for easy visualization and analysis or used to build shapefile exports.
+      Each feature includes geometry, color, validity period, and line identifiers.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema -->
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+      <tr>
+        <td><code>timestamp</code></td>
+        <td>integer</td>
+        <td>Unix timestamp (seconds since epoch).  
+            If omitted, the latest snapshot is returned; otherwise, the closest snapshot ≤ the specified timestamp is used.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type, always <code>"FeatureCollection"</code>. Standard GeoJSON top-level container for spatial feature collections using WGS84/EPSG:4326 coordinate reference system. Signals compatibility with all GeoJSON-aware mapping libraries, GIS tools, and web frameworks expecting standards-compliant geospatial data.</td></tr>
+      <tr><td>features</td><td>array</td><td>Array of GeoJSON Feature objects, each representing one route variant geometry—complete path for specific line/variant combination. Unlike segments (inter-stop pieces) or shapes (trip-specific paths), shapefile features represent entire route variants: Line 1 variant 0 might be complete Gare de l'Ouest → Stockel path as single feature, Line 1 variant 1 might be shortened service to Merode. Variants handle operational patterns: peak vs. off-peak routings (full route vs. short-turn variants), construction detours (temporary routing around infrastructure work), and branching services (routes splitting to serve different terminals). Brussels STIB network includes ~70 base lines with variants expanding to hundreds of distinct route geometries. Critical for: complete route rendering (drawing entire line paths), service variant comparison (identifying where short-turn routes terminate vs. full-service routes), and historical tracking (how have route alignments evolved across shapefile snapshots?).</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>GeoJSON feature type, always <code>"Feature"</code>. Standard GeoJSON designation indicating object contains geometry (route variant polyline) and properties (line identifier, color, validity dates, variant number). Distinguishes individual route variant features from FeatureCollection container.</td></tr>
+      <tr><td>geometry.type</td><td>string</td><td>Geometry type, typically <code>"LineString"</code> (single continuous route path) or <code>"MultiLineString"</code> (route with multiple disjoint segments or parallel alignments). <strong>LineString</strong> common for simple linear routes: metro Line 1 Gare de l'Ouest → Stockel follows single continuous tunnel alignment. <strong>MultiLineString</strong> used for complex routes: branching lines where one variant serves multiple terminals requiring multiple path segments, bidirectional routes with separate track alignments (tram lines with separate inbound/outbound track centerlines shown as two LineStrings), or routes interrupted by geography (ferry routes with water gaps, though rare in Brussels landlocked network). Geometry type informs rendering strategy—LineString draws single path, MultiLineString requires iterating sub-paths.</td></tr>
+      <tr><td>geometry.coordinates</td><td>array</td><td>Coordinate array defining complete route variant path. For <strong>LineString</strong>: array of [longitude, latitude] pairs ordered from route start to end, with intermediate waypoints capturing turns, curves, and alignment details. Brussels coordinates: lon 4.24-4.48°E, lat 50.79-50.91°N (WGS84). For <strong>MultiLineString</strong>: array of LineString coordinate arrays (nested structure for multiple paths). Coordinates trace actual vehicle travel paths: metro routes follow underground tunnel centerlines (invisible on surface but georeferenced), tram routes follow dedicated track alignments (often boulevard/street centerlines), bus routes follow street centerlines (matching actual driving paths). Coordinate density varies by route complexity: straight metro segments may have sparse waypoints (just major curve points), while tram routes through dense historic neighborhoods have dense waypoints capturing every street curve and turn. Precision (~5-6 decimal places = ~1m accuracy) sufficient for transit-scale mapping without excessive data volume.</td></tr>
+      <tr><td>properties.color_hex</td><td>string</td><td>Route line color in hexadecimal format (e.g., <code>"#FF0000"</code> for red, <code>"#0066CC"</code> for Brussels metro blue). Standardized visual identity color for this line enabling consistent rendering across maps and applications. Brussels STIB uses distinctive color schemes: metro lines in shades of blue/cyan, tram lines often red/green/yellow, bus lines varied palette. Color critical for: map styling (rendering each line in official color for brand recognition and passenger familiarity), legend generation (creating map keys showing "Line 1 = blue, Line 81 = red"), and multi-line visualization (color-coding overlapping routes on shared infrastructure segments). Hex format (#RRGGBB) directly usable in CSS, SVG, Canvas, and most graphics libraries without conversion.</td></tr>
+      <tr><td>properties.date_debut</td><td>string</td><td>Validity start date for this route variant geometry—when this specific routing/alignment became operational. Format typically ISO-8601 (YYYY-MM-DD) or locale-specific date string. Indicates: new route launches (date_debut marks service inauguration), route modifications (revised alignment active from this date), or seasonal service patterns (summer variant active from June 1). Used for: temporal filtering (which route variants were active on specific historical date?), change detection (comparing date_debut across features identifies recently-modified routes), and archive management (historical snapshots show route network as it existed at specific past dates). Essential for longitudinal analysis tracking Brussels network evolution—metro extensions, tram line realignments, bus route reorganizations.</td></tr>
+      <tr><td>properties.date_fin</td><td>string</td><td>Validity end date for this route variant—when routing ceased operation or was superseded by revised alignment. Format matches date_debut (ISO-8601 or locale string). Null or far-future date indicates currently-active routing with no planned expiration. Marks: route discontinuations (permanent service terminations), temporary detours ending (construction-related variant returning to normal alignment on this date), or seasonal service conclusion (winter variant ending as spring/summer variant activates). Enables: active-route filtering (query features where current date falls between date_debut and date_fin), historical reconstruction (showing only routes valid on specific past dates), and planned-change visualization (identifying upcoming route expirations signaling network modifications). Together with date_debut creates temporal validity window defining each variant's operational lifespan.</td></tr>
+      <tr><td>properties.geo_point_2d.lat</td><td>number</td><td>Latitude of representative point for this route variant—typically geographic centroid or prominent location along route. Brussels latitudes: 50.79-50.91°N. Not precise route location (full path in geometry.coordinates) but convenient single-point summary for: quick mapping (plotting route markers at representative points), spatial queries (rough proximity searches), and metadata displays (showing "route roughly in this area" without parsing full polyline). Use geometry for accurate routing, geo_point_2d for simplified location reference.</td></tr>
+      <tr><td>properties.geo_point_2d.lon</td><td>number</td><td>Longitude of representative point for this route variant. Brussels longitudes: 4.24-4.48°E (WGS84). Companion to geo_point_2d.lat forming simplified geographic reference for route. Together enable: rapid centroid-based searches (finding routes near specific location without computing polyline proximities), map marker placement (showing line identifiers at central points), and quick spatial filtering (bounding-box queries using representative points rather than full geometries). Convenience field—full routing accuracy requires geometry.coordinates polyline.</td></tr>
+      <tr><td>properties.ligne</td><td>string</td><td>Line identifier—the public-facing route number/name passengers recognize. Examples: "1" (metro M1), "81" (tram Line 81), "95" (bus Line 95). This is the passenger-visible line designation appearing on maps, vehicle headsigns, stop signs, and schedules. Core identifier for: line-specific queries (filtering all variants of Line 81), multi-variant analysis (how many operational variants does Line 1 have?), and user-facing displays (showing recognizable line numbers). Note: same ligne value appears across multiple features (one per variant)—combine ligne + variante for unique route specification.</td></tr>
+      <tr><td>properties.variante</td><td>integer</td><td>Variant number distinguishing different operational patterns/routings for the same line. Variant 0 typically represents standard/full-service routing, while higher variant numbers (1, 2, 3...) indicate alternative patterns: shortened services (variant 1 = Line 1 Gare de l'Ouest → Merode short-turn vs. variant 0 full to Stockel), peak-hour express routes skipping stops, construction detours (temporary routing around infrastructure work), or branching services (routes serving different terminals). Enables: variant-specific rendering (showing all operational patterns for one line in different styles), service planning analysis (how many variants does each line require?), and timetable integration (matching GTFS trip shape_ids or service patterns to shapefile variants). Critical for complete network representation—showing that Line 81 has multiple alignment variants depending on time-of-day, construction status, or operational needs beyond simple single-path assumption.</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Data Information</h2>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Start date</td><td>2024-08-21 14:48:24</td></tr>
+      <tr><td>End date</td><td>2025-08-23 05:20:01</td></tr>
+      <tr><td>Count</td><td>292</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Rendering transport lines and variants on maps</li>
+      <li>GIS analysis and route overlays</li>
+      <li>Building shapefile exports for offline GIS tools</li>
+      <li>Historical comparison between shapefile versions</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3 style="border-left: 4px solid #0066CC; padding-left: 10px;">Operational Context for STIB/MIVB Route Variant Shapefile Geometries</h3>
+    <p>
+      This endpoint delivers complete route variant geometries for the Brussels STIB/MIVB network as GeoJSON—enabling high-fidelity cartographic rendering of the entire transit system with official line colors, temporal validity, and operational variant distinctions. <em>For mapping applications and passenger information systems</em>, the shapefile format provides production-ready visualization data: each feature represents one complete route variant path (ligne + variante combination) with embedded color_hex properties enabling immediate styled rendering—Line 1 metro in Brussels blue (#0066CC), Line 81 tram in designated red, maintaining brand consistency across applications. Unlike GTFS shapes (trip-specific paths) or segments (inter-stop pieces), shapefile features represent entire route alignments as cohesive units ideal for overview maps showing complete network coverage. The variant structure captures operational complexity: Line 1 might have variant 0 (full Gare de l'Ouest → Stockel service), variant 1 (short-turn to Merode during off-peak), and variant 2 (construction detour routing)—each with distinct geometry enabling applications to visualize all service patterns, not just idealized single-path routes. Temporal validity (date_debut/date_fin) enables historical map reconstruction: rendering Brussels network as it existed on specific past dates by filtering features active during that period, tracking infrastructure evolution like metro extensions, tram realignments, and temporary construction detours.
+    </p>
+    <p>
+      <em>For GIS analysts and urban planners</em>, shapefile geometries support comprehensive spatial analysis of Brussels transit infrastructure coverage and network characteristics. Export to traditional GIS formats (ESRI Shapefile via GeoJSON conversion) enables offline analysis in desktop GIS tools (QGIS, ArcGIS) for: corridor analysis (which streets/neighborhoods traversed by transit lines?), overlay studies (correlating transit routes with population density, employment centers, socioeconomic indicators), and infrastructure planning (identifying gaps in network coverage, evaluating proposed extensions). Line-level aggregation (grouping all variants by ligne property) calculates line-specific metrics: Line 81 tram total route length (summing variant geometries), average stop spacing (route length ÷ stop count), and geographic coverage (buffering line geometries by 400m walkable distance to identify served areas). Variant analysis reveals operational patterns: how many variants per line (operational complexity indicator), variant path divergence distances (where do short-turn routes split from full routes?), and temporal variant lifecycles (tracking date_debut/date_fin to identify seasonal patterns, construction-period detours, or permanent service modifications). The hundreds of route variants (~292 features observed) spanning Brussels metro/tram/bus modes provide comprehensive network topology for: graph analysis (routes as edges, interchanges as nodes), accessibility studies (population within 400m of any route), and multimodal integration (STIB network overlaid with regional rail, cycling infrastructure, road networks).
+    </p>
+    <p>
+      <em>For service planners and operations analysts</em>, the shapefile dataset supports variant management, historical tracking, and infrastructure change monitoring. Variant proliferation analysis identifies lines requiring multiple operational patterns (high variant counts suggest complex operational needs—branching services, peak/off-peak variations, construction impacts), informing service simplification opportunities or capacity constraints requiring diverse routing options. Historical snapshots (~292 archived versions from Aug 2024-Aug 2025) enable longitudinal studies: detecting geometry changes (route realignments from infrastructure work), tracking new route launches (features with recent date_debut), identifying discontinued services (features with past date_fin), and measuring network expansion (total route-km growth over time, modal shifts between metro/tram/bus infrastructure investments). Color consistency monitoring ensures brand identity maintenance—verifying all Line 1 variants use same color_hex, detecting unintended color variations requiring correction. Integration with real-time vehicle position feeds validates operational conformance: do vehicles follow shapefile-defined paths? Deviations signal incidents, unplanned detours, or shapefile data staleness requiring updates. The geo_point_2d representative coordinates enable rapid route discovery ("find routes near European Parliament") without expensive polyline proximity calculations, while full geometry.coordinates support accurate trip planning and detailed route visualization. By providing temporally-valid, color-coded, variant-aware complete route geometries in standard GeoJSON/Shapefile-compatible format, this endpoint serves as authoritative cartographic reference for Brussels STIB/MIVB network—from passenger-facing web maps to professional GIS analysis to operations monitoring systems validating service delivery matches planned infrastructure routing.
+    </p>
+  </div>
+</div>

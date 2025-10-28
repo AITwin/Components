@@ -1,0 +1,103 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="micromobility-pony">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #micromobility-pony { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #micromobility-pony h1,
+    #micromobility-pony h2,
+    #micromobility-pony h3 { color: #16324a; margin-top: 1.1rem; }
+    #micromobility-pony code,
+    #micromobility-pony pre { background: #f6f8fa; border-radius: 6px; }
+    #micromobility-pony pre { padding: 12px; overflow: auto; }
+    #micromobility-pony table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #micromobility-pony th,
+    #micromobility-pony td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #micromobility-pony th { background: #f3f6f9; }
+    #micromobility-pony .muted { color:#566; font-size: 0.95rem; }
+    #micromobility-pony ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #micromobility-pony .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>Micromobility — Pony</h1>
+  <pre><code>GET /micromobility/pony</code></pre>
+  <p class="muted">Real-time and historical positions and statuses of Pony micromobility vehicles in Brussels, returned as GeoJSON.</p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      This endpoint returns a GeoJSON snapshot of available Pony vehicles, including location and operational attributes (fuel/battery level, range, reservation/disable status). Data originates from Pony’s GBFS feeds and is exposed through MobilityTwin.Brussels for mapping, analytics, and monitoring. If no timestamp is specified elsewhere, the latest snapshot is returned; otherwise the closest available snapshot is used.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type (always <code>FeatureCollection</code>)</td></tr>
+      <tr><td>features</td><td>array</td><td>List of features (each = one vehicle)</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>GeoJSON feature type (<code>Feature</code>)</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Unique identifier of the vehicle/feature</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON geometry</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td><code>Point</code></td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>[longitude, latitude]</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Operational metadata for the vehicle</td></tr>
+      <tr><td>properties.bike_id</td><td>string</td><td>Pony internal vehicle ID</td></tr>
+      <tr><td>properties.vehicle_type_id</td><td>string</td><td>Internal type ID of the vehicle</td></tr>
+      <tr><td>properties.system_id</td><td>string</td><td>Internal system identifier</td></tr>
+      <tr><td>properties.current_fuel_percent</td><td>number</td><td>Remaining fuel/battery percentage (0–100)</td></tr>
+      <tr><td>properties.current_range_meters</td><td>number</td><td>Estimated remaining range (meters)</td></tr>
+      <tr><td>properties.is_disabled</td><td>boolean</td><td>Vehicle currently disabled</td></tr>
+      <tr><td>properties.is_reserved</td><td>boolean</td><td>Vehicle reserved</td></tr>
+      <tr><td>properties.last_reported</td><td>number</td><td>Last update timestamp (Unix epoch seconds)</td></tr>
+      <tr><td>properties.pricing_plan_id</td><td>string</td><td>ID of the active pricing plan</td></tr>
+      <tr><td>properties.rental_uris.android</td><td>string</td><td>Android deep link for renting</td></tr>
+      <tr><td>properties.rental_uris.ios</td><td>string</td><td>iOS deep link for renting</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Live snapshots typically: several hundred to several thousand vehicles</li>
+      <li class="muted">Observed dataset stats (historical): &gt;85,000 entries aggregated between 2024-08-21 and 2025-08-04</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Pony official GBFS (<code>free_bike_status.json</code>) for Brussels</li>
+      <li>Example upstream: <em>https://gbfs.getapony.com/v1/Brussels/en/free_bike_status.json</em></li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Ingest:</strong> periodically pull GBFS vehicle availability.</li>
+      <li><strong>Archive:</strong> store snapshots by timestamp for historical queries.</li>
+      <li><strong>Resolve:</strong> on request, select the latest or nearest snapshot.</li>
+      <li><strong>Emit:</strong> return vehicles as GeoJSON <code>Feature</code> points with operational properties.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Live fleet visualization</li>
+      <li>Battery health &amp; range monitoring</li>
+      <li>Service area compliance (with geofencing)</li>
+      <li>Historical mobility impact studies</li>
+    </ul>
+  </div>
+
+  <div class="section" style="border-left: 4px solid #FF6B35; padding: 15px; margin: 20px 0; background-color: #f8f9fa;">
+    <h3>Operational Context for Brussels Micromobility Ecosystem</h3>
+    <p>The Micromobility Pony endpoint provides aggregated fleet data for Pony's Brussels operations—the smallest of the four main providers with ~58,677 historical vehicle observations (Aug 2024-Aug 2025), roughly 31% of Dott's volume and 38% of Lime's, revealing <em>market share dynamics</em> in Brussels competitive micromobility landscape. For <em>policy analysts</em>, Pony's smaller footprint raises questions about minimum viable scale: can niche providers survive alongside larger competitors like Lime/Dott, or does market consolidation favor operators with greater fleet sizes enabling better coverage and maintenance efficiency? The vehicle availability patterns enable <em>competitive strategy analysis</em>: does Pony focus on specific Brussels neighborhoods (targeted deployment in underserved areas vs. competing head-to-head in European Quarter), operate different hours (late-night service when competitors rebalance fleets), or target different demographics (tourists via hotel partnerships vs. commuters near STIB metro stations)? <em>Sustainability researchers</em> evaluate small-provider environmental impact: Pony's limited fleet reduces total e-scooter lifecycle emissions (manufacturing, charging, end-of-life) but may sacrifice mode-shift benefits if inadequate availability drives users back to cars—balancing individual provider footprint against system-level car-replacement effectiveness. For <em>Brussels residents</em>, multi-provider ecosystem with Pony as alternative to Bolt/Dott/Lime ensures competitive pricing (preventing monopoly pricing power), service redundancy (if one provider unavailable, alternatives exist), and innovation diversity (providers test different vehicle types, pricing models, service features). The GBFS data standardization enables <em>regulatory oversight</em>: Brussels Region monitoring all four providers through unified MobilityTwin.Brussels platform ensures compliance with licensing conditions (parking regulations, speed limits, operational zones) without requiring provider-specific integrations—scalable governance model supporting competitive market while protecting public interest through data-driven policy enforcement and equitable access requirements across Brussels neighborhoods.</p>
+  </div>
+</div>

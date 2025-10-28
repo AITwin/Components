@@ -1,0 +1,92 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="bolt-geofences">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #bolt-geofences { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #bolt-geofences h1,
+    #bolt-geofences h2,
+    #bolt-geofences h3 { color: #16324a; margin-top: 1.1rem; }
+    #bolt-geofences code,
+    #bolt-geofences pre { background: #f6f8fa; border-radius: 6px; }
+    #bolt-geofences pre { padding: 12px; overflow: auto; }
+    #bolt-geofences table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #bolt-geofences th,
+    #bolt-geofences td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #bolt-geofences th { background: #f3f6f9; }
+    #bolt-geofences .muted { color:#566; font-size: 0.95rem; }
+    #bolt-geofences ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #bolt-geofences .section { margin-bottom: 18px; }
+  </style>
+
+ <div class="section">
+    <h2>Description</h2>
+    <p>
+      Returns operational geofences used by Bolt to regulate shared micromobility. Each zone is a polygon (or multipolygon) feature with rule metadata such as speed limits, riding/ride-through permissions, and applicable vehicle types. If no timestamp is specified elsewhere, the latest dataset is returned; if a timestamp is supplied, the closest earlier (≤) snapshot is served.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type, always <code>FeatureCollection</code>. This standard format enables direct import into GIS platforms (QGIS, ArcGIS) and web mapping libraries for visualizing regulatory zones, analyzing coverage overlaps, and validating vehicle positions against permitted areas. Critical for compliance monitoring and urban planning coordination.</td></tr>
+      <tr><td>features</td><td>array</td><td>Collection of regulatory zone features defining where and how micromobility vehicles may operate. Each zone represents a geographic area with specific operational rules (speed limits, access restrictions, parking requirements) enforced through in-app navigation, vehicle firmware (geofenced speed governors), and post-trip compliance validation. Array size typically ranges from dozens (major city centers) to hundreds (comprehensive regional coverage) depending on regulatory complexity and citywide agreements.</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td>Geometry type, either <code>Polygon</code> (single contiguous zone) or <code>MultiPolygon</code> (multiple disconnected areas governed by the same ruleset, e.g., all city parks sharing identical access restrictions). MultiPolygon enables efficient rule management for spatially distributed zones without duplicating rule definitions. Essential for accurately representing complex administrative boundaries or non-contiguous regulatory areas.</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>Geographic boundary coordinates as nested arrays of [longitude, latitude] pairs in WGS84 (EPSG:4326). For Polygons: first array is the outer boundary ring (clockwise), subsequent arrays are holes (counterclockwise). For MultiPolygons: additional nesting level groups multiple polygon sets. Coordinate precision typically 5-6 decimal places (~1-10m accuracy) balancing spatial fidelity with payload size. Used for real-time geospatial containment checks ("Is vehicle X inside zone Y?") and map rendering of restricted/regulated areas.</td></tr>
+      <tr><td>features[].properties.name</td><td>string</td><td>Human-readable zone label providing contextual identification (e.g., "Grand Place Pedestrian Zone", "Parc du Cinquantenaire", "EU Quarter Low-Speed Area"). Displayed in rider-facing apps for awareness ("Entering slow zone"), used in operations dashboards for zone-based analytics, and referenced in compliance reports submitted to regulators. Names typically reflect geographic landmarks, neighborhoods, or regulatory purpose to aid intuitive understanding by both users and administrators.</td></tr>
+      <tr><td>features[].properties.rules</td><td>array</td><td>Ordered collection of operational rules governing vehicle behavior within this zone. Rules are evaluated sequentially and may apply conditionally based on vehicle type, time of day, or other factors. Multiple rules can coexist (e.g., reduced speed + parking required). Client applications must interpret and enforce these rules through: (1) in-app warnings and UI notifications, (2) vehicle firmware commands (remotely limiting motor power in speed-limited zones), (3) end-of-trip validation (preventing rental completion if parked in prohibited areas). Operators use rule analytics to measure compliance rates and adjust geofencing strategies.</td></tr>
+      <tr><td>rules[].maximum_speed_kph</td><td>number</td><td>Maximum permitted speed in kilometers per hour for vehicles operating within this zone. Typical values: 6 kph (walking speed in crowded pedestrian areas), 15 kph (shared-use paths), 20-25 kph (standard city riding). Enforced through: (1) in-app speed warnings alerting riders when approaching/exceeding limit, (2) vehicle firmware actively restricting motor power to prevent exceeding threshold (geofenced speed governor). Operators use speed limits to balance rider convenience with pedestrian safety, regulatory compliance (city ordinances), and liability risk mitigation in high-traffic or sensitive areas.</td></tr>
+      <tr><td>rules[].ride_allowed</td><td>boolean</td><td><code>false</code> indicates a hard exclusion zone where riding is completely prohibited (e.g., indoor spaces, protected natural areas, private property). <code>true</code> means riding is permitted subject to other active rules (speed limits, parking restrictions). When false, client apps must: prevent trip starts within the zone, trigger immediate warnings if a rider enters mid-trip, and potentially force trip termination or impose penalty fees for prolonged violations. Used to implement city-mandated "no-go zones" (restricted-access areas, historical districts with vehicle bans) and protect high-pedestrian-density spaces.</td></tr>
+      <tr><td>rules[].ride_through_allowed</td><td>boolean</td><td><code>false</code> blocks zone traversal entirely—riders cannot pass through even briefly, forcing route detours (e.g., private campuses, secured facilities, environmentally sensitive corridors). <code>true</code> permits transit but may still restrict other actions like trip starts/ends or parking. This fine-grained control separates access rights (can I be here?) from operational permissions (can I start/end a trip here?). Critical for implementing nuanced urban policies: allowing passage through parks while prohibiting parking, or enabling commuter shortcuts through business districts while restricting tourist rentals.</td></tr>
+      <tr><td>rules[].vehicle_type_id</td><td>array&lt;string&gt;</td><td>List of vehicle type identifiers to which this rule applies, enabling type-specific regulation within the same geographic zone. Example: <code>["scooter"]</code> applies speed cap only to e-scooters while exempting e-bikes (which may be city-regulated differently), or <code>["heavy_cargo"]</code> restricts large cargo bikes from narrow pedestrian lanes. Empty or null typically means "applies to all types". Allows operators to implement differentiated policies reflecting varying regulatory treatment (scooters often face stricter speed/parking rules than bikes) and vehicle capabilities (heavy vehicles excluded from weight-restricted bridges). Essential for compliance with type-specific municipal ordinances and optimizing deployment strategies per vehicle category.</td></tr>
+    </table>
+    
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #28a745; font-size: 0.95em;">
+      <strong>Operational Context:</strong> Geofences are the regulatory backbone of shared micromobility, balancing operational flexibility with urban integration and safety requirements. 
+      <em>For city authorities</em>, geofences implement policy objectives: pedestrian-priority zones with strict speed limits, parking-required areas to prevent sidewalk clutter, and hard exclusions for protected spaces (monuments, high-traffic squares). 
+      <em>For operators</em>, they enable dynamic fleet management (incentivizing parking in underserved areas via pricing, redistributing vehicles from oversaturated zones) and compliance demonstration (proving adherence to permit conditions through geofence violation reports). 
+      <em>For riders</em>, geofences appear as in-app notifications ("Entering slow zone") and physical vehicle responses (automatic speed reduction), improving safety while maintaining transparency. 
+      The combination of speed limits, access controls, and vehicle-type specificity creates a nuanced regulatory framework adaptable to Brussels' diverse urban fabric—from dense historic centers requiring restrictive policies to outer neighborhoods encouraging micromobility adoption. 
+      Geofence updates propagate via this API to ensure all stakeholders (rider apps, vehicle firmware, analytics platforms, city dashboards) operate with synchronized rule sets.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Observed dataset (historical): ~291 zones between 2024-08-22 and 2025-08-04</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Bolt geofencing configuration, integrated via MobilityTwin’s normalization pipeline (provider GBFS-style sources where applicable).</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Fetch &amp; parse:</strong> retrieve provider geofence snapshots.</li>
+      <li><strong>GeoJSON structuring:</strong> convert polygon geometry and attach metadata.</li>
+      <li><strong>Rule normalization:</strong> align zone rules to common schema.</li>
+      <li><strong>Versioning:</strong> store and timestamp snapshots for historical queries.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Urban compliance maps (restrictions &amp; limits)</li>
+      <li>Route planning that avoids restricted zones</li>
+      <li>City planning &amp; policy evaluation across districts</li>
+      <li>Zone enforcement dashboards (speed/access rules)</li>
+    </ul>
+  </div>
+</div>

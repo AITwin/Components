@@ -1,0 +1,109 @@
+<!-- Embedded fragment: TEC — GTFS -->
+<div id="tec-gtfs">
+  <style>
+    /* Scoped styles */
+    #tec-gtfs { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #tec-gtfs h1,
+    #tec-gtfs h2,
+    #tec-gtfs h3 { color: #16324a; margin-top: 1.1rem; }
+    #tec-gtfs code,
+    #tec-gtfs pre { background: #f6f8fa; border-radius: 6px; }
+    #tec-gtfs pre { padding: 12px; overflow: auto; }
+    #tec-gtfs table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #tec-gtfs th,
+    #tec-gtfs td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #tec-gtfs th { background: #f3f6f9; }
+    #tec-gtfs .muted { color:#566; font-size: 0.95rem; }
+    #tec-gtfs ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #tec-gtfs .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>TEC — GTFS</h1>
+  <pre><code>GET /tec/gtfs</code></pre>
+  <p class="muted">
+    Download the official TEC static schedule as a GTFS <code>.zip</code> archive.
+    This dataset provides full transit schedules for Wallonia and is suitable for mapping, analytics, and real-time overlays.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      TEC (Wallonia) publishes a GTFS static feed containing route, trip, stop, calendar, and shape definitions.
+      This endpoint serves the GTFS ZIP archive as provided by TEC and indexed historically by the MobilityTwin.Brussels platform.
+      The feed can be used for validation, visualization, or integration with GTFS-RT data.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+      <tr>
+        <td><code>timestamp</code></td>
+        <td>integer</td>
+        <td>No</td>
+        <td>If omitted, returns the latest available GTFS snapshot. If provided, returns the snapshot closest to or before the given timestamp (≤ logic).</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Removed: Output Format / Response Schema -->
+
+  <div class="section">
+    <h2>Output Format</h2>
+    <p><strong>Content-Type:</strong> <code>application/zip</code></p>
+    <p>The response body is a binary ZIP archive containing standard GTFS <code>.txt</code> files (CSV text format).</p>
+  </div>
+
+  <div class="section">
+    <h2>Contents of the GTFS Zip (typical)</h2>
+    <ul>
+      <li><code>agency.txt</code></li>
+      <li><code>routes.txt</code></li>
+      <li><code>trips.txt</code></li>
+      <li><code>stop_times.txt</code></li>
+      <li><code>stops.txt</code></li>
+      <li><code>calendar.txt</code>, <code>calendar_dates.txt</code></li>
+      <li><code>shapes.txt</code></li>
+      <li>Optionally: <code>frequencies.txt</code>, <code>transfers.txt</code>, and other GTFS-compliant files</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Typical ZIP size: tens of MB (varies by update and route coverage).</li>
+      <li>Snapshots are versioned and retrieved according to publication cadence.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <p><strong>Provider:</strong> TEC (Wallonia) — official GTFS static feed.</p>
+
+    <h3>Pipeline</h3>
+    <ol>
+      <li><strong>Ingestion:</strong> MobilityTwin periodically fetches the official TEC GTFS ZIP feed.</li>
+      <li><strong>Versioning:</strong> Each feed is stored and indexed by timestamp for historical queries.</li>
+      <li><strong>Serving:</strong> The ZIP file is served <em>as-is</em> with ≤ timestamp selection logic.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Generate maps of bus routes and stops across Wallonia.</li>
+      <li>Build schedule and timetable tools for passengers.</li>
+      <li>Integrate GTFS static data with GTFS-RT for real-time applications.</li>
+      <li>Perform accessibility, coverage, or frequency analysis.</li>
+    </ul>
+  </div>
+
+  <div class="section" style="border-left: 4px solid #9B59B6; padding: 15px; margin: 20px 0; background-color: #f8f9fa;">
+    <h3>Operational Context for Wallonia Regional Transit Ecosystem</h3>
+    <p>The TEC GTFS endpoint provides complete scheduled bus service data for Wallonia (Belgium's French-speaking southern region)—covering cities like Liège, Namur, Charleroi, Mons, and rural communities across provinces of Hainaut, Namur, Liège, Luxembourg, and Brabant Wallon. For <em>regional mobility planners</em>, TEC GTFS enables comprehensive coverage analysis: identifying underserved rural areas in Ardennes valleys, evaluating commuter corridor frequencies (Charleroi-Brussels, Liège-Verviers), and quantifying inter-city connectivity complementing SNCB rail service. The GTFS format standardization allows <em>multi-modal journey planners</em> to seamlessly integrate TEC buses with SNCB trains and STIB Brussels transit—passenger traveling from rural Walloon village to Brussels combines TEC local bus to regional hub, SNCB train to Brussels, and STIB metro to final destination, all planned through unified GTFS-based routing. <em>Accessibility researchers</em> use stops.txt coordinates and calendar patterns to evaluate rural mobility equity: do elderly residents in Ardennes municipalities have daily bus access to healthcare/shopping, or only limited school-day service? TEC's regional scope means routes balance urban frequency (Liège city buses every 10-20 minutes) with rural coverage (small villages served twice daily), reflected in calendar.txt patterns and frequencies.txt headways. For <em>developers</em>, historical GTFS snapshots enable evolution tracking: has TEC service frequency increased in response to car-free initiatives, have new routes appeared connecting SNCB rail stations for improved intermodal transfer, do seasonal patterns exist (enhanced service to Ardennes ski resorts winter, reduced service to universities during summer)? The French-language context (contrast with Dutch-speaking Flanders' De Lijn operator) appears in stop_name fields and agency metadata—critical for <em>user interface localization</em> serving Wallonia's predominantly French-speaking population while supporting multilingual Brussels connections.</p>
+  </div>
+</div>

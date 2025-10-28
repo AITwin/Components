@@ -1,0 +1,75 @@
+{
+  "collection_timestamp": "2025-10-28T13:08:48.408176",
+  "provider": "dott",
+  "data": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "id": "0",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.34089,
+            50.87284
+          ]
+        },
+        "properties": {
+          "bike_id": "701d7c09-447f-4330-9190-ba84772667a2",
+          "vehicle_type_id": "dott_scooter",
+          "current_range_meters": 29536.0,
+          "is_disabled": false,
+          "is_reserved": false,
+          "last_reported": 1755099455,
+          "pricing_plan_id": "31531fbf-77ec-4002-a635-ebe80880ac44",
+          "rental_uris.android": null,
+          "rental_uris.ios": null
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "1",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.33749,
+            50.87777
+          ]
+        },
+        "properties": {
+          "bike_id": "fed9f770-a8eb-4abc-8a2b-beb8918a95af",
+          "vehicle_type_id": "dott_scooter",
+          "current_range_meters": 26700.0,
+          "is_disabled": false,
+          "is_reserved": false,
+          "last_reported": 1755100027,
+          "pricing_plan_id": "31531fbf-77ec-4002-a635-ebe80880ac44",
+          "rental_uris.android": null,
+          "rental_uris.ios": null
+        }
+      },
+      {
+        "type": "Feature",
+        "id": "2",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.3527,
+            50.83807
+          ]
+        },
+        "properties": {
+          "bike_id": "8ab569ac-cdfc-48ff-831c-6d7e48908723",
+          "vehicle_type_id": "dott_scooter",
+          "current_range_meters": 17056.0,
+          "is_disabled": false,
+          "is_reserved": false,
+          "last_reported": 1755099996,
+          "pricing_plan_id": "31531fbf-77ec-4002-a635-ebe80880ac44",
+          "rental_uris.android": null,
+          "rental_uris.ios": null
+        }
+      }
+    ]
+  }
+}

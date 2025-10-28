@@ -1,0 +1,62 @@
+[
+  {
+    "directionId": "8731",
+    "lineId": "1",
+    "pointId": "8741",
+    "speed": 0.18
+  },
+  {
+    "directionId": "8161",
+    "lineId": "1",
+    "pointId": "8052",
+    "speed": 0.18
+  },
+  {
+    "directionId": "8161",
+    "lineId": "1",
+    "pointId": "8122",
+    "speed": 0.18
+  },
+  {
+    "directionId": "8161",
+    "lineId": "1",
+    "pointId": "8272",
+    "speed": 0.18
+  },
+  {
+    "directionId": "5086",
+    "lineId": "19",
+    "pointId": "2636",
+    "speed": 36.21
+  },
+  {
+    "directionId": "473",
+    "lineId": "19",
+    "pointId": "6800",
+    "speed": 29.29
+  },
+  {
+    "directionId": "1900",
+    "lineId": "20",
+    "pointId": "1095",
+    "speed": 14.02
+  },
+  {
+    "directionId": "1194",
+    "lineId": "20",
+    "pointId": "1198",
+    "speed": 24.85
+  },
+  {
+    "directionId": "1194",
+    "lineId": "20",
+    "pointId": "4661",
+    "speed": 10.29
+  },
+  {
+    "directionId": "1162",
+    "lineId": "21",
+    "pointId": "6464",
+    "speed": 2.48
+  }
+]

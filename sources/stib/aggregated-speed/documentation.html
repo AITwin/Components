@@ -1,0 +1,90 @@
+<!-- Embedded fragment: STIB/MIVB — Aggregated Speed -->
+<div id="stib-aggregated-speed">
+	<style>
+		/* Scoped styles */
+		#stib-aggregated-speed { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+		#stib-aggregated-speed h1,
+		#stib-aggregated-speed h2,
+		#stib-aggregated-speed h3 { color: #16324a; margin-top: 1.1rem; }
+		#stib-aggregated-speed code,
+		#stib-aggregated-speed pre { background: #f6f8fa; border-radius: 6px; }
+		#stib-aggregated-speed pre { padding: 12px; overflow: auto; }
+		#stib-aggregated-speed table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+		#stib-aggregated-speed th,
+		#stib-aggregated-speed td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+		#stib-aggregated-speed th { background: #f3f6f9; }
+		#stib-aggregated-speed .muted { color:#566; font-size: 0.95rem; }
+		#stib-aggregated-speed ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+		#stib-aggregated-speed .section { margin-bottom: 18px; }
+	</style>
+
+	<h1>STIB/MIVB — Aggregated Speed</h1>
+		<pre><code>GET /stib/aggregated-speed</code></pre>
+		<p class="muted">
+			The average speed of the STIB/MIVB vehicles on a 10 minutes interval, per line, stop and direction.
+			Each row represents one line–direction–point combination with an estimated current speed in km/h.
+		</p>
+
+	<div class="section">
+		<h2>Description</h2>
+		<p>
+			This endpoint provides a lightweight list of speed observations derived from real-time vehicle telemetry
+			and GTFS topology. Values reflect the current network state at the time of the snapshot.
+			Use it to spot slowdowns, compare directions, or monitor corridors without handling full vehicle traces.
+		</p>
+	</div>
+
+	<!-- Removed: Authentication -->
+	<!-- Removed: Output Format -->
+	<!-- Removed: Response Schema -->
+
+		<div class="section">
+			<h2>Query Parameters</h2>
+			<table>
+				<tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+				<tr>
+					<td><code>timestamp</code></td>
+					<td>integer</td>
+					<td>No</td>
+					<td>Timestamp in seconds since epoch. If not specified, the latest value will be returned (closest value ≤ timestamp otherwise).</td>
+				</tr>
+			</table>
+		</div>
+
+	<div class="section">
+		<h2>Output Data Attributes</h2>
+		<p>The response is a JSON array; each element describes one aggregated speed observation.</p>
+			<table>
+				<tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+				<tr><td><code>lineId</code></td><td>string</td><td>Transit line identifier—the passenger-facing route number used across STIB services (e.g., "95" for bus Line 95, "1" for metro M1, "81" for tram Line 81). Public-facing code that <em>operations controllers</em> use to filter dashboard displays ("show all Line 81 segments currently below 10 km/h"), <em>service planners</em> reference when analyzing line-level performance trends ("does Line 95 consistently show slower speeds during evening peak?"), and <em>software developers</em> join with GTFS routes.txt for complete line metadata (route_long_name, route_color, route_type distinguishing metro/tram/bus). Critical grouping dimension for aggregated speed data—enables comparing performance across Brussels STIB network (which lines operate fastest/slowest on average?) and identifying system-wide vs. line-specific congestion patterns. Appears consistently across STIB real-time feeds (vehicle-position, vehicle-distance, trips, vehicle-schedule) enabling multi-dataset correlation.</td></tr>
+				<tr><td><code>directionId</code></td><td>string</td><td>Direction identifier indicating operational pattern—typically "0" or "1" following GTFS direction_id convention where 0 represents one direction (often outbound/primary) and 1 represents the opposite (inbound/return). Actual geographic meaning varies by route: radial lines like metro M1 (Gare de l'Ouest ↔ Stockel) might use 0=eastbound/1=westbound; circular routes distinguish clockwise vs. counterclockwise. Enables directional performance comparison critical for Brussels traffic management: <em>transport planners</em> identify asymmetric congestion (Line 95 direction 0 averages 15 km/h while direction 1 shows 8 km/h = one-way traffic bottleneck), <em>operations controllers</em> detect directional incidents (sudden speed drop in direction 1 suggests accident/closure affecting inbound traffic), and <em>urban researchers</em> correlate with morning/evening commute patterns (do inbound routes slow during AM peak, outbound during PM peak?). Not interpretable in isolation—must combine with lineId and Brussels route knowledge to understand actual geographic direction. The aggregation by direction enables stakeholders to diagnose whether slowdowns affect both directions (corridor-wide congestion) or single direction (directional incident/construction).</td></tr>
+				<tr><td><code>pointId</code></td><td>string</td><td>Reference point identifier—the stop or route segment where speed is spatially aggregated. Typically corresponds to stop_id from GTFS stops.txt (enabling geographic contextualization by joining with stop coordinates and names), though may also represent route segments, timing points, or other measurement locations depending on STIB aggregation methodology. For <em>operations teams</em>, pointId enables precise problem localization: identifying "speed at Arts-Loi metro is 6 km/h while adjacent stops show 20+ km/h" pinpoints station congestion or platform dwell time issues rather than line-wide problems. <em>GIS analysts</em> join pointId with stops dataset to map speed patterns spatially (visualizing Brussels color-coded by segment speed reveals congestion hotspots at major intersections like Montgomery, Schuman, Gare du Midi). <em>Performance analysts</em> track point-level speed trends over time (has average speed at specific bottleneck improved after infrastructure intervention?). The 10-minute aggregation window (noted in endpoint description) means pointId speed values represent recent average conditions rather than instantaneous readings—smoothing out momentary variations while remaining responsive to persistent slowdowns. Combined with lineId + directionId, creates unique speed observation key enabling stakeholders to answer "how fast is Line 81 direction 0 currently moving through Arts-Loi?"—critical for real-time passenger information and operations monitoring.</td></tr>
+				<tr><td><code>speed</code></td><td>number</td><td>Estimated current movement speed in kilometers per hour (km/h), representing the 10-minute aggregated average for vehicles on the specified line, direction, and point combination. Values typically range from near-zero (vehicles stopped/crawling in heavy congestion or at station platforms with extended dwell) to mode-specific maximums: Brussels surface buses/trams rarely exceed 25-30 km/h in dense urban corridors (speed-limited by traffic, signals, frequent stops), while metro lines on grade-separated tracks may show 35-50 km/h averages between stations. For <em>operations controllers</em>, speed thresholds trigger alerts: values <5 km/h indicate severe delays requiring investigation (accident, mechanical failure, passenger incident), 5-10 km/h suggest heavy congestion or operational issues, 10-15 km/h typical for congested urban surface transit, >20 km/h indicates good flow. <em>Passenger information systems</em> correlate speed with arrival predictions: low speeds at upstream points increase estimated arrival times for downstream stops. <em>Service planners</em> use speed distributions to evaluate corridor performance: consistent 8 km/h averages on specific segment suggest infrastructure bottleneck warranting bus lane, signal priority, or stop consolidation interventions. <em>Researchers</em> compare speeds across time-of-day, day-of-week, or seasonal patterns to quantify congestion impacts and infrastructure effectiveness. The 10-minute aggregation window balances responsiveness (recent enough to reflect current conditions) with stability (smoothing momentary fluctuations from red lights, passenger boarding delays). Unlike instantaneous vehicle speeds, aggregated values represent typical recent conditions—useful for identifying persistent slowdowns rather than transient events. Critical metric for Brussels transit quality: speeds directly impact travel times, schedule adherence, passenger experience, and operational costs (slower speeds require more vehicles to maintain service frequency).</td></tr>
+			</table>
+
+		<p class="muted">
+			Operational meaning: for a given line and direction, <code>speed</code> summarizes the present traffic conditions
+			at the reference point, enabling quick identification of slow zones and comparison across directions.
+		</p>
+
+			<pre><code>[
+		{ "lineId": "95", "directionId": "0", "pointId": "5103", "speed": 12.4 },
+		{ "lineId": "95", "directionId": "1", "pointId": "6121", "speed": 9.7 }
+	]</code></pre>
+	</div>
+
+	<div class="section">
+		<h2>Example Application Scenarios</h2>
+		<ul>
+			<li>Find the slowest segments per direction to prioritize interventions</li>
+			<li>Compare corridor performance between inbound and outbound directions</li>
+			<li>Feed a dashboard with per-stop speed indicators without heavy geospatial processing</li>
+		</ul>
+	</div>
+
+	<div class="section" style="border-left: 4px solid #0066CC; padding: 15px; margin: 20px 0; background-color: #f8f9fa;">
+		<h3>Operational Context for Brussels Transit Ecosystem</h3>
+		<p>The STIB Aggregated Speed endpoint delivers real-time network performance monitoring by providing 10-minute average speeds for every line-direction-point combination across Brussels public transit—essential for <em>operations control centers</em> maintaining service quality through live dashboards color-coded by speed thresholds (red <5 km/h = severe delay requiring immediate dispatcher intervention, yellow 5-10 km/h = congestion monitoring, green >15 km/h = normal flow). Unlike granular vehicle-position GPS feeds requiring geometric processing, this endpoint pre-aggregates speeds at stop/segment level enabling <em>software developers</em> to build lightweight monitoring applications without spatial analysis infrastructure—simply filter by lineId for line-specific views ("show all Line 81 segments currently below threshold") or pointId for location-specific monitoring ("which lines are slowing at Arts-Loi intersection?"). For <em>service planners</em>, historical speed patterns quantify infrastructure effectiveness: comparing aggregated speeds before/after dedicated bus lane installation on Avenue Louise measures intervention impact (did average speeds increase from 8 km/h to 15 km/h as intended?), while identifying persistent low-speed corridors prioritizes future infrastructure investments. The directional aggregation enables asymmetric congestion diagnosis critical for Brussels traffic management: Line 95 showing 15 km/h outbound but 7 km/h inbound during morning peak reveals directional bottleneck (likely city-center-bound traffic congestion) rather than system-wide issue, guiding targeted interventions like contraflow bus lanes or signal priority adjustments. <em>Passenger information systems</em> integrate aggregated speeds with schedule data for dynamic arrival predictions: if upstream segments show 6 km/h (half normal speed), downstream arrival estimates automatically extend to reflect delays. <em>Urban mobility researchers</em> leverage speed distributions for transit performance benchmarking: Brussels STIB tram speeds averaging 12-15 km/h in mixed traffic compare favorably/unfavorably to other European cities, quantifying competitiveness and justifying transit priority policies. The 10-minute aggregation window balances real-time responsiveness (recent enough to detect developing congestion) with operational stability (avoiding false alarms from momentary red lights or passenger boarding delays). For Brussels mobility ecosystem, aggregated speed data provides the foundational network health metric—when Line 1 metro shows consistent 40 km/h between stations while Line 81 tram struggles at 8 km/h through European Quarter, planners understand mode-specific performance gaps, operations teams identify problematic corridors requiring attention, and policymakers justify infrastructure investments in grade separation or transit priority to achieve speed/reliability improvements attracting ridership.</p>
+	</div>
+</div>
+
