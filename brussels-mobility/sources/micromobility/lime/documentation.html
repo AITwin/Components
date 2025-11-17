@@ -1,0 +1,99 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="micromobility-lime">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #micromobility-lime { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #micromobility-lime h1,
+    #micromobility-lime h2,
+    #micromobility-lime h3 { color: #16324a; margin-top: 1.1rem; }
+    #micromobility-lime code,
+    #micromobility-lime pre { background: #f6f8fa; border-radius: 6px; }
+    #micromobility-lime pre { padding: 12px; overflow: auto; }
+    #micromobility-lime table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #micromobility-lime th,
+    #micromobility-lime td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #micromobility-lime th { background: #f3f6f9; }
+    #micromobility-lime .muted { color:#566; font-size: 0.95rem; }
+    #micromobility-lime ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #micromobility-lime .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>Micromobility — Lime</h1>
+  <pre><code>GET /micromobility/lime</code></pre>
+  <p class="muted">Geospatial positions and statuses of Lime micromobility vehicles (scooters, bikes) operating in Brussels, returned as GeoJSON.</p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      This endpoint returns a GeoJSON snapshot of available Lime vehicles, including location and operational attributes (availability, range, type). Data is collected from Lime and surfaced through the MobilityTwin.Brussels platform for mapping, analytics, and dashboards.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type (always <code>FeatureCollection</code>)</td></tr>
+      <tr><td>features</td><td>array</td><td>List of features (each = one vehicle)</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>GeoJSON feature type (<code>Feature</code>)</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Unique identifier of the vehicle/feature</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON geometry</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td><code>Point</code></td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>[longitude, latitude]</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Operational metadata for the vehicle</td></tr>
+      <tr><td>properties.bike_id</td><td>string</td><td>Lime internal vehicle ID</td></tr>
+      <tr><td>properties.vehicle_type</td><td>string</td><td>Human-readable type (e.g., "scooter")</td></tr>
+      <tr><td>properties.vehicle_type_id</td><td>string</td><td>Internal vehicle type ID</td></tr>
+      <tr><td>properties.current_range_meters</td><td>number</td><td>Estimated remaining range (meters)</td></tr>
+      <tr><td>properties.is_disabled</td><td>boolean</td><td>Vehicle currently disabled</td></tr>
+      <tr><td>properties.is_reserved</td><td>boolean</td><td>Vehicle reserved</td></tr>
+      <tr><td>properties.last_reported</td><td>number</td><td>Last update timestamp (Unix epoch seconds)</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Typical snapshot: hundreds to thousands of vehicles</li>
+      <li class="muted">Observed dataset stats: 2024-08-21 14:59:47 → 2025-08-04 20:59:04, ~87,521 records aggregated</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Lime partner feeds (real-time and historical)</li>
+      <li>Stored in MobilityTwin’s time-stamped geospatial backend</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Ingest:</strong> pull Lime partner data on a schedule.</li>
+      <li><strong>Store:</strong> archive snapshots with timestamps for historical queries.</li>
+      <li><strong>Select:</strong> resolve to latest or nearest snapshot for the request time.</li>
+      <li><strong>Format:</strong> emit vehicles as GeoJSON <code>Feature</code> points with operational properties.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Fleet visualization on a live map</li>
+      <li>Availability and coverage analytics</li>
+      <li>Urban planning with historical snapshots</li>
+      <li>Sustainability and usage metrics</li>
+    </ul>
+  </div>
+
+  <div class="section" style="border-left: 4px solid #FF6B35; padding: 15px; margin: 20px 0; background-color: #f8f9fa;">
+    <h3>Operational Context for Brussels Micromobility Ecosystem</h3>
+    <p>The Micromobility Lime endpoint aggregates Lime's Brussels fleet data—one of the largest shared micromobility operators globally, providing <em>Brussels regulators</em> with visibility into major provider operations and enabling <em>comparative market analysis</em> against smaller competitors like Pony or regional players like Dott/Bolt. The ~154,419 historical vehicle observations (Aug 2024-Aug 2025) reflect Lime's substantial Brussels presence, though lower than Dott's ~188k suggesting different operational strategies (Dott higher vehicle turnover vs. Lime longer deployment cycles). For <em>network planning</em>, mapping Lime vehicle density across Brussels reveals coverage patterns: does Lime leverage global operational expertise to optimize geographic distribution better than local competitors, or do all providers show similar concentration in high-demand European Quarter/Grand Place tourist/business zones? The vehicle_type_id field distinguishes Lime's product mix: e-scooters vs. e-bikes vs. e-mopeds (where permitted), enabling <em>mode-shift analysis</em>—are Brussels users adopting bikes for longer trips, scooters for last-mile connections, or mixing modes based on trip characteristics? <em>Safety researchers</em> correlate Lime vehicle availability with accident data: do high-density deployment areas show increased incident rates (suggesting infrastructure deficiencies requiring protected bike lanes), or does availability improve safety through reduced car dependency? The rental deep links (iOS/Android URIs) enable <em>integrated mobility apps</em>: Brussels residents planning journeys see Lime as one option among STIB metro/tram, SNCB trains, and competing micromobility providers—multi-modal integration critical for Brussels sustainable urban mobility plan achieving 2030 climate targets. <em>Economic development analysts</em> evaluate micromobility impact: does Lime vehicle presence correlate with commercial activity in Brussels neighborhoods, do tourists use services enabling car-free Brussels visits supporting hospitality/retail, has shared micromobility reduced private vehicle parking demand freeing public space for alternative uses?</p>
+  </div>
+</div>

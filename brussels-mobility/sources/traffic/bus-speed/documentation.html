@@ -1,0 +1,124 @@
+<!-- Embedded fragment: STIB/MIVB Bus Speed -->
+<div id="bus-speed">
+  <style>
+    /* Scoped styles */
+    #bus-speed { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #bus-speed h1,
+    #bus-speed h2,
+    #bus-speed h3 { color: #16324a; margin-top: 1.1rem; }
+    #bus-speed code,
+    #bus-speed pre { background: #f6f8fa; border-radius: 6px; }
+    #bus-speed pre { padding: 12px; overflow: auto; }
+    #bus-speed table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #bus-speed th,
+    #bus-speed td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #bus-speed th { background: #f3f6f9; }
+    #bus-speed .muted { color:#566; font-size: 0.95rem; }
+    #bus-speed ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #bus-speed .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>STIB/MIVB — Bus Speed</h1>
+  <pre><code>GET /traffic/bus-speed</code></pre>
+  <p class="muted">
+    Provides near real-time average bus speeds, updated roughly every 20 seconds, organized by line, direction, and point (stop or segment).
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Returns a live dataset of STIB/MIVB bus speeds in the Brussels region.  
+      Each record represents the average vehicle speed during a ~20-second interval, identified by <em>lineId</em>,
+      <em>directionId</em>, and <em>pointId</em>.  
+      Useful for congestion detection, performance monitoring, and operational analytics.
+      If a timestamp is provided, the closest snapshot ≤ that time is returned; otherwise, the latest snapshot is used.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication / Response Schema / Other Status Codes -->
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+      <tr>
+        <td><code>timestamp</code></td>
+        <td>integer</td>
+        <td>No</td>
+        <td>If omitted, returns the latest dataset; otherwise, the closest snapshot ≤ the provided timestamp.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Output Format</h2>
+    <p><strong>Content-Type:</strong> <code>application/json</code></p>
+    <p>
+      The response is a JSON array of records containing average speed values per line, direction, and point.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>directionId</code></td><td>string</td><td>Direction identifier, typically '1' or '2', distinguishing the two opposite travel directions for this bus line (e.g., outbound vs. inbound, to terminus A vs. terminus B). Matches GTFS-Static trips.direction_id convention. Critical for: directional speed analysis (detecting asymmetric congestion—speeds differ between directions due to one-way streets, dedicated bus lanes, traffic signal timing), route-specific filtering (analyzing only inbound speeds during morning peak when commuters flow toward city center), and operational planning (identifying which direction requires schedule adjustments or infrastructure improvements based on speed patterns).</td></tr>
+      <tr><td><code>lineId</code></td><td>string</td><td>STIB/MIVB bus line identifier (e.g., "95", "71", "12") matching official route designations displayed to passengers. Persistent identifier enabling: multi-temporal analysis (tracking line 95's speed trends over days/months), cross-line comparisons (which routes operate fastest? which suffer most congestion?), and integration with STIB GTFS data (joining speeds with route geometries, stop sequences, schedule data). Essential for operational monitoring—identifying specific lines experiencing degraded performance requiring intervention (dedicated lanes, signal priority, schedule relief).</td></tr>
+      <tr><td><code>pointId</code></td><td>string</td><td>Stop or route segment identifier (e.g., "STIB-1234") specifying the geographic location or segment where this speed was measured. May reference: specific bus stops (measuring speed approaching/departing stop), inter-stop segments (speed between consecutive stops), or operational control points. Enables: geographic speed mapping (identifying slow segments requiring infrastructure improvements), hotspot analysis (which locations consistently show low speeds indicating congestion or design problems), and granular operational intelligence (speeds vary dramatically by segment—arterial roads vs. narrow streets, bus lane sections vs. mixed traffic). Joining pointId with STIB stop/network databases reveals geographic context essential for interpreting speed patterns.</td></tr>
+      <tr><td><code>speed</code></td><td>number</td><td>Average bus speed in kilometers per hour (km/h) measured over the ~20-second observation interval. Represents aggregate speed across all buses operating on this line-direction-point combination during the period. Typical Brussels bus speeds: 8-15 km/h in dense city center (frequent stops, congestion, narrow streets), 15-25 km/h on arterial corridors with dedicated lanes, 25-40 km/h on outer ring roads or express segments. Low speeds (<10 km/h) indicate: severe congestion, stop-and-go traffic, infrastructure bottlenecks, or high-frequency stop service. High speeds (>30 km/h) suggest: dedicated bus infrastructure, express routing, or outer suburban segments. Critical for: service quality assessment (slow speeds mean unreliable schedules, passenger dissatisfaction), identifying infrastructure needs (which segments require dedicated lanes to improve speeds?), schedule calibration (adjusting run times to match observed speeds), and congestion monitoring (speed drops signal traffic problems requiring operational response or policy intervention). The 20-second update frequency provides near-real-time operational intelligence while smoothing individual vehicle variations.</td></tr>
+    </table>
+
+    <pre><code>[
+  {
+    "directionId": "1",
+    "lineId": "95",
+    "pointId": "STIB-1234",
+    "speed": 18.6
+  },
+  {
+    "directionId": "2",
+    "lineId": "71",
+    "pointId": "STIB-5678",
+    "speed": 12.3
+  }
+]</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Each snapshot (~20s) may contain hundreds or thousands of entries.</li>
+      <li>Higher density observed during peak service hours.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>STIB/MIVB telemetry and operational data aggregated via MobilityTwin.Brussels.</li>
+    </ul>
+
+    <h3>Pipeline</h3>
+    <ol>
+      <li><strong>Collection:</strong> Capture vehicle GPS telemetry from operational buses.</li>
+      <li><strong>Aggregation:</strong> Compute average speeds per (line, direction, point) over ~20-second intervals.</li>
+      <li><strong>Indexing:</strong> Organize snapshots by timestamp for historical retrieval.</li>
+      <li><strong>Exposure:</strong> Serve as compact JSON arrays optimized for real-time dashboards.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Congestion heatmaps and performance analytics.</li>
+      <li>Real-time dashboards for bus network efficiency.</li>
+      <li>Correlation with schedule adherence and delay metrics.</li>
+      <li>Transit optimization and signal priority evaluation.</li>
+    </ul>
+  </div>
+
+  <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #0066CC; font-size: 0.95em;">
+    <strong>Operational Context:</strong> This STIB/MIVB bus speed feed provides granular, near-real-time performance intelligence for Brussels' extensive bus network, with 20-second update intervals enabling operational monitoring at a temporal resolution impossible with traditional schedule-based analysis. <em>For transit operations managers</em>, the feed supports critical real-time decisions: identifying lines experiencing severe slowdowns requiring immediate service adjustments (adding buses, implementing short-turn strategies), detecting localized congestion hotspots (specific pointIds showing consistently low speeds suggesting infrastructure bottlenecks or incidents), and monitoring network-wide performance during disruptions (special events, accidents, construction). The line-direction-point granularity enables precise diagnosis—not just "line 95 is slow" but "line 95 direction 1 at point STIB-1234 shows 8 km/h (congestion likely between stops X and Y)." <em>For infrastructure planners and policy makers</em>, historical speed patterns reveal systematic problems requiring capital interventions: segments consistently operating below 12 km/h despite scheduled 15-minute run times justify dedicated bus lane construction, directional speed asymmetries expose one-way street configurations creating inefficiencies, and temporal patterns (morning slowdowns on specific segments) guide signal priority implementations. Speed data quantifies the ROI of bus infrastructure—did the new dedicated lane on Avenue Louise increase speeds from 12→20 km/h as projected? <em>For service planners and schedulers</em>, observed speeds calibrate realistic schedules: if actual speeds average 14 km/h but schedules assume 18 km/h, systematic delays and bunching result. The 20-second granularity captures short-term speed variations (stop dwell time impacts, signal delay effects) essential for accurate schedule modeling, while aggregating across time reveals seasonal patterns (winter speeds 10-15% slower due to weather, tourist season congestion in summer). <em>For passengers and trip planning applications</em>, speed data enables accurate travel time predictions: real-time feeds show "line 95 currently operating at 10 km/h in your direction—expect 5-minute delay" rather than generic schedule estimates. Integration with vehicle position data creates dynamic ETAs accounting for current congestion. <em>For researchers and transport analysts</em>, the dataset enables sophisticated mobility studies: correlating bus speeds with car traffic (do general traffic conditions affect buses despite dedicated lanes?), weather impacts (quantifying speed reductions during rain/snow), and modal competition analysis (when buses slow to car-competitive speeds, does ridership shift?). The Brussels-wide coverage across dozens of lines, paired with directional granularity and point-level geography, creates unparalleled transit performance intelligence for understanding and improving urban bus operations in mixed-traffic environments.
+  </p>
+</div>

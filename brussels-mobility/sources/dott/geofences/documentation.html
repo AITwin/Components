@@ -1,0 +1,94 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="dott-geofences">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #dott-geofences { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #dott-geofences h1,
+    #dott-geofences h2,
+    #dott-geofences h3 { color: #16324a; margin-top: 1.1rem; }
+    #dott-geofences code,
+    #dott-geofences pre { background: #f6f8fa; border-radius: 6px; }
+    #dott-geofences pre { padding: 12px; overflow: auto; }
+    #dott-geofences table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #dott-geofences th,
+    #dott-geofences td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #dott-geofences th { background: #f3f6f9; }
+    #dott-geofences .muted { color:#566; font-size: 0.95rem; }
+    #dott-geofences ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #dott-geofences .section { margin-bottom: 18px; }
+  </style>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Provides operational zones and associated rule sets for Dott vehicles. Each polygon includes policy metadata such as whether riding/ride-through is allowed, maximum speeds, whether parking is station-only, and applicable vehicle types. If no timestamp is specified elsewhere, the latest dataset is returned; otherwise the snapshot closest to the provided timestamp is served.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type, always <code>FeatureCollection</code>. This standard format enables seamless integration with GIS platforms (QGIS, ArcGIS), web mapping libraries (Leaflet, Mapbox), and spatial analysis tools for visualizing regulatory zones, detecting overlaps, and validating vehicle positions against permitted operational areas. Essential for compliance monitoring, urban planning coordination, and multi-provider geofence aggregation.</td></tr>
+      <tr><td>features</td><td>array</td><td>Collection of geofence features defining operational boundaries and behavioral rules for Dott's micromobility fleet. Each zone represents a geographic area with specific constraints (speed limits, access restrictions, parking requirements, station-based parking mandates) enforced through real-time vehicle control, in-app notifications, and post-trip compliance validation. Array size typically ranges from dozens to hundreds depending on regulatory complexity, city agreements, and deployment geography.</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td>Geometry type, either <code>Polygon</code> (single contiguous zone with consistent rules) or <code>MultiPolygon</code> (multiple disconnected areas sharing identical regulations, e.g., all pedestrian squares in a district governed by the same speed limit). MultiPolygon reduces data redundancy by avoiding rule duplication across spatially separated but policy-equivalent zones. Critical for representing complex administrative boundaries and non-contiguous regulatory areas common in urban environments.</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>Geographic boundary coordinates as nested arrays of [longitude, latitude] pairs in WGS84 (EPSG:4326). For Polygons: first array defines the outer boundary (clockwise winding), subsequent arrays define interior exclusions or holes (counterclockwise). For MultiPolygons: additional nesting groups multiple polygon sets. Coordinate precision typically 5-6 decimal places (~1-10m accuracy), balancing spatial fidelity with payload efficiency. Used for real-time point-in-polygon checks ("Is scooter X inside restricted zone Y?") and rendering regulatory overlays on maps.</td></tr>
+      <tr><td>features[].properties.name</td><td>string</td><td>Human-readable zone identifier providing geographic or functional context (e.g., "Canal District Slow Zone", "Central Station No-Parking", "Royal Park Walking Speed"). Displayed in rider apps for situational awareness ("Entering pedestrian area - reduce speed"), used in operations dashboards for zone-based performance analytics (trip starts/ends per zone), and referenced in regulatory compliance reports. Names typically reflect landmarks, neighborhoods, or policy intent to facilitate intuitive understanding by users and administrators.</td></tr>
+      <tr><td>features[].properties.rules</td><td>array</td><td>Ordered collection of operational rules governing vehicle behavior within this geofence. Rules may stack (e.g., speed limit + mandatory parking stations) and can apply conditionally based on vehicle type, time of day, or operational context. Client applications enforce these through: (1) in-app warnings and UI alerts, (2) vehicle firmware commands (remotely limiting motor power in speed zones, preventing trip ends outside parking stations), (3) post-trip validation (penalty fees for violations). Operators analyze rule compliance data to refine geofence strategies and demonstrate regulatory adherence.</td></tr>
+      <tr><td>rules[].maximum_speed_kph</td><td>number</td><td>Maximum permitted speed in kilometers per hour for vehicles operating within this zone. Common values: 6 kph (walking pace in dense pedestrian areas), 15 kph (mixed-use paths), 20-25 kph (normal city operation). Enforcement mechanisms: (1) progressive in-app speed warnings as riders approach/exceed limits, (2) active vehicle firmware intervention (geofenced motor governors restricting power output to prevent exceeding threshold). Operators balance rider experience with pedestrian safety, municipal compliance requirements, and liability risk reduction in high-traffic or sensitive zones.</td></tr>
+      <tr><td>rules[].ride_allowed</td><td>boolean</td><td><code>false</code> designates a hard exclusion zone prohibiting all riding activity (e.g., indoor facilities, protected natural reserves, private property, areas under temporary closure). <code>true</code> permits riding subject to other active constraints (speed, parking, station requirements). When false, client apps must prevent trip initiation within the zone, alert riders entering mid-trip, and may enforce automatic trip termination or penalty fees for prolonged violations. Implements city-mandated no-go zones and protects high-pedestrian-density spaces from micromobility intrusion.</td></tr>
+      <tr><td>rules[].ride_through_allowed</td><td>boolean</td><td><code>false</code> blocks all zone traversal—riders cannot pass through even momentarily, requiring route detours around the perimeter (e.g., secured corporate campuses, gated communities, environmentally sensitive corridors). <code>true</code> permits passage but may still restrict trip starts/ends or parking. This granular control separates transit rights from operational permissions, enabling nuanced policies: allowing commuter shortcuts through business districts while prohibiting tourist rentals, or permitting passage through parks while requiring parking at designated stations.</td></tr>
+      <tr><td>rules[].station_parking</td><td>boolean</td><td><code>true</code> mandates station-based parking—trips cannot end (and vehicles cannot be legally parked) anywhere within this zone except at designated physical parking stations or virtual station geofences. <code>false</code> allows free-floating parking anywhere in the zone. Station-based requirements combat sidewalk clutter, concentrate vehicles at intermodal hubs (train stations, bus terminals), and implement city policies requiring organized parking infrastructure. Enforced via app-based trip-end validation (preventing rental completion if not at station) and potential penalty fees for violations.</td></tr>
+      <tr><td>rules[].vehicle_type_id</td><td>array&lt;string&gt;</td><td>List of vehicle type identifiers to which this rule applies, enabling differentiated regulation within the same geographic zone. Examples: <code>["e-scooter"]</code> applies speed restriction only to scooters while exempting e-bikes (reflecting different regulatory treatment), or <code>["cargo_bike"]</code> excludes heavy cargo vehicles from narrow pedestrian lanes or weight-restricted infrastructure. Empty/null typically means "applies to all types". Enables compliance with type-specific municipal ordinances (scooters often face stricter parking/speed rules than bikes) and optimization of deployment strategies per vehicle category capabilities and regulatory context.</td></tr>
+    </table>
+    
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #28a745; font-size: 0.95em;">
+      <strong>Operational Context:</strong> Geofences form the spatial regulatory framework enabling Dott to operate responsibly within Brussels' complex urban landscape while meeting municipal requirements. 
+      <em>For city authorities</em>, geofences translate policy objectives into enforceable spatial rules: pedestrian-priority zones with walking-speed limits, station-based parking requirements preventing sidewalk obstruction, and complete exclusions protecting sensitive areas (monuments, crowded squares, temporary event closures). 
+      <em>For Dott's operations</em>, geofences enable dynamic fleet steering (pricing incentives for parking in underserved zones, rebalancing triggers when vehicles cluster in oversaturated areas) and automated compliance reporting (demonstrating permit adherence through violation analytics, zone-based deployment metrics). 
+      <em>For riders</em>, geofences manifest as contextual app notifications ("Entering slow zone - max 15 kph") and physical vehicle responses (automatic speed reduction via motor governors), improving safety while maintaining operational transparency. 
+      The <code>station_parking</code> rule uniquely addresses Brussels' emphasis on organized parking infrastructure, distinguishing Dott's approach from purely free-floating competitors. 
+      Rule updates propagate through this API ensuring synchronized enforcement across rider apps, vehicle firmware, analytics dashboards, and city regulatory portals.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Observed dataset: ~285 zones recorded between 2024-08-22 and 2025-08-04</li>
+      <li>Typical live response: ~50–100 zones (varies with provider coverage)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Dott GBFS <code>geofencing_zones.json</code> for Brussels, aggregated by MobilityTwin.Brussels</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Ingestion:</strong> periodically poll Dott’s GBFS geofencing feeds.</li>
+      <li><strong>Normalization:</strong> convert raw zone geometry into GeoJSON polygons/multipolygons.</li>
+      <li><strong>Metadata parsing:</strong> extract and attach rule sets to each zone.</li>
+      <li><strong>Storage &amp; serving:</strong> timestamp snapshots for historical and latest queries.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Parking zone visualization and validation</li>
+      <li>Speed regulation mapping and enforcement support</li>
+      <li>Riding/ride-through compliance checks</li>
+      <li>Policy and coverage analysis over time</li>
+    </ul>
+  </div>
+</div>

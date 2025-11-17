@@ -1,0 +1,102 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="sncb-vehicle-position">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #sncb-vehicle-position { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #sncb-vehicle-position h1,
+    #sncb-vehicle-position h2,
+    #sncb-vehicle-position h3 { color: #16324a; margin-top: 1.1rem; }
+    #sncb-vehicle-position code,
+    #sncb-vehicle-position pre { background: #f6f8fa; border-radius: 6px; }
+    #sncb-vehicle-position pre { padding: 12px; overflow: auto; }
+    #sncb-vehicle-position table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #sncb-vehicle-position th,
+    #sncb-vehicle-position td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #sncb-vehicle-position th { background: #f3f6f9; }
+    #sncb-vehicle-position .muted { color:#566; font-size: 0.95rem; }
+    #sncb-vehicle-position ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #sncb-vehicle-position .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>SNCB Vehicle position</h1>
+  <pre><code>GET /sncb/vehicle-position</code></pre>
+  <p class="muted">Returns estimated real-time train positions across the SNCB/NMBS network in GeoJSON, suitable for mapping, monitoring, and transit analytics.</p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      The MobilityTwin.Brussels platform fuses GTFS-RT vehicle updates with GTFS static schedules to estimate a train's current position between stops. The result is a geospatial dataset in GeoJSON that can power real-time dashboards and interactive maps.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type (always <code>FeatureCollection</code>)</td></tr>
+      <tr><td>features</td><td>array</td><td>List of features (each feature = one vehicle position)</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>GeoJSON feature type (<code>Feature</code>)</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Unique identifier of the vehicle/instance</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON geometry</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td>Geometry type (<code>Point</code>)</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>[longitude, latitude] of the estimated position</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Trip and station metadata</td></tr>
+      <tr><td>properties.name_start</td><td>string</td><td>Origin station name</td></tr>
+      <tr><td>properties.name_end</td><td>string</td><td>Destination station name</td></tr>
+      <tr><td>properties.ptcarid_start</td><td>string</td><td>Origin station code</td></tr>
+      <tr><td>properties.ptcarid_end</td><td>string</td><td>Destination station code</td></tr>
+      <tr><td>properties.trip_headsign</td><td>string</td><td>Trip headsign (final destination)</td></tr>
+      <tr><td>properties.trip_id</td><td>string</td><td>Trip identifier (GTFS)</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Single timestamp (snapshot): typically ~100–200 active trains</li>
+      <li>Time range (start/end): can yield many records depending on interval length</li>
+      <li class="muted">Historical sample (for reference): 2024-08-21 14:54:59 → 2025-07-26 10:33:33, ~1,343,466 positions</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li><strong>GTFS-RT (SNCB/NMBS):</strong> real-time vehicle updates (positions, delays, progress)</li>
+      <li><strong>GTFS static (SNCB):</strong> stops, trips, routes, and stop times</li>
+      <li><strong>Infrabel track geometry (when available):</strong> rail segment LineStrings for map-matching</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Snapshot selection:</strong> choose the closest GTFS-RT snapshot at/just before the requested time; load the applicable GTFS static snapshot.</li>
+      <li><strong>Stop-time sync:</strong> merge static <code>stop_times</code> with real-time progress/delays.</li>
+      <li><strong>Interpolation:</strong> estimate vehicle position between the previous and next scheduled stop; compute completion percentage within the segment time window.</li>
+      <li><strong>Geometry projection:</strong> project the interpolated position onto the corresponding track LineString when geometry is available.</li>
+      <li><strong>Enrichment:</strong> join trip metadata (<code>trip_id</code>, <code>trip_headsign</code>) and station names/codes.</li>
+      <li><strong>Output:</strong> return a GeoJSON <code>FeatureCollection</code> of <code>Point</code> features.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Real-time monitoring of active trains</li>
+      <li>Passenger information (nearest/approaching trains)</li>
+      <li>Operational analytics and flow density over time</li>
+      <li>Animations over intervals (replay movement)</li>
+    </ul>
+  </div>
+
+  <div class="section" style="border-left: 4px solid #8B0000; padding: 15px; margin: 20px 0; background-color: #f8f9fa;">
+    <h3>Operational Context for Belgian National Rail Ecosystem</h3>
+    <p>The SNCB Vehicle Position endpoint delivers real-time train location estimates across Belgium's national railway network by fusing GTFS-RT vehicle updates with static schedule data and Infrabel track geometries—essential for <em>passenger information systems</em> rendering live train maps showing "IC to Oostende currently passing Ghent" and <em>mobile applications</em> providing "nearest train" proximity searches for travelers. The interpolation methodology estimates positions between scheduled stops using time-based progress calculation: if IC train departed Brussels-Midi 14:05 (scheduled) and arrives Ghent-Sint-Pieters 14:35 (30-minute segment), current time 14:20 (15 minutes elapsed) places train approximately halfway along Brussels-Ghent track segment—enabling <em>mapping applications</em> to display train icon at realistic intermediate location rather than jumping discretely between stations. For <em>operations controllers</em>, the ~1.3 million historical position snapshots (Aug 2024-Jul 2025) document actual train movements enabling forensic analysis: did delayed train actually stop mid-route (signal problem?) or maintain movement (indicating congestion slow-down?), which corridor segments show frequent train clustering (capacity bottleneck?), do position updates correlate with GTFS-RT delay messages (validating data quality?). Belgium's geographic context shapes position patterns: IC trains on Brussels-Antwerp corridor show steady high-speed progression across flat Flanders, while Ardennes mountain routes display variable speeds reflecting steep grades and curves. The GeoJSON Point format with trip metadata (trip_id, trip_headsign, origin/destination names and codes) enables <em>filtering for specific services</em>: Brussels commuter dashboard shows only S-suburban trains within 30km radius, long-distance planner focuses on IC intercity services, international connections display trains continuing to Netherlands/France/Germany. <em>Transit researchers</em> aggregate position data to quantify network utilization: how many trains simultaneously occupy Brussels junction during morning peak (revealing capacity constraints), which routes show highest service frequency (positions per hour per corridor), do weekend patterns differ from weekdays (leisure coast-bound trains vs. weekday commuter flows?). The estimated 100-200 active trains per snapshot reflects Belgian rail intensity: dense service on main corridors (Brussels-Antwerp-Netherlands, Brussels-Ghent-coast, Brussels-Liège-Germany) contrasts with sparse rural coverage (single L-local train per hour in Ardennes valleys). For <em>multi-modal journey planning</em>, SNCB train positions integrate with STIB Brussels metro/tram/bus positions showing complete mobility picture: passenger route involves IC train to Brussels-Midi, real-time transfer to STIB metro toward European Quarter—both systems' vehicle positions visible enabling dynamic connection validation ("train delayed 5 minutes, will I still catch metro connection?"). The track geometry projection ensures trains appear on actual rail infrastructure rather than interpolating through buildings or rivers, critical for <em>operational credibility</em> and <em>user trust</em> in real-time displays showing realistic Belgian rail network representation.</p>
+  </div>
+</div>

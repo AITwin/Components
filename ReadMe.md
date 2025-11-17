@@ -1,101 +1,112 @@
-<img src="https://avatars.githubusercontent.com/u/125973400?s=150&v=4" alt="Logo de MobilityTwin.Brussels" height=150>
+# Brussels Mobility Data
 
-# Components
+Data collection and analysis for Brussels' transportation systems - bikes, scooters, buses, trains, and more.
 
-## Overview
+## What's This?
 
-This project implements all the components of the MobilityTwin.Brussels
-data processing pipeline. It is designed to be flexible and configurable,
-allowing you to easily add or remove components as needed.
+This project pulls real-time data from 40+ APIs covering Brussels mobility:
+- Micromobility (Bolt, Dott, Lime, Pony) - ~11k vehicles
+- Public transit (SNCB, STIB, TEC, De Lijn)
+- Traffic monitoring (bike counters, bus speeds, tunnels)
+- Environment (weather, air quality)
 
-## Some terminology
+Plus some ML experiments for predicting micromobility demand and optimizing vehicle rebalancing.
 
-### Collector
+## Quick Start
 
-A collector is a component that gathers data from one (in general) or more
-external sources and stores it in a structured manner without (ideally) any processing
-in the database. It can then be retrieved by other components for further processing or
-directly by the end user. Collectors are made to run on a schedule.
+Install:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-### Harvester
+Run tests:
+```bash
+./run_all_tests.sh analytics  # Quick (30 seconds)
+./run_all_tests.sh            # Everything (~10 min)
+```
 
-A harvester is a component that processes raw data retrieved from collectors / harvesters
-and applies necessary transformations before saving it to the database. In general,
-harvesters are made to run on a schedule/follow a source collector/harvester schedule.
+Try the demand nowcasting:
+```bash
+cd sources/analytics/demand_nowcasting
+bash quickstart.sh
+```
 
-### Handler
+## Project Structure
 
-A handler is a component that retrieves data from collectors and harvesters
-and processes it in some way. In opposition to harvesters, handlers do
-not save the data to the database. They are made to run on-demand.
+```
+sources/                    # Data collection scripts
+  analytics/               # ML models for demand forecasting
+    demand_nowcasting/     # Main forecasting system
+  bolt/                    # Bolt API integration
+  dott/                    # Dott API integration
+  lime/                    # Lime API integration
+  pony/                    # Pony API integration
+  sncb/                    # Belgian railways
+  stib/                    # Brussels metro/tram/bus
+  tec/                     # Wallonia transport
+  de-lijn/                 # Flanders transport
+  infrabel/                # Railway infrastructure
+  environment/             # Weather & air quality
+  traffic/                 # Traffic monitoring
 
-## How it works
+tests/                     # Test suite
+documentation/             # More detailed docs
+output/                    # Generated maps and CSVs
+```
 
-The project is built around the concept of components. Each component is a Python module that implements a specific
-functionality. The components are grouped into three categories: handlers, collectors, and harvesters. Each component is
-responsible for a specific task, such as retrieving data from a source, processing data, or saving data to the database.
+## How It Works
 
-The logic for each component is implemented in a separate Python module. The modules are stored in the `components`
-directory. The `main.py` script is responsible for running the components and scheduling them.
+Each data source has a `fetch_and_analyze.py` script that:
+1. Calls the API
+2. Processes the data
+3. Generates a visualization (usually an HTML map)
+4. Saves the results
 
-To lighten the components, configuration files defining many properties of the components are stored in
-the `configuration` directory. The configuration files are written in TOML format. The framework
-will automatically load the configuration files for the components that are run and inject them into the components.
+The demand nowcasting system:
+1. Aggregates vehicle positions into 250m grid cells
+2. Builds features (time of day, weather, historical patterns)
+3. Trains a LightGBM model to predict demand
+4. Suggests vehicle rebalancing moves
 
-SQLAlchemy is used to interact with the database. It should not be used directly in the components. Instead, the
-different helper functions defined in the `src.data` module should be used.
+## Running Scripts
 
-## Prerequisites
+Fetch data from specific sources:
+```bash
+python sources/micromobility/dott/fetch_and_analyze.py
+python sources/stib/vehicle-position/fetch_and_analyze.py
+python sources/environment/weather/fetch_and_analyze.py
+```
 
-Before running the project, ensure the following:
+Check output in the `output/` directory.
 
-Python is installed (preferably Python 3.11 or higher).
-Required packages are installed. You can install them using pip:
+## Testing
 
-`pip install -r requirements.txt`
+Most tests run reliably. Some integration tests might timeout if external APIs are slow - that's normal.
 
-## Usage
+```bash
+./run_all_tests.sh analytics     # ML tests only
+./run_all_tests.sh integration   # All API calls
+./run_all_tests.sh unit          # Individual module tests
+```
 
-Clone the repository and navigate to the project directory.
+See `documentation/TESTING.md` for more.
 
-Create a .env file in the project root directory and set the required environment variables. (See the .env.example file
-for an example.)
+## Documentation
 
-Run specific handlers:
+- `documentation/TESTING.md` - Test info
+- `documentation/DEMAND_NOWCASTING_QUICKSTART.md` - ML system guide
+- `documentation/FETCH_AND_ANALYZE_DOCUMENTATION.md` - All data sources
 
-`python main.py --handlers handler_name1 handler_name2`
+## Notes
 
-Run all handlers on a specific host and port and allowed hosts:
+This started as a mobility analysis experiment and grew into a fairly comprehensive data collection system. The code's a bit scattered (data sources have tests living next to them rather than centralized), but everything works.
 
-`python main.py --handlers * --host 192.12.12.1 --port 5242 --allowed-hosts localhost`
+Some APIs require authentication - check individual scripts for details.
 
-Run specific collectors:
+Most visualizations use Folium for maps and Plotly for charts. Outputs are HTML files you can open in a browser.
 
-`python main.py --collectors collector_name1 collector_name2`
+## Status
 
-Run specific harvesters:
-
-`python main.py --harvesters harvester_name1 harvester_name2`
-
-Run all handlers, collectors, and harvesters:
-
-`python main.py --handlers * --collectors * --harvesters *`
-
-Run collectors or harvesters once and exit (without scheduling):
-
-`python main.py --collectors collector_name --now`
-
-The script will start processing the data based on your input and configuration. Monitor the terminal for logs and
-output.
-
-## Configuration
-
-Each component can be configured in the TOML files in the configuration directory. The configuration files are named
-after the data provider they configure. For example, the configuration for the `stib_gtfs` handler is stored in
-`config/stib.toml`.
-
-## Contributing
-
-We welcome contributions from the community to improve and enhance the MobilityTwin.Brussels project. Whether you are interested in fixing bugs, adding new features, or improving documentation, your help is valuable. 
-
-You can learn more about how to contribute by reading the Contribute.md file.
+Tests passing, APIs working, docs up to date. Built with Python 3.12.

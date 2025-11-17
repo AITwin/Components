@@ -1,0 +1,98 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="pony-vehicle-position">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #pony-vehicle-position { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #pony-vehicle-position h1, 
+    #pony-vehicle-position h2, 
+    #pony-vehicle-position h3 { color: #16324a; margin-top: 1.1rem; }
+    #pony-vehicle-position code, 
+    #pony-vehicle-position pre { background: #f6f8fa; border-radius: 6px; }
+    #pony-vehicle-position pre { padding: 12px; overflow: auto; }
+    #pony-vehicle-position table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #pony-vehicle-position th, 
+    #pony-vehicle-position td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #pony-vehicle-position th { background: #f3f6f9; }
+    #pony-vehicle-position .muted { color:#566; font-size: 0.95rem; }
+    #pony-vehicle-position ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #pony-vehicle-position .section { margin-bottom: 18px; }
+  </style>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Returns live location and operational attributes for available Pony vehicles (e.g., fuel/battery level, range, reservation/disable status, vehicle type). Data is served as a GeoJSON snapshot via MobilityTwin.Brussels. If no timestamp is specified elsewhere, the latest snapshot is returned; otherwise the closest available snapshot to the requested Unix epoch (seconds) is used.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, Response Headers/Body) and Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type, always <code>FeatureCollection</code>. This industry-standard format enables seamless integration with mapping libraries (Leaflet, Mapbox, OpenLayers), GIS platforms, and spatial analysis tools for visualizing real-time fleet distributions, generating density heatmaps, and conducting availability analyses across Pony's Brussels deployment.</td></tr>
+      <tr><td>features</td><td>array</td><td>Collection of vehicle features, each representing one physical Pony e-scooter available in Brussels at the snapshot time. Array length reflects current operational fleet size and varies dynamically based on demand patterns, rebalancing operations, maintenance schedules, charging cycles, and regulatory deployment constraints (city permit limits, seasonal adjustments, operational area restrictions).</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Ephemeral feature identifier unique within this specific snapshot, used primarily for GeoJSON rendering, client-side map indexing, and temporary session tracking. For persistent vehicle tracking across time, rental sessions, maintenance events, and longitudinal performance analysis, always use <code>properties.bike_id</code>, which remains constant throughout the asset's operational lifecycle.</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td>Geometry type, always <code>Point</code>. Vehicles are represented as discrete GPS coordinates reflecting their last reported position, typically updated every few minutes while parked or during active rentals. This point-based representation enables efficient real-time map overlays, proximity-based availability searches ("find nearest scooter within 500m"), and temporal movement analysis for understanding deployment patterns and rider behavior.</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>Geographic position as [longitude, latitude] in decimal degrees using the WGS84 datum (EPSG:4326), the global standard for GPS coordinates. For Brussels coverage: longitude approximately 4.24–4.48°E, latitude 50.79–50.91°N. Position accuracy reflects onboard GPS quality and may be intentionally rounded (~10-50m precision) by Pony for competitive positioning, privacy considerations, or data optimization. Critical for proximity searches, geofence compliance checks, coverage gap identification, and availability heatmap generation.</td></tr>
+      <tr><td>features[].properties.bike_id</td><td>string</td><td>Pony's persistent, globally unique identifier for this physical scooter (retaining historical "bike" naming from GBFS specification, applicable to all vehicle types). This ID remains constant across rental sessions, battery swaps, maintenance interventions, geographic redeployments, and firmware updates—enabling longitudinal asset tracking, utilization analytics, maintenance history compilation, and performance benchmarking. Essential for data joins with trip records, service logs, compliance audits, and multi-temporal analyses of fleet health and operational efficiency.</td></tr>
+      <tr><td>features[].properties.vehicle_type_id</td><td>string</td><td>Internal classification code referencing specific Pony vehicle models, hardware generations, or capability tiers (e.g., "scooter_gen3", "heavy_duty_urban"). Distinguishes technical specifications (max speed, range, load capacity, terrain capability) and enables type-specific operational rules (differentiated pricing, geofence restrictions by vehicle class, parking regulations). Operators use this for fleet composition optimization (deploying appropriate models per neighborhood topography and demographics), strategic planning (hardware refresh cycles), and comparative performance analysis across vehicle categories.</td></tr>
+      <tr><td>features[].properties.system_id</td><td>string</td><td>Provider/system identifier, typically <code>"pony"</code>, enabling multi-operator data aggregation and cross-provider analytics in platforms ingesting feeds from multiple micromobility services (Bolt, Dott, Lime, Pony simultaneously). Critical for Brussels' multimodal mobility platforms and regulatory dashboards consolidating citywide micromobility data, allowing unified queries while maintaining provider attribution. Facilitates comparative analyses of provider coverage, pricing, availability, and compliance across the shared mobility ecosystem.</td></tr>
+      <tr><td>features[].properties.current_fuel_percent</td><td>number</td><td>Current energy level expressed as percentage of full charge (0–100). Unlike meters-based range estimates, this normalized metric enables direct comparisons across vehicle types with different battery capacities and provides intuitive user feedback ("75% charged"). Riders use this to assess reliability for planned trips (preferring >50% for longer journeys), while operators trigger charging logistics when fleets drop below operational thresholds (~20-30%). Often displayed alongside or instead of <code>current_range_meters</code> in user interfaces for clearer energy status communication.</td></tr>
+      <tr><td>features[].properties.current_range_meters</td><td>number</td><td>Estimated remaining travel distance in meters before battery depletion, calculated from current charge level, historical consumption patterns, and Brussels urban riding conditions (hills, traffic patterns, typical rider weights). Range typically 0–40,000m depending on battery size and efficiency. Riders rely on this for concrete trip planning ("Can I make a 3km journey?"), while operators prioritize vehicles below operational thresholds for battery swapping or recharging, maximizing effective fleet availability and preventing mid-trip failures that damage user experience.</td></tr>
+      <tr><td>features[].properties.is_disabled</td><td>boolean</td><td><code>true</code> when the scooter is unavailable for public rental due to operational, safety, or regulatory constraints: active maintenance or repair work, physical damage requiring service, battery depleted below minimum threshold, positioned in geofence-restricted zones (no-parking areas, exclusion zones), or administratively locked by Pony (compliance investigation, theft recovery, fleet rebalancing hold). Disabled vehicles remain visible in fleet management systems for operational crews but hidden from customer apps. Essential for calculating effective fleet size (rentable units) versus total deployed assets.</td></tr>
+      <tr><td>features[].properties.is_reserved</td><td>boolean</td><td><code>true</code> when a rider has reserved this scooter through Pony's app (or partner platform) but hasn't yet started the rental trip. Reservations typically hold vehicles for 10–15 minutes, during which the scooter remains locked to that specific user and excluded from general availability. Useful for real-time supply-demand analysis (high reservation rates signal tight supply or popular pickup zones), user behavior insights (reservation-to-rental conversion efficiency), and reservation policy optimization (hold duration tuning).</td></tr>
+      <tr><td>features[].properties.last_reported</td><td>number</td><td>Unix timestamp (seconds since epoch, 1970-01-01 00:00:00 UTC) when Pony's backend last received telemetry from this vehicle's onboard systems (GPS, battery management, connectivity module). Used to assess data freshness, vehicle connectivity health, and operational status. Significant reporting gaps (>30-60 minutes for parked vehicles, >5-10 minutes during rentals) may indicate GPS/cellular failures, battery depletion, theft, vandalism, or environmental obstruction. Operators monitor latency for fleet diagnostics; analysts filter stale records to ensure availability metrics reflect current reality.</td></tr>
+      <tr><td>features[].properties.pricing_plan_id</td><td>string</td><td>Identifier of the commercial tariff structure currently applied to this scooter (e.g., "standard", "student_discount", "weekend_promo"). Pricing plans define unlock fees, per-minute rates, pause charges, and zone-based surcharges or incentives. Enables dynamic pricing displays in aggregator apps, cost estimation tools, and revenue attribution analytics. Operators adjust pricing plans strategically to manage demand (surge pricing during peak hours, discounts in underutilized zones) and influence parking behavior (lower rates for ending trips at rebalancing-priority locations).</td></tr>
+      <tr><td>features[].properties.rental_uris.android</td><td>string</td><td>Deep link URI that opens the Pony Android app directly to this scooter's rental flow, pre-selecting the asset for one-tap unlock. Typically follows <code>pony://scooter/{bike_id}</code> or similar app-specific scheme. Enables seamless user handoff from third-party discovery channels (Google Maps, multimodal trip planners, QR code scans at physical locations) to Pony's native rental experience, reducing friction and improving conversion rates from discovery to active rental.</td></tr>
+      <tr><td>features[].properties.rental_uris.ios</td><td>string</td><td>Deep link URI that opens the Pony iOS app directly to this scooter's rental flow, pre-selecting the asset for one-tap unlock. Mirrors Android functionality for iPhone users. Critical for omnichannel integrations (Apple Maps, mobility-as-a-service platforms, transit planning apps) where users discover scooters outside Pony's native app and expect frictionless transitions to complete rentals without manual vehicle ID entry.</td></tr>
+    </table>
+    
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #ff6b35; font-size: 0.95em;">
+      <strong>Operational Context:</strong> This live vehicle position feed enables comprehensive micromobility services across Pony's Brussels operations and third-party platform integrations. 
+      <em>For riders and mobility platforms</em>, it powers essential discovery features: nearest-vehicle lookups with battery filtering ("show scooters with >60% charge"), multimodal trip planning (solving first/last-mile transit connections), and predictive availability based on historical patterns. 
+      <em>For Pony's operations</em>, this data drives intelligent fleet management: algorithmic rebalancing (redistributing vehicles from oversupplied to high-demand zones), proactive maintenance (flagging frequently-disabled units), battery logistics (routing charging teams to low-battery clusters via <code>current_fuel_percent</code> thresholds), and regulatory compliance reporting (proving deployment adherence to permit conditions). 
+      <em>For Brussels' urban mobility ecosystem</em>, the <code>system_id</code> field enables multi-operator aggregation—city dashboards and MaaS platforms can consolidate Pony data alongside Bolt, Dott, and Lime for unified micromobility views, comparative provider analysis, and comprehensive coverage mapping. 
+      The dual energy metrics (<code>current_fuel_percent</code> for intuitive percentage, <code>current_range_meters</code> for concrete distance) provide flexibility for different user interface designs and operational workflows, while <code>last_reported</code> timestamps enable data quality assessment and connectivity monitoring.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Observed dataset (historical): ~77,965 entries between 2024-08-21 and 2025-08-04</li>
+      <li>Typical live responses: ~100–300 active vehicles (time-dependent)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Pony GBFS <code>free_bike_status.json</code>, ingested by MobilityTwin.Brussels</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Ingestion:</strong> periodic polling of provider GBFS feed.</li>
+      <li><strong>Normalization:</strong> harmonize fields across operators.</li>
+      <li><strong>GeoJSON conversion:</strong> emit vehicles as point features with metadata.</li>
+      <li><strong>Storage:</strong> timestamp snapshots for historical and latest queries.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Vehicle availability mapping</li>
+      <li>Fuel/battery level monitoring</li>
+      <li>Trip-planning proximity and range filters</li>
+      <li>Urban mobility dashboards (density &amp; distribution)</li>
+    </ul>
+  </div>
+</div>

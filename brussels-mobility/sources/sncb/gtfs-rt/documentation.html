@@ -1,0 +1,118 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="sncb-gtfs-rt">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #sncb-gtfs-rt { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #sncb-gtfs-rt h1,
+    #sncb-gtfs-rt h2,
+    #sncb-gtfs-rt h3 { color: #16324a; margin-top: 1.1rem; }
+    #sncb-gtfs-rt code,
+    #sncb-gtfs-rt pre { background: #f6f8fa; border-radius: 6px; }
+    #sncb-gtfs-rt pre { padding: 12px; overflow: auto; }
+    #sncb-gtfs-rt table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #sncb-gtfs-rt th,
+    #sncb-gtfs-rt td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #sncb-gtfs-rt th { background: #f3f6f9; }
+    #sncb-gtfs-rt .muted { color:#566; font-size: 0.95rem; }
+    #sncb-gtfs-rt ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #sncb-gtfs-rt .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>SNCB GTFS-RT</h1>
+  <pre><code>GET /sncb/gtfs-realtime</code></pre>
+  <p class="muted">Returns the GTFS Realtime (GTFS-RT) feed for SNCB/NMBS in Protocol Buffers binary format, including live vehicle positions, delays, and trip status updates.</p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Provides live operational data following Google’s GTFS-Realtime specification. Use alongside the static GTFS feed for:
+    </p>
+    <ul>
+      <li>Real-time transit tracking and arrival predictions</li>
+      <li>Vehicle position updates and monitoring disruptions</li>
+      <li>Visualizing trains in motion and building dashboards</li>
+    </ul>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+      <tr><td>(binary)</td><td>protobuf</td><td>GTFS-Realtime FeedMessage in Protocol Buffers binary format—compact, schema-defined serialization format requiring specialized libraries (gtfs-realtime-bindings, protobuf, google-transit-tools) for parsing. Binary encoding reduces payload size (~25-150 KB typical) compared to JSON equivalents, critical for <em>mobile applications</em> minimizing cellular data usage and <em>high-frequency polling systems</em> fetching updates every ~22 seconds. The FeedMessage contains header (feed timestamp, GTFS-RT version) plus entity array with live Belgian rail operational data. <em>Developers</em> must deserialize protobuf before accessing fields: Python uses gtfs_realtime_bindings library, JavaScript node-gtfs, Java google-transit-tools. Not human-readable without conversion—<em>debugging requires</em> protobuf-to-JSON conversion tools or GTFS-RT validators to inspect contents. The specification-compliant format ensures interoperability: same parsing code works for SNCB Belgian rail, STIB Brussels transit, or international feeds, enabling <em>multi-modal journey planners</em> to integrate diverse real-time sources through unified GTFS-RT processing pipeline.</td></tr>
+      <tr><td>entity[]</td><td>array</td><td>Array of FeedEntity objects representing individual real-time updates—each entity describes one live train vehicle position, trip delay update, or service alert affecting Belgian rail network. Typical SNCB feed contains dozens to hundreds of entities: active trains generating VehiclePosition entities (IC train from Brussels to Antwerp, S-train on Brussels suburban network), trips with delays producing TripUpdate entities (scheduled arrivals/departures modified by operational conditions), and network disruptions creating Alert entities (track work near Liège, signal failure at Brussels junction). <em>Processing applications</em> iterate entity[] array filtering by type: extract only vehicle positions for live mapping, only trip_updates for delay analytics, only alerts for passenger notifications. The entity.id field enables incremental updates: caching previously-seen IDs and processing only new/changed entities reduces computational load for <em>high-frequency consumers</em> polling every 20-30 seconds. Belgian rail complexity means entities span diverse service categories: long-distance IC trains, high-frequency S-suburban trains around Brussels, L-local stopping services, P-peak reinforcement trains, and international connections—requiring <em>routing logic</em> to filter relevant entities per use case (urban dashboard shows only S-trains, long-distance planner focuses on IC services).</td></tr>
+      <tr><td>entity[].id</td><td>string</td><td>Identifier unique within the message; useful for incremental processing and caching.</td></tr>
+      <tr><td>entity[].vehicle</td><td>object</td><td><code>VehiclePosition</code>. Describes where a specific train currently is, including its trip reference and status.</td></tr>
+      <tr><td>entity[].vehicle.trip.trip_id</td><td>string</td><td>Trip being operated (links the live train to a planned journey in GTFS <code>trips.txt</code>).</td></tr>
+      <tr><td>entity[].vehicle.trip.route_id</td><td>string</td><td>Commercial line the train belongs to (e.g., IC, S). Matches GTFS <code>routes.txt</code>.</td></tr>
+      <tr><td>entity[].vehicle.trip.direction_id</td><td>number</td><td>Service direction (0/1) relative to the route’s canonical direction.</td></tr>
+      <tr><td>entity[].vehicle.position.latitude</td><td>number</td><td>Current latitude of the train (WGS84). Used for map rendering.</td></tr>
+      <tr><td>entity[].vehicle.position.longitude</td><td>number</td><td>Current longitude of the train (WGS84).</td></tr>
+      <tr><td>entity[].vehicle.position.bearing</td><td>number</td><td>Heading of the train in degrees, indicating movement direction along the track.</td></tr>
+      <tr><td>entity[].vehicle.position.speed</td><td>number</td><td>Instantaneous speed (m/s) if provided; can be missing for some vehicles.</td></tr>
+      <tr><td>entity[].vehicle.stop_id</td><td>string</td><td>Identifier of the last known or upcoming stop context for this position (GTFS <code>stops.txt</code>).</td></tr>
+      <tr><td>entity[].vehicle.current_status</td><td>string</td><td>Operational status: <em>IN_TRANSIT_TO</em>, <em>STOPPED_AT</em>, or <em>INCOMING_AT</em> — used to interpret dwell and movement.</td></tr>
+      <tr><td>entity[].vehicle.timestamp</td><td>number</td><td>When the position was observed (Unix epoch seconds). Useful to align with static timetables.</td></tr>
+      <tr><td>entity[].trip_update</td><td>object</td><td><code>TripUpdate</code>. Live adjustments to the timetable for a specific trip: delays, skipped stops, or added stops.</td></tr>
+      <tr><td>entity[].trip_update.trip.trip_id</td><td>string</td><td>Trip receiving updates (ties live changes back to a planned trip).</td></tr>
+      <tr><td>entity[].trip_update.stop_time_update[]</td><td>array</td><td>Per-stop live information used to compute ETA/ETD along the trip.</td></tr>
+      <tr><td>stop_time_update[].stop_id</td><td>string</td><td>Stop being updated (station/platform). Combine with GTFS to get names and coordinates.</td></tr>
+      <tr><td>stop_time_update[].arrival.delay</td><td>number</td><td>Seconds late/early vs. the planned arrival time. Positive = late, negative = early.</td></tr>
+      <tr><td>stop_time_update[].departure.delay</td><td>number</td><td>Seconds late/early vs. the planned departure time.</td></tr>
+      <tr><td>stop_time_update[].arrival.time</td><td>number</td><td>Unix epoch seconds for the predicted/updated arrival (if provided).</td></tr>
+      <tr><td>stop_time_update[].departure.time</td><td>number</td><td>Unix epoch seconds for the predicted/updated departure (if provided).</td></tr>
+      <tr><td>stop_time_update[].schedule_relationship</td><td>string</td><td>How the stop relates to the schedule: <em>SCHEDULED</em>, <em>SKIPPED</em>, <em>NO_DATA</em> (e.g., skip due to disruption).</td></tr>
+      <tr><td>entity[].alert</td><td>object</td><td><code>Alert</code>. Service messages describing disruptions, effects (e.g., delays, detours), and who is affected.</td></tr>
+      <tr><td>alert.informed_entity[]</td><td>array</td><td>Scope of the alert: which routes/trips/stops are affected for filtering in UIs.</td></tr>
+      <tr><td>alert.cause / alert.effect</td><td>string</td><td>High-level cause and effect classification (e.g., <em>WEATHER</em> → <em>DELAY</em>), used for dashboards and analytics.</td></tr>
+    </table>
+    <p class="muted">Use VehiclePosition for mapping live trains, TripUpdate for ETA/ETD predictions and delay analytics, and Alert for passenger-facing disruption context.</p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Observed time range: 2024-08-21 14:54:59 → 2025-07-26 10:33:33</li>
+      <li>Total snapshots observed: ~1,342,650</li>
+      <li>Frequency (est.): ~1 update every ~22 seconds</li>
+      <li>Typical payload: ~25–150 KB per request (varies with vehicle count)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Origin: SNCB/NMBS live operational data via HAFAS</li>
+      <li>Feed type: GTFS-RT (<code>VehiclePosition</code>, <code>TripUpdate</code>, <code>Alert</code>)</li>
+      <li>Hosted by SNCB at <em>sncb-opendata.hafas.de</em></li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Collect:</strong> retrieve the GTFS-RT <code>FeedMessage</code> from the upstream endpoint.</li>
+      <li><strong>Validate:</strong> basic health checks (e.g., HTTP errors).</li>
+      <li><strong>Serve:</strong> pass through as raw Protocol Buffers with <code>application/octet-stream</code>; timestamp exposed via <code>X-Data-Timestamp</code>.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Live vehicle tracking (map visualizations)</li>
+      <li>Real-time delay estimation and disruption monitoring</li>
+      <li>Navigation engines &amp; trip planners (combined with static GTFS)</li>
+      <li>Synchronize with vehicle-position/trips endpoints for validation</li>
+    </ul>
+  </div>
+
+  <div class="section" style="border-left: 4px solid #8B0000; padding: 15px; margin: 20px 0; background-color: #f8f9fa;">
+    <h3>Operational Context for Belgian National Rail Ecosystem</h3>
+    <p>The SNCB GTFS-Realtime endpoint delivers live operational data for Belgium's national railway network at high frequency (~22-second updates, 1.3+ million snapshots observed Aug 2024-Jul 2025)—essential for <em>passenger information systems</em> displaying accurate train locations, delay predictions, and service disruptions across Belgian stations. The feed combines three GTFS-RT message types: VehiclePosition entities enable <em>mobile apps</em> to render moving train icons on maps ("IC to Oostende currently passing through Ghent, 8 km from arrival"), TripUpdate entities provide <em>arrival prediction algorithms</em> with stop-by-stop delay data (Brussels-Central scheduled 14:23 now arriving 14:31 = +8 minutes delay), and Alert entities deliver <em>passenger notifications</em> about disruptions ("signal failure at Liège-Guillemins affecting IC trains to Germany"). For <em>real-time integration</em>, the GTFS-RT feed must join with static GTFS data: trip_id from vehicle position links to trips.txt to retrieve route information, stop_id from trip updates joins stops.txt for station names/coordinates, enabling contextual displays ("train 2341 delayed at Bruxelles-Midi platform 6"). The protobuf binary format (~25-150 KB payloads) minimizes bandwidth compared to JSON, critical for <em>mobile applications</em> updating every 30 seconds over cellular networks and <em>embedded station displays</em> with limited connectivity. <em>Operations control centers</em> leverage TripUpdate delay data to identify systemic issues: multiple trains showing +10-15 minute delays on Brussels-Antwerp corridor suggests infrastructure problem (signal failure, track obstruction) requiring dispatcher intervention, while isolated single-train delays indicate local issues (mechanical problem, crew scheduling). Belgium's complex rail operations create diverse Alert causes: weather events (heavy snow in Ardennes affects mountainous routes), infrastructure maintenance (weekend track work requires rail replacement buses), labor actions (strikes reducing service frequency), and passenger incidents (medical emergency causing station delays). The high update frequency (every ~22 seconds) enables responsive passenger information: commuter checking "next S-train to Nivelles" sees current delay estimate incorporating latest operational data, dramatically improving traveler experience compared to static timetables. For <em>data analysts</em>, historical GTFS-RT archives quantify Belgian rail performance: calculating percentage of trains arriving within 5 minutes of schedule (punctuality metrics), identifying chronic delay hotspots (Brussels junction, Liège-Guillemins, Antwerp-Central showing frequent congestion), and evaluating infrastructure investments (did dedicated track improvements reduce delay frequency?). The VehiclePosition current_status field (IN_TRANSIT_TO, STOPPED_AT, INCOMING_AT) enables granular journey tracking: passengers waiting at platform see "train approaching station" vs. "train stopped at previous station" providing actionable context for boarding preparation. Belgium's dense rail network (~3,600 stations) combined with frequent service (IC trains every 30 minutes major corridors, S-trains every 10-15 minutes Brussels suburbs) generates hundreds of concurrent entities—requiring <em>filtering logic</em> for manageable displays (show only trains relevant to specific station/route rather than entire national network). The GTFS-RT specification compliance ensures <em>multi-modal integration</em>: same parsing infrastructure processes SNCB national rail, STIB Brussels transit, TEC Wallonia buses, enabling unified Belgian mobility applications showing seamless connections across operators, modes, and regions for comprehensive door-to-door journey planning with live arrival predictions throughout.</p>
+  </div>
+</div>

@@ -1,0 +1,110 @@
+<!-- Embedded fragment: STIB/MIVB — Stops -->
+<div id="stib-stops">
+  <style>
+    /* Scoped styles */
+    #stib-stops { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #stib-stops h1,
+    #stib-stops h2,
+    #stib-stops h3 { color: #16324a; margin-top: 1.1rem; }
+    #stib-stops code,
+    #stib-stops pre { background: #f6f8fa; border-radius: 6px; }
+    #stib-stops pre { padding: 12px; overflow: auto; }
+    #stib-stops table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #stib-stops th,
+    #stib-stops td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #stib-stops th { background: #f3f6f9; }
+    #stib-stops .muted { color:#566; font-size: 0.95rem; }
+    #stib-stops ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #stib-stops .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>STIB/MIVB — Stops</h1>
+  <pre><code>GET /stib/stops</code></pre>
+  <p class="muted">The stops of STIB/MIVB. The data was enriched and cleaned for easier use.</p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Returns a GeoJSON dataset of STIB/MIVB stops enriched with line/direction context and cleaned identifiers for easier joins.
+      Typical uses include map visualizations, stop lookup, and joining with schedules or real-time feeds.
+    </p>
+    <p class="muted">
+      Dataset stats (historical sample): Start <em>2024-08-21 14:48:23</em>, End <em>2025-01-20 01:22:08</em>, Snapshots <em>107</em>.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type, always <code>"FeatureCollection"</code>. Standard GeoJSON top-level container indicating structure contains spatial features array with coordinate reference system (default WGS84/EPSG:4326). Enables direct compatibility with mapping libraries (Leaflet, Mapbox, OpenLayers) and GIS tools (QGIS, ArcGIS) for Brussels transit stop visualization and analysis.</td></tr>
+      <tr><td>features</td><td>array</td><td>Array of GeoJSON Feature objects, each representing one STIB/MIVB stop location enriched with route/direction context. Unlike raw GTFS stops.txt (which lists stops once regardless of how many lines serve them), this enriched dataset typically includes multiple features per physical stop—one for each line-direction combination serving that location. Example: Arts-Loi metro station appears multiple times (M1 direction 0, M1 direction 1, M2 direction 0, M2 direction 1, M5 direction 0, M5 direction 1) enabling line-specific stop sequence analysis and route-oriented queries. Brussels STIB network ~2,000 physical stops expands to thousands of enriched features when multiplied by serving routes/directions.</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>GeoJSON feature type, always <code>"Feature"</code>. Standard GeoJSON designation indicating object contains geometry (stop coordinates) and properties (stop metadata). Distinguishes individual stop features from FeatureCollection container.</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Unique feature identifier, typically combining stop_id with route and direction to create distinct IDs for each stop-line-direction combination. Example: stop Arts-Loi on Line 1 direction 0 might have ID "3011-1-0" (stop_id-route-direction). These composite IDs enable precise feature identification in applications requiring line-specific stop references: "show me stop sequence for Line 81 direction 1" returns ordered features with matching route_short_name and direction_id. Critical for: joining with GTFS-RT vehicle positions (matching stop predictions to specific line contexts), rendering line-specific stop markers on maps (color-coding by route), and sequence-based queries (which stops come after this one on this line in this direction?).</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON Geometry object containing stop location coordinates. Standard GeoJSON structure with type and coordinates properties defining spatial position. Enables all geospatial operations: plotting stops on maps, proximity searches (find stops within 400m of address), spatial joins (which stops within Brussels neighborhoods?), and distance calculations (how far between consecutive stops on route?).</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td>Geometry type, always <code>"Point"</code> for transit stops—representing single fixed location where passengers board/alight. Point geometries appropriate for stops as dimensionless locations rather than areas. Large metro stations with multiple platforms may have multiple Point features (one per platform) with parent_station relationships in raw GTFS, here flattened into route-direction-specific points for operational use.</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>GeoJSON coordinate array in format <code>[longitude, latitude]</code> (note: longitude first per GeoJSON specification). Brussels STIB stop coordinates range: longitude 4.24°E to 4.48°E, latitude 50.79°N to 50.91°N (WGS84/EPSG:4326). Precise stop locations essential for: accurate map rendering (showing stops at exact street positions), proximity-based passenger information (finding nearest stop to user location), multimodal transfer analysis (identifying co-located STIB/SNCB/De Lijn stops within walking transfer distance), and accessibility planning (measuring distances to building entrances, park-and-ride facilities, bike parking). Metro station coordinates typically underground track/platform positions, surface tram/bus stops at curbside shelter locations.</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Properties object containing enriched stop metadata beyond basic GTFS stops.txt fields. Enrichment includes route/direction context (route_short_name, direction_id) and stop sequencing (stop_sequence) enabling line-specific analysis without requiring joins to stop_times.txt or trips.txt. This cleaned/enriched structure simplifies common queries: "what's the stop order for Line 81 tram direction 1?" directly available without parsing full GTFS schedule tables. Designed for operational applications requiring quick stop lookup and route-context awareness.</td></tr>
+  <tr><td>properties.stop_id</td><td>integer</td><td>Cleaned STIB stop identifier as integer (removing any GTFS prefix/namespace decorations). Core reference ID linking to: GTFS stop_times.txt schedules, GTFS-RT vehicle position stop predictions, real-time arrival displays, and stop-specific passenger information queries. Stop IDs are stable infrastructure identifiers—stop 3011 is Arts-Loi metro across all systems. Typical Brussels stop IDs: metro stations 1000-4000 range, tram/bus stops 4000-9000+ range. Essential for: joining stops with schedules/real-time data, creating stop-specific alerts/notifications, and maintaining consistent references across static/dynamic datasets. Integer type enables numeric sorting and range queries if needed.</td></tr>
+      <tr><td>properties.stop_name</td><td>string</td><td>Human-readable stop name as displayed to passengers on maps, signs, and information systems. Examples: "Arts-Loi" (metro station), "Montgomery" (metro/tram interchange), "Schuman" (European Quarter hub), "Gare du Midi" (main rail station). Names typically reflect geographic location (street/square names), landmarks (buildings/institutions), or historical references. Brussels bilingual reality: official stop names often French or Dutch primary with translation, though this field shows canonical name used in GTFS. Critical for: passenger-facing displays (showing recognizable location names), voice announcements, search functionality (users type "Schuman" to find stop), and wayfinding (matching digital information to physical signage at stops).</td></tr>
+      <tr><td>properties.stop_lat</td><td>number</td><td>Stop latitude coordinate in decimal degrees WGS84 (EPSG:4326). Brussels STIB stops range approximately 50.79°N to 50.91°N spanning the Brussels-Capital Region. Duplicate of geometry.coordinates[1] included in properties for convenience (avoiding nested access to geometry object). Used with stop_lon for: quick coordinate extraction without parsing geometry, legacy system integration expecting flat lat/lon properties, and CSV/table exports where nested JSON structures problematic. Precision typically 5-6 decimal places (~1 meter accuracy) sufficient for stop-level positioning.</td></tr>
+      <tr><td>properties.stop_lon</td><td>number</td><td>Stop longitude coordinate in decimal degrees WGS84 (EPSG:4326). Brussels STIB stops range approximately 4.24°E to 4.48°E covering Brussels-Capital Region east-west extent. Duplicate of geometry.coordinates[0] for convenience. Together with stop_lat provides direct coordinate access without navigating GeoJSON geometry nesting. Enables simple distance calculations, bounding box queries, and coordinate-based filtering in systems not optimized for GeoJSON geometry parsing.</td></tr>
+      <tr><td>properties.route_short_name</td><td>string</td><td>Line number/identifier as displayed to passengers—enrichment field joining route information to stop features. Examples: "1" (metro M1), "81" (tram), "95" (bus). This is the public-facing line designation passengers recognize on maps, schedules, and vehicle headsigns. Enrichment enables route-filtered queries: "show me all stops served by Line 81 tram" returns only features with route_short_name="81", without requiring separate route lookup. Critical for: line-specific map rendering (drawing Line 1 stops vs. Line 2 stops in different colors), route analysis (stop spacing along Line 81), and passenger information (this stop serves Lines 1, 2, and 5—represented by three separate features with different route_short_name values).</td></tr>
+      <tr><td>properties.direction</td><td>number</td><td>Numeric direction indicator (typically 0 or 1) corresponding to GTFS direction_id convention—0 often represents outbound/clockwise/increasing stop sequence, 1 represents inbound/counterclockwise/decreasing. Actual geographic meaning varies by route: for radial metro lines (M1 Gare de l'Ouest ↔ Stockel), direction 0 might be eastbound (toward Stockel), direction 1 westbound; for circular tram routes, 0 might be clockwise, 1 counterclockwise. Not inherently meaningful without route context—must interpret with route knowledge or trip headsigns. Used for: directional filtering (show only outbound stops for Line 81), sequence ordering (stops in direction 0 vs. direction 1 may follow different paths on branching routes), and real-time matching (vehicle on Line 1 direction 0 approaching next stop in direction 0 sequence).</td></tr>
+      <tr><td>properties.direction_id</td><td>string</td><td>Direction identifier in string form, typically same value as direction field but typed as string for systems preferring text-based direction handling. May be "0"/"1" (stringified numeric) or potentially descriptive labels ("outbound"/"inbound", "Stockel"/"Gare de l'Ouest" headsign-based directions) depending on enrichment process. Redundant with direction field in most cases but provided for compatibility with different consuming systems—some prefer numeric direction codes (direction field), others prefer string-typed identifiers (direction_id field). Use whichever fits your data model and type system.</td></tr>
+      <tr><td>properties.stop_sequence</td><td>number</td><td>Integer indicating stop's position along the route in this direction—critical enrichment field enabling ordered stop lists and route progression analysis. stop_sequence values typically start at 1 (first stop) and increment along route: Line 1 direction 0 might be 1=Gare de l'Ouest, 2=Beekkant, 3=Comte de Flandre, ... , 21=Stockel. Enables: ordered stop retrieval (query features for Line 81 direction 1, sort by stop_sequence ascending to get stop order), next-stop prediction (vehicle at sequence 5 will next serve sequence 6), progress visualization (showing vehicle position "currently at stop 8 of 15"), and distance-to-destination estimation (passenger at stop 3 traveling to stop 12 = 9 stops remaining). Essential for timeline/route displays showing vehicle progression along line with accurate stop ordering.</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Typically returns hundreds to thousands of features (varies with enrichment and snapshot).</li>
+      <li>Static structure; content may change when stop definitions are updated.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>STIB/MIVB GTFS static (e.g., <code>stops.txt</code>, <code>stop_times.txt</code>, <code>routes.txt</code>).</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Ingestion:</strong> Periodic loading of STIB GTFS snapshots.</li>
+      <li><strong>Join &amp; Enrichment:</strong> Stops joined with route/direction and sequence context to simplify downstream usage.</li>
+      <li><strong>Cleaning:</strong> Deduplication and normalization of stop identifiers and names.</li>
+      <li><strong>Serialization:</strong> Export as GeoJSON <code>FeatureCollection</code> with point geometries.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Stop maps for rider information and wayfinding.</li>
+      <li>Joining with schedules or real-time vehicle data for dashboards.</li>
+      <li>Planning and analysis of network coverage by line/direction.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3 style="border-left: 4px solid #0066CC; padding-left: 10px;">Operational Context for STIB/MIVB Enriched Stop Infrastructure Data</h3>
+    <p>
+      This endpoint delivers enriched, operationally-optimized STIB/MIVB stop infrastructure combining geographic locations with route/direction context—simplifying common transit application workflows that would otherwise require complex multi-table GTFS joins. <em>For passenger information developers and mapping applications</em>, the route-enriched structure enables immediate line-specific stop queries: filtering features by route_short_name="81" returns all stops served by Line 81 tram ordered by stop_sequence, ready for map rendering without parsing stop_times.txt schedules or trips.txt route assignments. Each physical stop appears multiple times (once per serving line-direction combination)—Arts-Loi metro station has separate features for M1-dir0, M1-dir1, M2-dir0, M2-dir1, M5-dir0, M5-dir1—enabling applications to display "Arts-Loi: Lines 1, 2, 5" by grouping features with same stop_id, or show line-specific platform guidance "M1 toward Stockel: Platform 1" using direction and headsign context. GeoJSON format ensures direct compatibility with web mapping libraries (Leaflet, Mapbox GL JS) and mobile frameworks, while coordinate duplication in both geometry.coordinates and properties (stop_lat/stop_lon) accommodates systems preferring flat property access over nested geometry parsing.
+    </p>
+    <p>
+      <em>For real-time transit operations and monitoring systems</em>, this enriched stop dataset serves as essential reference layer for GTFS-Realtime integration and schedule adherence tracking. RT vehicle position messages contain trip_id and stop_id—joining vehicle position stop_id with this stops dataset enriches "vehicle approaching stop 3011" into "M1 toward Stockel approaching Arts-Loi metro (stop 8 of 21 on route)" using stop_sequence for progress indication. The route/direction enrichment eliminates runtime joins: knowing vehicle is on Line 1 direction 0, filter stops dataset to route_short_name="1" AND direction=0, sort by stop_sequence ascending to generate ordered upcoming stops list for passenger displays and next-stop predictions. Stop_sequence enables progress visualization—showing vehicle position marker between stops 8 and 9 on timeline, calculating "3 stops until destination", and estimating remaining travel time based on typical inter-stop intervals. Cleaned stop_id integers (removing GTFS namespace prefixes) simplify database keys and API queries while maintaining compatibility with official STIB identifiers.
+    </p>
+    <p>
+      <em>For network planning analysts and accessibility researchers</em>, the enriched stop geography supports comprehensive Brussels transit coverage evaluation and multimodal connectivity analysis. Spatial queries identify underserved areas (neighborhoods >400m walking distance from any STIB stop), calculate stop density by district (stops per km² revealing service intensity), and measure multimodal integration (finding STIB stops within 200m of SNCB rail stations enabling transfer analysis). Route-level aggregations assess line-specific coverage: filtering by route_short_name groups stops by line for analyzing Line 81 tram corridor coverage vs. Line 95 bus coverage, comparing stop spacing (average distance between consecutive stops via stop_sequence ordering reveals metro <500m, tram 300-500m, bus 200-400m typical spacings), and identifying service gaps (streets without parallel transit service). The stop_name field enables linguistic analysis and wayfinding quality assessment—evaluating toponym consistency (do multiple stops share confusing similar names?), landmark alignment (stops named for nearby institutions like "Schuman" for EU Quarter, "Gare du Midi" for rail station), and translation completeness for Brussels bilingual requirements. Historical snapshots (~107 observed Aug 2024-Jan 2025) preserve stop network evolution—tracking new stops added (network extensions), relocations (street reconstruction projects), and service pattern changes (routes reassigned to different stops)—enabling longitudinal infrastructure development studies and impact evaluation of network modifications on accessibility equity across Brussels' diverse neighborhoods from European Quarter to peripheral communes.
+    </p>
+  </div>
+</div>

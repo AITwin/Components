@@ -1,0 +1,26 @@
+{
+  "source": "TEC GTFS zip",
+  "x_data_timestamp": "2025-08-14T03:45:00.521226",
+  "archive_size_bytes": 75209607,
+  "file_count": 9,
+  "sample_files": [
+    "agency.txt",
+    "calendar.txt",
+    "calendar_dates.txt",
+    "routes.txt",
+    "shapes.txt",
+    "stop_times.txt",
+    "stops.txt",
+    "trips.txt"
+  ],
+  "contains": {
+    "agency.txt": true,
+    "routes.txt": true,
+    "trips.txt": true,
+    "stop_times.txt": true,
+    "stops.txt": true,
+    "calendar.txt": true,
+    "calendar_dates.txt": true,
+    "shapes.txt": true
+  }
+}

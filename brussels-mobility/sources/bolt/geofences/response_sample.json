@@ -1,0 +1,246 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                4.31758,
+                50.8227
+              ],
+              [
+                4.315,
+                50.82025
+              ],
+              [
+                4.30954,
+                50.81913
+              ],
+              [
+                4.30872,
+                50.81566
+              ],
+              [
+                4.3076,
+                50.80988
+              ],
+              [
+                4.30467,
+                50.80542
+              ],
+              [
+                4.30663,
+                50.80325
+              ],
+              [
+                4.30994,
+                50.80665
+              ],
+              [
+                4.31608,
+                50.81421
+              ],
+              [
+                4.32015,
+                50.81937
+              ],
+              [
+                4.32071,
+                50.82189
+              ],
+              [
+                4.31758,
+                50.8227
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "No Go ",
+        "rules": [
+          {
+            "maximum_speed_kph": 0,
+            "ride_allowed": false,
+            "ride_through_allowed": false,
+            "vehicle_type_id": [
+              "7ff246ec-cbdb-5da9-b9db-dfd6c323f2cc",
+              "69cbe23c-c3b5-5baa-b217-4b17641cf00a",
+              "23e1231b-5673-5af2-adab-47bf06b2d5e1",
+              "7cc5184d-7159-5f61-97a9-e866e7218f63",
+              "0fe72a8b-1cf8-53f8-bfb1-0a02528b8b99",
+              "6810d765-42b8-51af-8374-617cc0d54f97",
+              "e133ac24-9677-56cf-b391-d9a3d95c168d",
+              "a4762863-8d98-5a7b-b2e2-383b557d43f9",
+              "4f5e8477-6bde-5857-8408-34ff71e0a40a",
+              "822e1c03-0203-5bce-8a1b-754f07cdbcd4",
+              "2212d8e5-4d82-5a7f-b6db-1e8ff381652f",
+              "0ca31efe-3c56-5b6b-bf99-d9ed72eff34f",
+              "fdbbbf7e-e074-523b-b286-bfc8b68d0e28",
+              "ff2858e0-4ef3-5521-84a9-c2ad69952aff",
+              "84fe1021-7807-515b-8de9-ab80f44c8e22",
+              "1df21533-afbb-5c16-88d3-2f5127d6c489",
+              "e6fc84c1-c8cf-58d8-b626-e64f94298850",
+              "635b05df-18f6-5850-9b22-616c7377761a",
+              "c82b505f-2960-5f48-bba6-18177f105e5c",
+              "d5bc57ea-90bc-561d-99c2-3ecc0a36814b",
+              "1ae4039e-a1f2-5f40-9a97-ef8295f42d59",
+              "4931996e-caa1-592c-9361-b9cf22ee1379",
+              "e92dc79f-736d-5eca-9ff4-1806653b6672"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                4.33619,
+                50.88122
+              ],
+              [
+                4.33605,
+                50.88036
+              ],
+              [
+                4.33652,
+                50.8794
+              ],
+              [
+                4.3395,
+                50.8793
+              ],
+              [
+                4.34007,
+                50.88131
+              ],
+              [
+                4.33811,
+                50.88133
+              ],
+              [
+                4.33619,
+                50.88122
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "No Go",
+        "rules": [
+          {
+            "maximum_speed_kph": 0,
+            "ride_allowed": false,
+            "ride_through_allowed": false,
+            "vehicle_type_id": [
+              "7ff246ec-cbdb-5da9-b9db-dfd6c323f2cc",
+              "69cbe23c-c3b5-5baa-b217-4b17641cf00a",
+              "23e1231b-5673-5af2-adab-47bf06b2d5e1",
+              "7cc5184d-7159-5f61-97a9-e866e7218f63",
+              "0fe72a8b-1cf8-53f8-bfb1-0a02528b8b99",
+              "6810d765-42b8-51af-8374-617cc0d54f97",
+              "e133ac24-9677-56cf-b391-d9a3d95c168d",
+              "a4762863-8d98-5a7b-b2e2-383b557d43f9",
+              "4f5e8477-6bde-5857-8408-34ff71e0a40a",
+              "822e1c03-0203-5bce-8a1b-754f07cdbcd4",
+              "2212d8e5-4d82-5a7f-b6db-1e8ff381652f",
+              "0ca31efe-3c56-5b6b-bf99-d9ed72eff34f",
+              "fdbbbf7e-e074-523b-b286-bfc8b68d0e28",
+              "ff2858e0-4ef3-5521-84a9-c2ad69952aff",
+              "84fe1021-7807-515b-8de9-ab80f44c8e22",
+              "1df21533-afbb-5c16-88d3-2f5127d6c489",
+              "e6fc84c1-c8cf-58d8-b626-e64f94298850",
+              "635b05df-18f6-5850-9b22-616c7377761a",
+              "c82b505f-2960-5f48-bba6-18177f105e5c",
+              "d5bc57ea-90bc-561d-99c2-3ecc0a36814b",
+              "1ae4039e-a1f2-5f40-9a97-ef8295f42d59",
+              "4931996e-caa1-592c-9361-b9cf22ee1379",
+              "e92dc79f-736d-5eca-9ff4-1806653b6672"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                4.32002,
+                50.84386
+              ],
+              [
+                4.31847,
+                50.84294
+              ],
+              [
+                4.31875,
+                50.8428
+              ],
+              [
+                4.32014,
+                50.8431
+              ],
+              [
+                4.32051,
+                50.84352
+              ],
+              [
+                4.32002,
+                50.84386
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Depot Stib",
+        "rules": [
+          {
+            "maximum_speed_kph": 0,
+            "ride_allowed": false,
+            "ride_through_allowed": false,
+            "vehicle_type_id": [
+              "a4762863-8d98-5a7b-b2e2-383b557d43f9",
+              "4f5e8477-6bde-5857-8408-34ff71e0a40a",
+              "822e1c03-0203-5bce-8a1b-754f07cdbcd4",
+              "2212d8e5-4d82-5a7f-b6db-1e8ff381652f",
+              "0ca31efe-3c56-5b6b-bf99-d9ed72eff34f",
+              "fdbbbf7e-e074-523b-b286-bfc8b68d0e28",
+              "ff2858e0-4ef3-5521-84a9-c2ad69952aff",
+              "84fe1021-7807-515b-8de9-ab80f44c8e22",
+              "1df21533-afbb-5c16-88d3-2f5127d6c489",
+              "e6fc84c1-c8cf-58d8-b626-e64f94298850",
+              "635b05df-18f6-5850-9b22-616c7377761a",
+              "c82b505f-2960-5f48-bba6-18177f105e5c",
+              "d5bc57ea-90bc-561d-99c2-3ecc0a36814b",
+              "1ae4039e-a1f2-5f40-9a97-ef8295f42d59",
+              "4931996e-caa1-592c-9361-b9cf22ee1379",
+              "e92dc79f-736d-5eca-9ff4-1806653b6672",
+              "7ff246ec-cbdb-5da9-b9db-dfd6c323f2cc",
+              "69cbe23c-c3b5-5baa-b217-4b17641cf00a",
+              "23e1231b-5673-5af2-adab-47bf06b2d5e1",
+              "7cc5184d-7159-5f61-97a9-e866e7218f63",
+              "0fe72a8b-1cf8-53f8-bfb1-0a02528b8b99",
+              "6810d765-42b8-51af-8374-617cc0d54f97",
+              "e133ac24-9677-56cf-b391-d9a3d95c168d"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

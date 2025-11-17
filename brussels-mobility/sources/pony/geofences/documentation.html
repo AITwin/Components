@@ -1,0 +1,95 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="pony-geofences">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #pony-geofences { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #pony-geofences h1, 
+    #pony-geofences h2, 
+    #pony-geofences h3 { color: #16324a; margin-top: 1.1rem; }
+    #pony-geofences code, 
+    #pony-geofences pre { background: #f6f8fa; border-radius: 6px; }
+    #pony-geofences pre { padding: 12px; overflow: auto; }
+    #pony-geofences table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #pony-geofences th, 
+    #pony-geofences td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #pony-geofences th { background: #f3f6f9; }
+    #pony-geofences .muted { color:#566; font-size: 0.95rem; }
+    #pony-geofences ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #pony-geofences .section { margin-bottom: 18px; }
+  </style>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Delivers geospatial boundaries and mobility rules that apply to Pony vehicles, including riding permissions, speed limits, station-only parking, and applicable vehicle types. Data is provided as GeoJSON polygons (or multipolygons) and may contain nested geometries. If no timestamp is specified elsewhere, the latest dataset is returned; otherwise the snapshot closest to the given Unix epoch (≤ logic) is served.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type, always <code>FeatureCollection</code>. This standard format enables direct integration with GIS platforms (QGIS, ArcGIS), web mapping libraries (Leaflet, Mapbox), and spatial analysis tools for visualizing regulatory zones, analyzing policy coverage, and validating vehicle positions against permitted operational areas. Essential for compliance monitoring, urban planning coordination, and multi-provider geofence harmonization.</td></tr>
+      <tr><td>features</td><td>array</td><td>Collection of geofence features defining operational boundaries and behavioral rules for Pony's micromobility fleet in Brussels. Each zone represents a geographic area with specific constraints (speed limits, access restrictions, parking requirements, station-based parking mandates) enforced through vehicle firmware control, in-app rider notifications, and post-trip compliance validation. Array size reflects regulatory complexity, ranging from dozens of zones (basic city center coverage) to hundreds (comprehensive neighborhood-level policies).</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td>Geometry type, either <code>Polygon</code> (single contiguous zone governed by unified rules) or <code>MultiPolygon</code> (multiple spatially disconnected areas sharing identical regulations, e.g., all public parks citywide with the same speed limit). MultiPolygon enables efficient rule management by consolidating policy-equivalent zones without duplicating rule definitions. Critical for accurately representing complex administrative boundaries and non-contiguous regulatory frameworks common in urban environments.</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>Geographic boundary coordinates as nested arrays of [longitude, latitude] pairs in WGS84 (EPSG:4326). For Polygons: first array defines the outer boundary ring (clockwise winding by GeoJSON convention), subsequent arrays define interior exclusions or holes (counterclockwise). For MultiPolygons: additional nesting level groups multiple polygon sets under shared rules. Coordinate precision typically 5-6 decimal places (~1-10m spatial accuracy), balancing boundary fidelity with data payload efficiency. Used for real-time point-in-polygon checks ("Is scooter X inside restricted zone Y?"), rendering regulatory overlays on maps, and spatial compliance auditing.</td></tr>
+      <tr><td>features[].properties.name</td><td>string</td><td>Human-readable zone identifier providing geographic or functional context (e.g., "Grand Place Pedestrian Zone", "EU Quarter Slow Zone", "Montgomery Station Parking Area"). Displayed in Pony's rider app for situational awareness ("Entering slow zone - max 15 kph ahead"), referenced in operations dashboards for zone-based analytics (trips started/ended per zone, compliance rates), and cited in regulatory reports. Names typically reflect landmarks, neighborhoods, or regulatory intent to facilitate intuitive understanding by both end users and administrators.</td></tr>
+      <tr><td>features[].properties.rules</td><td>array</td><td>Ordered collection of operational rules governing scooter behavior within this geofence. Rules may stack additively (e.g., speed limit + mandatory station parking) and can apply conditionally based on vehicle type, time of day, or operational context. Client applications enforce these through: (1) in-app warnings and contextual UI alerts, (2) vehicle firmware commands (remotely limiting motor power in speed zones, preventing trip ends outside designated stations), (3) post-trip validation with potential penalty fees for violations. Operators analyze rule compliance data to refine geofence strategies, optimize policies, and demonstrate regulatory adherence to Brussels authorities.</td></tr>
+      <tr><td>rules[].maximum_speed_kph</td><td>number</td><td>Maximum permitted speed in kilometers per hour for scooters operating within this zone. Common thresholds: 6 kph (walking pace in dense pedestrian areas like shopping streets), 15 kph (shared-use paths and parks), 20-25 kph (standard city operation on roads/bike lanes). Enforcement mechanisms include: (1) progressive in-app speed warnings as riders approach/exceed limits, (2) active vehicle firmware intervention (geofenced motor governors automatically restricting power to prevent threshold exceedance). Operators balance rider convenience with pedestrian safety, municipal compliance mandates, and liability risk mitigation in high-traffic or sensitive zones.</td></tr>
+      <tr><td>rules[].ride_allowed</td><td>boolean</td><td><code>false</code> designates a hard exclusion zone prohibiting all riding activity (e.g., indoor facilities, protected natural areas, private property, areas under temporary closure for events). <code>true</code> permits riding subject to other active constraints (speed limits, parking regulations). When false, Pony's app must prevent trip initiation within the zone, trigger immediate warnings if riders enter mid-trip, and may enforce automatic trip termination or penalty fees for sustained violations. Implements city-mandated no-go zones and protects high-pedestrian-density spaces from micromobility intrusion.</td></tr>
+      <tr><td>rules[].ride_through_allowed</td><td>boolean</td><td><code>false</code> blocks all zone traversal—riders cannot pass through even briefly, requiring route detours around the perimeter (e.g., secured corporate campuses, gated residential communities, environmentally sensitive corridors). <code>true</code> permits passage but may still restrict other actions like trip starts/ends or parking locations. This granular control separates transit rights from operational permissions, enabling nuanced urban policies: allowing commuter shortcuts through business districts while prohibiting casual tourist rentals, or permitting park passage while mandating parking at designated stations.</td></tr>
+      <tr><td>rules[].station_parking</td><td>boolean</td><td><code>true</code> mandates station-based parking—trips cannot end (and scooters cannot be legally parked) anywhere within this zone except at designated physical parking corrals or virtual station geofences. <code>false</code> allows free-floating parking anywhere in the zone. Station requirements combat sidewalk clutter, concentrate scooters at intermodal hubs (metro stations, tram stops, bus terminals), and implement Brussels' policies requiring organized parking infrastructure. Enforced via app-based trip-end validation (blocking rental completion if not at approved station) and potential post-trip penalty fees for non-compliance.</td></tr>
+      <tr><td>rules[].vehicle_type_id</td><td>array&lt;string&gt;</td><td>List of vehicle type identifiers to which this rule applies, enabling differentiated regulation within the same geographic zone. Examples: <code>["e-scooter"]</code> applies speed restriction only to scooters while exempting e-bikes (reflecting different municipal regulations), or <code>["heavy_cargo"]</code> excludes large cargo vehicles from narrow pedestrian lanes or weight-restricted infrastructure. Empty/null typically means "applies to all vehicle types". Enables compliance with type-specific Brussels ordinances (scooters often face stricter parking and speed rules than traditional bikes) and optimization of deployment strategies per vehicle category capabilities and regulatory context.</td></tr>
+    </table>
+    
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #28a745; font-size: 0.95em;">
+      <strong>Operational Context:</strong> Geofences form the spatial regulatory framework enabling Pony to operate responsibly within Brussels' urban landscape while meeting municipal requirements and coexisting with other mobility modes. 
+      <em>For Brussels authorities</em>, geofences implement policy objectives: pedestrian-priority zones with walking-speed limits, station-based parking mandates preventing sidewalk obstruction, and complete exclusions protecting sensitive areas (historical monuments, crowded public squares, temporary event closures). 
+      <em>For Pony's operations</em>, geofences enable data-driven fleet management: dynamic pricing incentives encouraging parking in underserved zones, automated rebalancing triggers when vehicles cluster in oversaturated areas, and comprehensive compliance reporting demonstrating adherence to permit conditions through violation analytics and zone-based deployment metrics. 
+      <em>For riders</em>, geofences manifest as contextual in-app guidance ("Entering slow zone - reduce to 15 kph") and physical vehicle responses (automatic speed governors activating motor power restrictions), improving pedestrian safety while maintaining operational transparency. 
+      The <code>station_parking</code> rule reflects Brussels' emphasis on organized parking infrastructure, distinguishing Pony's approach from purely free-floating models and addressing city concerns about sidewalk accessibility. 
+      Rule updates propagate through this API ensuring synchronized enforcement across Pony's rider app, vehicle firmware, analytics dashboards, city regulatory portals, and third-party mobility aggregators.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Observed dataset (historical): ~289 zones between 2024-08-22 and 2025-08-04</li>
+      <li>Typical live response: several dozen zones (coverage-dependent)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Pony GBFS <code>geofencing_zones.json</code>, periodically ingested by MobilityTwin.Brussels</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Ingestion:</strong> scheduled access to Pony’s geofence feed.</li>
+      <li><strong>Normalization:</strong> standardize to a shared geofence schema.</li>
+      <li><strong>GeoJSON conversion:</strong> convert geometries to polygons/multipolygons with metadata.</li>
+      <li><strong>Rule parsing:</strong> extract rule sets per vehicle type.</li>
+      <li><strong>Archival:</strong> timestamp snapshots for historical queries.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Compliance mapping (riding/parking restrictions)</li>
+      <li>Operational dashboards (rule enforcement &amp; behavior)</li>
+      <li>Speed regulation overlays for navigation/control</li>
+      <li>Urban policy evaluation and planning</li>
+    </ul>
+  </div>
+</div>

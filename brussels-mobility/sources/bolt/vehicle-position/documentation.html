@@ -1,0 +1,95 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="bolt-vehicle-position">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #bolt-vehicle-position { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #bolt-vehicle-position h1,
+    #bolt-vehicle-position h2,
+    #bolt-vehicle-position h3 { color: #16324a; margin-top: 1.1rem; }
+    #bolt-vehicle-position code,
+    #bolt-vehicle-position pre { background: #f6f8fa; border-radius: 6px; }
+    #bolt-vehicle-position pre { padding: 12px; overflow: auto; }
+    #bolt-vehicle-position table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #bolt-vehicle-position th,
+    #bolt-vehicle-position td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #bolt-vehicle-position th { background: #f3f6f9; }
+    #bolt-vehicle-position .muted { color:#566; font-size: 0.95rem; }
+    #bolt-vehicle-position ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #bolt-vehicle-position .section { margin-bottom: 18px; }
+  </style>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Supplies vehicle positions and operational attributes (battery/range, reservation/disable status, vehicle type, rental links) for Bolt scooters and bikes. If no timestamp is specified elsewhere, the latest snapshot is returned; otherwise the closest available snapshot ≤ the requested time is used.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type, always <code>FeatureCollection</code>. This standard format enables direct integration with mapping libraries (Leaflet, Mapbox, OpenLayers) and GIS tools for visualizing live vehicle distributions, density heatmaps, and spatial availability analyses.</td></tr>
+      <tr><td>features</td><td>array</td><td>Collection of vehicle features, each representing one physical asset (e-scooter or e-bike) available in Bolt's Brussels fleet at the snapshot time. Array length indicates current deployment size and can fluctuate based on demand, rebalancing operations, or maintenance schedules.</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Ephemeral feature identifier unique within this snapshot, used primarily for GeoJSON rendering and client-side map indexing. For persistent vehicle tracking across time and rental sessions, use <code>properties.bike_id</code> instead, which remains constant for the physical asset's lifecycle.</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td>Geometry type, always <code>Point</code>. Vehicles are represented as discrete GPS coordinates reflecting their last reported position, typically updated every few minutes while idle or in use. This enables real-time map overlays showing "where to find a ride" for users and "where assets are clustered" for operators planning rebalancing.</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>Geographic position as [longitude, latitude] in decimal degrees using the WGS84 datum (EPSG:4326). Longitude ranges approximately 4.24–4.48°E and latitude 50.79–50.91°N for Brussels coverage. Position accuracy reflects the vehicle's onboard GPS quality and may be slightly obfuscated (rounded to ~10m precision) by the provider for privacy or competitive reasons. Critical for proximity searches, geofence compliance checks, and availability mapping.</td></tr>
+      <tr><td>features[].properties.bike_id</td><td>string</td><td>Provider's persistent, globally unique identifier for this physical vehicle (despite the historical "bike" naming, applies to both e-scooters and e-bikes). This ID remains constant across rental sessions, battery swaps, maintenance events, and redeployments, enabling longitudinal tracking of asset utilization, maintenance history, and performance analytics. Essential for joining with trip records, service logs, or geofence compliance audits to understand lifecycle behavior and operational efficiency.</td></tr>
+      <tr><td>features[].properties.vehicle_type_id</td><td>string</td><td>Classification key referencing a specific vehicle model, form factor, or hardware generation (e.g., "scooter_v3", "bike_cargo"). Used to distinguish capabilities (max speed, range, cargo capacity) and apply type-specific business rules (pricing tiers, geofence restrictions, parking regulations). Operators rely on this for fleet composition analysis and strategic deployment planning (e.g., deploying cargo bikes near commercial districts).</td></tr>
+      <tr><td>features[].properties.current_range_meters</td><td>number</td><td>Estimated remaining travel distance in meters before battery depletion or service intervention required, calculated from current battery state-of-charge and average consumption patterns for urban riding conditions (hills, stops, rider weight). Typically ranges 0–40,000m. Riders rely on this to assess trip feasibility ("Can I reach my destination?"), while operators use it to prioritize vehicles for battery swapping or recharging to maximize fleet availability and prevent mid-trip failures.</td></tr>
+      <tr><td>features[].properties.is_disabled</td><td>boolean</td><td><code>true</code> when the vehicle is unavailable for public rental due to operational, safety, or regulatory reasons: undergoing maintenance, damaged and awaiting repair, low battery below operational threshold, parked in a restricted zone (no-parking area), or administratively locked. Disabled vehicles remain visible in provider systems for rebalancing crews but hidden from customer-facing apps. Critical for filtering map displays and understanding effective (rentable) vs. nominal (total) fleet size.</td></tr>
+      <tr><td>features[].properties.is_reserved</td><td>boolean</td><td><code>true</code> when a rider has reserved this vehicle (typically via the provider's app) but has not yet started the rental trip. During reservation (usually 10–15 minute hold), the vehicle is locked to that user and excluded from availability for others. Useful for real-time availability calculations and understanding demand patterns (high reservation rates indicate supply constraints or popular areas).</td></tr>
+      <tr><td>features[].properties.pricing_plan_id</td><td>string</td><td>Identifier of the commercial tariff structure currently applied to this vehicle (e.g., "standard", "student_discount", "peak_pricing"). Pricing plans define unlock fees, per-minute rates, pause fees, and any time-of-day or zone-based surcharges. Enables dynamic pricing displays in aggregator apps, cost estimation tools, and revenue analytics. Operators adjust pricing plans to manage demand (surge pricing during peak hours) or incentivize off-peak usage.</td></tr>
+      <tr><td>features[].properties.rental_uris.android</td><td>string</td><td>Deep link URI that opens the Bolt Android app directly to this vehicle's rental flow, pre-selecting the asset and enabling one-tap unlock. Format typically <code>bolt://vehicle/{bike_id}</code> or similar app-specific scheme. Enables seamless user handoff from third-party map services, multimodal planners, or QR code scans, reducing friction in the rental initiation process and improving conversion rates from "browsing" to "riding".</td></tr>
+      <tr><td>features[].properties.rental_uris.ios</td><td>string</td><td>Deep link URI that opens the Bolt iOS app directly to this vehicle's rental flow, pre-selecting the asset and enabling one-tap unlock. Mirrors Android functionality for iPhone users. Critical for omnichannel integrations (Google Maps, Apple Maps, mobility-as-a-service platforms) where users discover available vehicles outside the native Bolt app and expect frictionless transitions to complete the rental.</td></tr>
+    </table>
+    
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #007bff; font-size: 0.95em;">
+      <strong>Operational Context:</strong> This live vehicle position feed serves multiple use cases across the mobility ecosystem. 
+      <em>For end users and trip planners</em>, it enables real-time "where's my nearest ride?" queries, multimodal journey planning (last-mile connections to transit hubs), and availability heatmaps showing service coverage gaps. 
+      <em>For Bolt's operations teams</em>, the data powers rebalancing algorithms (identifying oversupply/undersupply zones), predictive maintenance scheduling (flagging assets with low range or frequent disablement), and regulatory compliance reporting (demonstrating deployment density and parking compliance). 
+      <em>For city mobility analysts</em>, aggregating snapshots over time reveals usage patterns, demand hotspots, seasonal variations, and the effectiveness of micromobility in reducing car dependency. 
+      The combination of persistent <code>bike_id</code> tracking and ephemeral position snapshots enables both real-time operational dashboards and longitudinal asset performance studies.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Observed dataset (historical): ~79,675 entries between 2024-08-21 and 2025-08-04</li>
+      <li>Typical live responses: hundreds to thousands of vehicles depending on demand/time</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Bolt GBFS <code>free_bike_status.json</code>, integrated via MobilityTwin ingestion</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Fetch &amp; parse:</strong> pull provider snapshots.</li>
+      <li><strong>GeoJSON conversion:</strong> convert positions to <code>Point</code> features.</li>
+      <li><strong>Normalization:</strong> align properties to MobilityTwin schema.</li>
+      <li><strong>Archival:</strong> timestamp snapshots for historical analytics and replay.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Fleet mapping (real-time vehicle locations)</li>
+      <li>Operational insights (availability &amp; movement trends)</li>
+      <li>User experiences (nearby vehicles in apps/dashboards)</li>
+      <li>Infrastructure planning (distribution &amp; usage)</li>
+    </ul>
+  </div>
+</div>

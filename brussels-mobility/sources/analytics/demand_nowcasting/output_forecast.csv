@@ -1,0 +1,4 @@
+cell_id,lat,lon,available_vehicles,predicted_demand_30m,projected_remaining,shortage_if_any
+477000_6598000,50.87,4.29,1,0.0,1.0,0
+480000_6586750,50.81,4.31,1,0.0,1.0,0
+493250_6588750,50.82,4.43,1,0.0,1.0,0

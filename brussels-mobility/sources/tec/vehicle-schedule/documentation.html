@@ -1,0 +1,147 @@
+<!-- Embedded fragment: TEC — Vehicle Schedule -->
+<div id="tec-vehicle-schedule">
+  <style>
+    /* Scoped styles */
+    #tec-vehicle-schedule { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #tec-vehicle-schedule h1,
+    #tec-vehicle-schedule h2,
+    #tec-vehicle-schedule h3 { color: #16324a; margin-top: 1.1rem; }
+    #tec-vehicle-schedule code,
+    #tec-vehicle-schedule pre { background: #f6f8fa; border-radius: 6px; }
+    #tec-vehicle-schedule pre { padding: 12px; overflow: auto; }
+    #tec-vehicle-schedule table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #tec-vehicle-schedule th,
+    #tec-vehicle-schedule td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #tec-vehicle-schedule th { background: #f3f6f9; }
+    #tec-vehicle-schedule .muted { color:#566; font-size: 0.95rem; }
+    #tec-vehicle-schedule ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #tec-vehicle-schedule .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>TEC — Vehicle Schedule</h1>
+  <pre><code>GET /tec/vehicle-schedule</code></pre>
+  <p class="muted">
+    Provides scheduled stop information for TEC services within a given time window.  
+    The response is returned as GeoJSON, where each feature represents a stop with an array of scheduled events.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Returns scheduled stop events for TEC (Wallonia) vehicles between <code>start_timestamp</code> and <code>end_timestamp</code>.
+      Data originates from TEC’s GTFS static feed (<code>stops.txt</code>, <code>trips.txt</code>, <code>stop_times.txt</code>) and is served as a GeoJSON
+      <code>FeatureCollection</code>, one feature per stop with its matching schedule entries.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication / Response Schema / Other Status Codes -->
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+      <tr>
+        <td><code>start_timestamp</code></td>
+        <td>integer</td>
+        <td>Yes</td>
+        <td>Start of the time window (inclusive, seconds since epoch).</td>
+      </tr>
+      <tr>
+        <td><code>end_timestamp</code></td>
+        <td>integer</td>
+        <td>Yes</td>
+        <td>End of the time window (inclusive, seconds since epoch). Must be ≥ <code>start_timestamp</code>.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <p>The response is a GeoJSON <code>FeatureCollection</code> representing stop-level schedules.</p>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>Always <code>FeatureCollection</code></td></tr>
+      <tr><td>features</td><td>array</td><td>List of stop features</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>Always <code>Feature</code></td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON Point geometry (stop location)</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Stop metadata and schedule details</td></tr>
+      <tr><td>properties.stop_id</td><td>string</td><td>Stop ID (GTFS)</td></tr>
+      <tr><td>properties.stop_name</td><td>string</td><td>Stop name</td></tr>
+      <tr><td>properties.stop_lat</td><td>number</td><td>Latitude</td></tr>
+      <tr><td>properties.stop_lon</td><td>number</td><td>Longitude</td></tr>
+      <tr><td>properties.schedule</td><td>array</td><td>List of scheduled events at this stop</td></tr>
+      <tr><td>schedule[].arrival_time</td><td>string</td><td>Scheduled arrival time (<code>HH:MM:SS</code>)</td></tr>
+      <tr><td>schedule[].departure_time</td><td>string</td><td>Scheduled departure time (<code>HH:MM:SS</code>)</td></tr>
+      <tr><td>schedule[].route_id</td><td>string</td><td>Route identifier</td></tr>
+      <tr><td>schedule[].trip_id</td><td>string</td><td>Trip ID (GTFS)</td></tr>
+      <tr><td>schedule[].trip_headsign</td><td>string</td><td>Trip destination</td></tr>
+      <tr><td>schedule[].trip_short_name</td><td>string</td><td>Trip short code</td></tr>
+    </table>
+
+    <pre><code>{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [number, number]
+      },
+      "properties": {
+        "stop_id": "string",
+        "stop_name": "string",
+        "stop_lat": number,
+        "stop_lon": number,
+        "schedule": [
+          {
+            "arrival_time": "HH:MM:SS",
+            "departure_time": "HH:MM:SS",
+            "route_id": "string",
+            "trip_id": "string",
+            "trip_headsign": "string",
+            "trip_short_name": "string"
+          }
+        ]
+      }
+    }
+  ]
+}</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>1-hour window: typically tens to several hundred stops, depending on network activity.</li>
+      <li>Peak hours may yield larger outputs.</li>
+      <li>Each stop may include multiple <code>schedule[]</code> entries.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <p><strong>GTFS Static (TEC):</strong> stops, routes, trips, and stop_times tables.</p>
+
+    <h3>Pipeline</h3>
+    <ol>
+      <li><strong>Snapshot selection:</strong> select the GTFS snapshot applicable to the requested interval.</li>
+      <li><strong>Filtering:</strong> extract trips whose stop times overlap the window.</li>
+      <li><strong>Aggregation:</strong> group by stop and assemble <code>schedule[]</code> events.</li>
+      <li><strong>Output:</strong> serve as GeoJSON <code>FeatureCollection</code> of stop points with schedule arrays.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Generating stop-level timetables for a selected interval.</li>
+      <li>Frequency and headway analysis for transit planning.</li>
+      <li>Integrating schedule data with real-time feeds for monitoring.</li>
+    </ul>
+  </div>
+
+  <div class="section" style="border-left: 4px solid #9B59B6; padding: 15px; margin: 20px 0; background-color: #f8f9fa;">
+    <h3>Operational Context for Wallonia Regional Transit Ecosystem</h3>
+    <p>The TEC Vehicle Schedule endpoint provides stop-centric GeoJSON timetables for Wallonia's regional bus network—each bus stop appears as Point feature with schedule[] array listing all arrivals/departures within requested timeframe, enabling <em>rural transit coordinators</em> to monitor service coverage across dispersed Walloon communities, <em>passenger displays</em> at regional hubs to show comprehensive departure boards, and <em>mobility equity analysts</em> to quantify transit accessibility for car-free households in Wallonia. The stop aggregation simplifies common queries: "which buses serve Namur central station 07:00-09:00 weekday morning?" returns single feature with schedule showing TEC urban routes, regional interurban connections, and school services—critical for <em>commuters</em> at multi-modal transfer points where TEC buses connect with SNCB trains. For <em>service planners</em>, comparing schedule densities across Wallonia quantifies urban-rural service disparity: Liège city stops may show 20-30 buses per hour (frequent urban service), Ardennes village stops show 2-4 buses daily (minimal coverage often school-synchronized)—informing regional subsidy allocation and social equity policies. The trip_headsign and route_id fields enable service filtering: <em>urban applications</em> display high-frequency city routes for Liège/Charleroi/Mons residents, <em>regional planners</em> highlight interurban lines connecting provincial capitals, <em>accessibility tools</em> show all options including infrequent rural services ensuring no populations excluded. Wallonia's French-language context appears in stop_name fields (Gare de Namur, Place de Liège, Hôtel de Ville de Charleroi)—<em>user interfaces</em> must support French labels for Walloon resident comprehension while enabling multilingual Brussels transfers. The GeoJSON spatial format enables <em>geographic coverage analysis</em>: mapping Wallonia color-coded by buses-per-hour reveals corridor-centric pattern (dense along valleys where population concentrates, sparse in mountainous Ardennes), identifying mobility deserts for policy intervention. <em>Intermodal coordination</em> uses TEC schedules at SNCB railway stations: are bus arrivals timed to meet incoming trains (enabling car-free rural-to-urban commutes), or do mismatched schedules force long transfer waits reducing system attractiveness?</p>
+  </div>
+</div>

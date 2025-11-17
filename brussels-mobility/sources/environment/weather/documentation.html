@@ -1,0 +1,103 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="environment-weather">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #environment-weather { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #environment-weather h1,
+    #environment-weather h2,
+    #environment-weather h3 { color: #16324a; margin-top: 1.1rem; }
+    #environment-weather code,
+    #environment-weather pre { background: #f6f8fa; border-radius: 6px; }
+    #environment-weather pre { padding: 12px; overflow: auto; }
+    #environment-weather table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #environment-weather th,
+    #environment-weather td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #environment-weather th { background: #f3f6f9; }
+    #environment-weather .muted { color:#566; font-size: 0.95rem; }
+    #environment-weather ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #environment-weather .section { margin-bottom: 18px; }
+  </style>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Provides current weather conditions sourced from official meteorological providers and harmonised by the MobilityTwin.Brussels platform. If no timestamp is specified elsewhere, the latest snapshot is returned; when a timestamp is provided, the closest earlier (≤) snapshot is served. Units follow SI conventions unless noted (e.g., °C, hPa, m/s).
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes) -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>coord.lat</td><td>number</td><td>Latitude of the weather observation location in decimal degrees (WGS84). For Brussels metropolitan area: approximately 50.79–50.91°N. Enables geospatial correlation of weather conditions with mobility data—joining weather observations with transit routes, micromobility deployment zones, or traffic monitoring locations to analyze weather impacts on travel behavior, service performance, and modal choices.</td></tr>
+      <tr><td>coord.lon</td><td>number</td><td>Longitude of the weather observation location in decimal degrees (WGS84). For Brussels: approximately 4.24–4.48°E. Paired with latitude, enables mapping weather station locations, spatial interpolation of conditions across the city (urban microclimates can vary significantly), and proximity-based joins with mobility datasets for localized weather-transport correlation studies.</td></tr>
+      <tr><td>dt</td><td>number</td><td>Unix timestamp (seconds since epoch, 1970-01-01 00:00:00 UTC) when weather conditions were measured. Critical for temporal alignment with mobility snapshots—comparing vehicle speeds, ridership levels, or micromobility usage during specific weather events. The <code>X-Data-Timestamp</code> response header provides consistent temporal reference for cross-dataset synchronization. Enables time-series analysis of weather-mobility relationships: demand suppression during rain, speed reductions during snow, or battery performance degradation in extreme cold.</td></tr>
+      <tr><td>timezone</td><td>number</td><td>Local timezone offset from UTC in seconds. For Brussels: typically +3600 (UTC+1 standard time) or +7200 (UTC+2 daylight saving time, late March to late October). Essential for converting UTC timestamps to local time for human-readable displays ("weather at 8:30 AM Brussels time"), aligning with local mobility patterns (rush hours occur at local clock times), and accounting for sunrise/sunset times in local context. Enables proper interpretation of diurnal patterns in weather-mobility interactions.</td></tr>
+      <tr><td>name</td><td>string</td><td>Human-readable location identifier, typically "Brussels" or specific district/station names. Displayed in weather dashboards, mobility reports, and user-facing applications for geographic context. Helps users quickly understand which Brussels area the observation represents—important as weather can vary across the metropolitan region (urban heat island effects, localized precipitation patterns).</td></tr>
+      <tr><td>id</td><td>number</td><td>Provider-specific weather station or location identifier from the source weather API (e.g., OpenWeatherMap city ID). May be absent or null depending on data source. When available, enables tracking specific weather stations over time, understanding observation network coverage, and joining with provider-specific metadata (station elevation, instrumentation type, data quality flags). Useful for diagnosing data quality issues or understanding spatial coverage gaps.</td></tr>
+      <tr><td>weather[].main</td><td>string</td><td>Top-level weather condition category (e.g., "Rain", "Snow", "Clouds", "Clear", "Thunderstorm", "Fog"). Provides quick, coarse-grained weather classification for high-level filtering and visualization (color-coded weather icons, categorical analyses). Used for: mobility app weather badges ("rainy conditions, consider alternative transport"), automated service alerts ("snow conditions may affect schedules"), and statistical analyses of mode choice under different weather regimes. Simpler than detailed description but sufficient for many operational decisions.</td></tr>
+      <tr><td>weather[].description</td><td>string</td><td>Detailed human-readable weather phrase (e.g., "light rain", "heavy intensity rain", "broken clouds", "overcast clouds"). More nuanced than main category, providing severity gradations essential for operational decision-making. "Light rain" might not trigger service changes while "heavy intensity rain" could justify speed restrictions, rebalancing postponements for micromobility, or passenger communication about potential delays. Displayed directly in user-facing apps and operational dashboards for contextual awareness.</td></tr>
+      <tr><td>main.temp</td><td>number</td><td>Measured air temperature in degrees Celsius. Typical Brussels range: -5°C to 30°C, with extremes occasionally beyond these bounds. Temperature profoundly influences mobility: below 0°C suppresses micromobility demand and degrades battery performance; above 25°C increases active mode usage but can trigger heat-related service advisories. Essential for: battery range corrections in e-scooter/e-bike systems (cold reduces capacity by 20-40%), passenger comfort predictions affecting transit ridership, infrastructure maintenance planning (rail expansion/contraction, road surface performance), and mode choice modeling (weather elasticity of demand).</td></tr>
+      <tr><td>main.feels_like</td><td>number</td><td>Apparent temperature in degrees Celsius accounting for wind chill (cold conditions) and heat index (hot humid conditions). Often better predictor of human behavioral response than actual temperature—10°C with strong wind feels much colder than calm 10°C, affecting mode choice and trip decisions. Used for: rider comfort assessments in micromobility demand models, outdoor waiting time tolerance at transit stops, and personalized travel recommendations ("feels-like temperature below 5°C, consider indoor transport options"). Critical for understanding psychological barriers to active mobility beyond pure thermometer readings.</td></tr>
+      <tr><td>main.temp_min</td><td>number</td><td>Minimum temperature in degrees Celsius within the recent calculation window (typically past hour or forecast period). Useful for understanding temperature variability and recent trends. If significantly below current temp, indicates warming trend that might increase afternoon micromobility demand. Used in operational planning: overnight minimum temperatures determine morning ice risk requiring road salt deployment, affecting bus/tram schedules and micromobility vehicle operability (frozen brakes, battery cold-soaking).</td></tr>
+      <tr><td>main.temp_max</td><td>number</td><td>Maximum temperature in degrees Celsius within the calculation window. Indicates peak thermal stress conditions. If significantly above current temp, suggests cooling trend. Used for: heat stress planning (afternoon peak transit demand when outdoor activity becomes uncomfortable), pavement temperature estimation affecting road surface conditions, and understanding diurnal temperature range impacting daily mobility patterns (morning commute cold, evening return warm).</td></tr>
+      <tr><td>main.pressure</td><td>number</td><td>Atmospheric pressure at sea level in hectoPascals (hPa). Normal range ~980-1040 hPa. Rapid pressure drops (>5 hPa in 3 hours) often precede storms, providing early warning for service disruptions. High pressure typically correlates with stable, clear conditions favoring all mobility modes. Low pressure associates with unsettled weather, precipitation, wind—conditions suppressing micromobility and potentially degrading transit performance. Used in weather forecasting for operational planning and understanding broad meteorological contexts beyond immediate conditions.</td></tr>
+      <tr><td>main.humidity</td><td>number</td><td>Relative humidity as percentage (0-100%). High humidity (>80%) reduces visibility, causes fog formation affecting safety and speeds, and decreases rider comfort (heat index impact). Very low humidity (<20%) can indicate dry, clear conditions favorable for all modes. Combined with temperature: high humidity + high temp creates oppressive conditions suppressing active mobility; high humidity + low temp creates damp cold reducing outdoor comfort. Used for: visibility forecasting, passenger comfort indexing, and understanding precipitation potential (high humidity precedes rain).</td></tr>
+      <tr><td>wind.speed</td><td>number</td><td>Wind speed in meters per second (m/s). Convert to km/h by multiplying by 3.6. Typical Brussels: 1-5 m/s light winds, 6-10 m/s moderate, >11 m/s strong winds affecting operations. Strong winds (>8 m/s / 29 km/h) can: reduce micromobility safety (scooter stability), trigger tram service restrictions on exposed segments (overhead wire safety), affect bus fuel efficiency, and decrease pedestrian comfort. Very strong winds (>15 m/s / 54 km/h) may halt outdoor micromobility operations entirely. Critical for operational safety decisions and understanding headwind/tailwind effects on electric vehicle range and travel times.</td></tr>
+      <tr><td>wind.deg</td><td>number</td><td>Wind direction in meteorological degrees (0-360°), where 0°/360° = North, 90° = East, 180° = South, 270° = West. Combined with route orientations, determines headwind vs. tailwind conditions affecting vehicle performance and travel times. For example, strong westerly winds (270°) create headwinds for east-west tram routes heading east, potentially requiring speed reductions or causing delays. Used in: detailed trajectory analysis (understanding speed variations along routes), e-bike/scooter range calculations (headwinds increase energy consumption), and infrastructure planning (wind protection needs at exposed stops).</td></tr>
+      <tr><td>clouds.all</td><td>number</td><td>Cloud cover as percentage of sky obscured (0% = clear, 100% = overcast). Correlates with: daylight intensity (heavy cloud reduces visibility requiring earlier/stronger vehicle/street lighting), solar panel efficiency for electric vehicles with solar charging, and passenger perceptions of weather quality (overcast skies deter outdoor activity even without rain). Used for: visibility forecasting (combined with fog/precipitation for safety assessments), solar energy availability modeling for infrastructure, and understanding psychological weather impacts on travel behavior (grey overcast days suppress discretionary trips).</td></tr>
+      <tr><td>visibility</td><td>number</td><td>Horizontal visibility distance in meters. Normal conditions: 10,000m (10km) or more. Reduced visibility (<1000m = fog, <400m = dense fog) triggers: transit speed restrictions for safety, enhanced lighting requirements, potential service delays or cancellations in extreme cases, and driver/operator warnings. Critical for: operational safety protocols (automated alerts when visibility drops below thresholds), understanding accident risk (poor visibility correlates with collisions), and justifying speed reductions or service modifications during fog events. Visibility <200m may halt certain transit services entirely.</td></tr>
+      <tr><td>sys.country</td><td>string</td><td>ISO 3166-1 alpha-2 country code for the observation region, typically "BE" for Belgium/Brussels. Provides geographic context for international datasets, enables country-level aggregations in multi-city mobility analyses, and serves as metadata for data quality validation (ensuring observations are from expected regions). Less critical for Brussels-focused applications but essential for platforms aggregating mobility-weather data across multiple countries or regions.</td></tr>
+      <tr><td>sys.sunrise</td><td>number</td><td>Unix timestamp (seconds since epoch) for sunrise at this location on the observation date. Combined with timezone, converts to local sunrise time for operational planning. Dawn/sunrise timing affects: transit lighting schedules (vehicle interior/exterior lights, station illumination), micromobility deployment schedules (operators often deploy vehicles after sunrise for safety/visibility), and passenger travel patterns (commute times adjust seasonally with daylight). Brussels sunrise varies dramatically: ~8:45 AM in winter to ~5:30 AM in summer, profoundly impacting morning peak mobility patterns.</td></tr>
+      <tr><td>sys.sunset</td><td>number</td><td>Unix timestamp (seconds since epoch) for sunset at this location. Critical for: evening micromobility operations (many providers reduce service or increase rebalancing after sunset due to safety concerns, reduced demand, and vandalism risk), transit lighting transitions (station/vehicle illumination timing), and understanding evening peak timing (commuters prefer departing before dark in winter). Brussels sunset ranges ~4:30 PM winter to ~9:45 PM summer. Dusk/darkness onset significantly suppresses micromobility demand while increasing transit ridership (safety, comfort, weather protection preferences).</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Observed dataset (historical): ~87,710 snapshots between 2024-08-21 and 2025-08-04</li>
+      <li>Typical live response: a single JSON object (~1–3 KB)</li>
+    </ul>
+    
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #4caf50; font-size: 0.95em;">
+      <strong>Operational Context:</strong> This weather feed provides essential environmental context for understanding and predicting Brussels mobility patterns, enabling weather-aware operations, demand forecasting, and service adaptations across all transport modes. 
+      <em>For micromobility operators</em>, weather data drives critical decisions: deployment reductions during rain/snow (lower demand, higher vehicle damage risk), battery management in temperature extremes (cold reduces range requiring more frequent swaps), rebalancing postponements during high winds (rider safety concerns), and dynamic pricing adjustments (surge pricing during poor weather when alternatives are limited, discounts during ideal conditions to encourage usage). Temperature and precipitation are primary demand predictors—rain can suppress e-scooter usage by 60-80% while temperatures below 5°C reduce it by 40-60%. 
+      <em>For transit operations</em>, weather conditions inform: speed restrictions during poor visibility or high winds (especially tram overhead wire safety), service frequency adjustments anticipating weather-driven ridership changes (rain increases bus/metro demand as car users and micromobility riders switch modes), resource allocation for winter operations (additional vehicles, de-icing equipment deployment), and passenger communication ("delays expected due to fog conditions"). Schedule adherence correlates strongly with weather—snow, rain, and wind cause measurable performance degradation requiring proactive management. 
+      <em>For trip planning and mobility apps</em>, real-time weather enables personalized recommendations: "heavy rain forecast, consider metro instead of bike-share", multimodal routing optimizations accounting for weather comfort preferences, and accurate arrival time predictions incorporating weather-induced delays. Feels-like temperature and precipitation intensity are better behavioral predictors than raw temperature/rain binary—users tolerate light drizzle but avoid moderate rain, accept 5°C if calm but avoid it with strong winds. 
+      <em>For researchers and urban mobility analysts</em>, weather data enables: demand elasticity studies (quantifying weather impacts on mode choice, trip generation, route selection), service performance attribution (distinguishing weather-caused delays from operational failures), seasonal pattern analysis, and climate adaptation planning (understanding how climate change might affect future mobility patterns as extreme weather becomes more frequent). 
+      The high-frequency snapshot collection (~87K observations over ~1 year ≈ ~4 per hour) enables fine-grained temporal correlation with mobility datasets collected at similar intervals, supporting both real-time operational use and historical pattern discovery.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Official meteorological providers aggregated by MobilityTwin.Brussels</li>
+    </ul>
+
+  <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Ingestion:</strong> fetch current conditions at regular intervals.</li>
+      <li><strong>Normalization:</strong> harmonise fields/units into a stable schema.</li>
+      <li><strong>Archival:</strong> timestamp and store snapshots for temporal queries.</li>
+      <li><strong>Serving:</strong> return latest or nearest ≤ snapshot for requests with a time reference.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Urban mobility dashboards: contextualise delays or transport choices.</li>
+      <li>Environment-aware routing: adapt bike/e-scooter availability to precipitation/visibility.</li>
+      <li>Analytics: correlate modal usage and performance with weather conditions.</li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,103 @@
+<!-- Embedded fragment: STIB/MIVB — Speed -->
+<div id="stib-speed">
+  <style>
+    /* Scoped styles */
+    #stib-speed { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #stib-speed h1,
+    #stib-speed h2,
+    #stib-speed h3 { color: #16324a; margin-top: 1.1rem; }
+    #stib-speed code,
+    #stib-speed pre { background: #f6f8fa; border-radius: 6px; }
+    #stib-speed pre { padding: 12px; overflow: auto; }
+    #stib-speed table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #stib-speed th,
+    #stib-speed td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #stib-speed th { background: #f3f6f9; }
+    #stib-speed .muted { color:#566; font-size: 0.95rem; }
+    #stib-speed ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #stib-speed .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>STIB/MIVB — Speed</h1>
+  <pre><code>GET /stib/speed</code></pre>
+  <p class="muted">
+    Returns the average speed of STIB/MIVB vehicles over 20-second intervals, per line, stop, and direction.
+    Useful for analyzing network performance, congestion, and transit reliability.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      The STIB/MIVB Speed API provides aggregated vehicle speeds sampled every 20 seconds.  
+      Each record represents the average travel speed at a specific stop (<code>pointId</code>), for a given line and direction.  
+      Data supports operational analytics, performance monitoring, and live dashboards.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema -->
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+      <tr>
+        <td><code>timestamp</code></td>
+        <td>integer</td>
+        <td>Unix timestamp (seconds since epoch).  
+            If omitted, returns the latest 20-second snapshot; otherwise, returns the closest snapshot ≤ the given timestamp.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>directionId</td><td>string</td><td>Direction identifier distinguishing the two opposite travel directions for this line (e.g., "0" for outbound/northbound, "1" for inbound/southbound). Direction semantics are line-specific and map to GTFS-Static trip direction_id. Critical for separating speed measurements by travel direction, as congestion, traffic signals, and road conditions often differ between directions on the same corridor. Enables directional performance analysis ("southbound tram 81 is 15% slower than northbound during PM peak due to one-way street configuration").</td></tr>
+      <tr><td>lineId</td><td>string</td><td>STIB/MIVB transit line identifier matching official line numbering (e.g., "81" for tram, "71" for bus, "1" for metro). This is the primary line designator visible to passengers on vehicles, stops, maps, and schedules. Essential for line-level speed analytics ("average speed on bus line 38"), performance comparisons across lines (identifying slow-performing routes needing infrastructure improvements), and correlating speed data with service schedules, passenger loads, and infrastructure characteristics. Can be joined with GTFS-Static routes.txt for detailed line metadata (mode, color, full name).</td></tr>
+      <tr><td>pointId</td><td>string</td><td>Unique identifier for the stop or measurement point where this speed observation was recorded. References STIB's stop infrastructure (tram/bus stops, metro stations) and can be cross-referenced with GTFS-Static stops.txt or STIB stops API for geographic coordinates, stop names, accessibility features, and served lines. The measurement represents average speed as vehicles approach, pass through, or depart from this point. Critical for spatial speed analysis (identifying bottleneck locations, slow zones near intersections), stop-level performance monitoring, and correlating speeds with local conditions (traffic signals, pedestrian crossings, stop dwell times, road geometry).</td></tr>
+      <tr><td>speed</td><td>number</td><td>Average vehicle speed in kilometers per hour, calculated over a 20-second sampling window for all vehicles serving this line-direction combination passing the specified point. Typical ranges: 5-15 km/h (dense urban areas with frequent stops, traffic congestion), 20-35 km/h (arterial routes with signal priority), 40-60 km/h (metro, express buses on highways). This aggregate metric smooths individual vehicle variations, revealing systemic performance patterns. Lower speeds indicate congestion, frequent stops, or infrastructure constraints; higher speeds suggest efficient operation, signal coordination, or grade-separated infrastructure (metro tunnels). Used for: (1) real-time traffic monitoring dashboards identifying current congestion, (2) historical performance trending (month-over-month speed degradation indicating worsening traffic), (3) schedule adherence validation (actual vs. planned speeds), (4) infrastructure investment prioritization (targeting slow segments for dedicated lanes, signal priority upgrades). Speed anomalies (sudden drops to near-zero) may indicate service disruptions, accidents, or special events.</td></tr>
+    </table>
+    <pre><code>[
+  {
+    "directionId": "string",
+    "lineId": "string",
+    "pointId": "string",
+    "speed": 0
+  }
+]</code></pre>
+    
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #00a4e0; font-size: 0.95em;">
+      <strong>Operational Context:</strong> This speed feed provides high-frequency (20-second intervals) performance telemetry for STIB/MIVB's entire Brussels transit network, enabling real-time service quality monitoring and historical trend analysis. 
+      <em>For transit operations</em>, it powers performance dashboards identifying current slow zones (signaling congestion, incidents, or service disruptions), monitors schedule adherence (comparing actual vs. planned speeds along routes), and triggers automatic alerts when speeds drop below operational thresholds (indicating blockages or failures). 
+      <em>For service planning and infrastructure teams</em>, longitudinal speed analysis reveals chronic bottlenecks requiring intervention: segments needing dedicated transit lanes, intersections requiring signal priority systems, or stop locations causing excessive dwell time delays. Speed comparisons across similar route types (e.g., all north-south tram corridors) identify underperforming infrastructure for capital investment prioritization. 
+      <em>For passengers and mobility apps</em>, real-time speed data enhances arrival predictions—slower-than-normal speeds indicate delays affecting downstream stops, enabling proactive trip replanning. 
+      <em>For urban mobility researchers</em>, the data enables studies of transit-traffic interaction (how car congestion impacts bus speeds), evaluation of infrastructure interventions (before/after analysis of new bus lanes), and understanding temporal patterns (rush hour vs. off-peak performance, weekday vs. weekend speed profiles). 
+      The 20-second granularity balances real-time responsiveness with data volume, capturing dynamic conditions while remaining computationally manageable for large-scale analytics across hundreds of stops and dozens of lines simultaneously.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Data Information</h2>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Start date</td><td>2024-08-21 14:54:58</td></tr>
+      <tr><td>End date</td><td>2025-08-23 18:18:09</td></tr>
+      <tr><td>Count</td><td>1,510,611</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Identifying slow segments or congestion patterns in the STIB/MIVB network</li>
+      <li>Building real-time or historical speed heatmaps</li>
+      <li>Performance benchmarking between different time periods</li>
+      <li>Transit simulation and travel time estimation models</li>
+    </ul>
+  </div>
+</div>

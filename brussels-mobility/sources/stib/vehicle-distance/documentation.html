@@ -1,0 +1,121 @@
+<!-- Embedded fragment: STIB/MIVB — Vehicle Distance -->
+<div id="stib-vehicle-distance">
+  <style>
+    /* Scoped styles */
+    #stib-vehicle-distance { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #stib-vehicle-distance h1,
+    #stib-vehicle-distance h2,
+    #stib-vehicle-distance h3 { color: #16324a; margin-top: 1.1rem; }
+    #stib-vehicle-distance code,
+    #stib-vehicle-distance pre { background: #f6f8fa; border-radius: 6px; }
+    #stib-vehicle-distance pre { padding: 12px; overflow: auto; }
+    #stib-vehicle-distance table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #stib-vehicle-distance th,
+    #stib-vehicle-distance td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #stib-vehicle-distance th { background: #f3f6f9; }
+    #stib-vehicle-distance .muted { color:#566; font-size: 0.95rem; }
+    #stib-vehicle-distance ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #stib-vehicle-distance .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>STIB/MIVB — Vehicle Distance</h1>
+  <pre><code>GET /stib/vehicle-distance</code></pre>
+  <p class="muted">
+    Provides the raw data from the STIB/MIVB proprietary API, reporting the distance traveled by each vehicle since its last stop.
+    Useful for monitoring trip progress, congestion levels, or validating vehicle telemetry.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      This endpoint returns per-vehicle records indicating how far each vehicle has traveled since departing its previous stop.
+      The data is refreshed continuously and can be queried for specific timestamps or intervals.  
+      Each entry links to a specific line, direction, and stop point (<code>pointId</code>).
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+  <!-- Removed: Output Format -->
+  <!-- Removed: Response Schema -->
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+      <tr>
+        <td><code>timestamp</code></td>
+        <td>integer</td>
+        <td>No</td>
+        <td>Unix timestamp (seconds since epoch). If not specified, the latest available data is returned; otherwise, the closest ≤ timestamp snapshot is returned.</td>
+      </tr>
+      <tr>
+        <td><code>start_timestamp</code></td>
+        <td>integer</td>
+        <td>No</td>
+        <td>Start of the time window (epoch seconds).</td>
+      </tr>
+      <tr>
+        <td><code>end_timestamp</code></td>
+        <td>integer</td>
+        <td>No</td>
+        <td>End of the time window (epoch seconds).</td>
+      </tr>
+      <tr>
+        <td><code>limit</code></td>
+        <td>integer</td>
+        <td>No</td>
+        <td>Maximum number of records to return (for pagination).</td>
+      </tr>
+      <tr>
+        <td><code>offset</code></td>
+        <td>integer</td>
+        <td>No</td>
+        <td>Record offset for pagination (default = 0).</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>directionId</td><td>string</td><td>Direction identifier indicating which directional pattern the vehicle is following—typically "0" or "1" corresponding to GTFS direction_id convention (0=outbound/one direction, 1=inbound/opposite direction). Actual geographic meaning varies by line: for radial routes like metro M1 (Gare de l'Ouest ↔ Stockel), direction 0 might be eastbound toward Stockel, direction 1 westbound; for circular routes, clockwise vs. counterclockwise. Critical for: associating distance measurements with correct route variant (same vehicle traveling opposite directions has different distance contexts), correlating with real-time position feeds (matching directionId to understand vehicle trajectory), and analyzing directional asymmetry (do vehicles travel different distances in one direction vs. other due to route variants, detours, or operational patterns?). Not meaningful in isolation—must interpret with lineId context.</td></tr>
+      <tr><td>distanceFromPoint</td><td>integer</td><td>Distance in meters that vehicle has traveled since departing the reference point (pointId)—typically the most recently departed stop. Measures inter-stop progress: value 0 indicates vehicle at stop (just departed or about to depart), values 50-300m suggest vehicle actively traveling between stops, values matching typical stop spacing (200-500m for Brussels surface transit, 400-800m for metro) indicate approaching next stop. Real-time progression metric enabling: arrival time estimation (distance remaining ÷ average speed = estimated time to next stop), service regularity monitoring (comparing distances for consecutive vehicles on same route reveals bunching—two vehicles both showing 100m from same point suggests inadequate spacing), congestion detection (vehicle showing same distanceFromPoint across consecutive observations indicates stalled/very slow progress), and route adherence validation (unexpectedly large distances suggest off-route operation or missed stop). Typical Brussels values: tram stops 250-400m apart, bus stops 200-350m, metro stops 500-1000m—distanceFromPoint values exceeding these ranges flag potential data quality issues, operational incidents, or express services skipping stops. Critical for passenger information systems calculating "vehicle approaching in X meters" and operations monitoring detecting service irregularities.</td></tr>
+      <tr><td>lineId</td><td>string</td><td>Transit line identifier—the route number/code passengers recognize (e.g., "1" for metro M1, "81" for tram Line 81, "95" for bus Line 95). Core reference linking distance measurements to specific STIB service lines. Enables: line-specific distance analysis (typical inter-stop distances for Line 81 tram vs. Line 1 metro), service quality monitoring by route (which lines show consistent progress vs. frequent stalls?), and cross-referencing with schedules/static data (joining lineId with GTFS routes.txt, stop_times.txt to contextualize distance within planned route geometry). Essential for operational dashboards filtering by line ("show all Line 1 vehicles and their inter-stop progress") and performance analytics aggregating distance metrics by route for comparative service evaluation across Brussels STIB network.</td></tr>
+      <tr><td>pointId</td><td>string</td><td>Reference point identifier—typically the stop ID from which distanceFromPoint is measured (the vehicle's most recently departed stop). Establishes spatial reference for distance measurement: knowing pointId + distanceFromPoint enables precise vehicle location estimation (vehicle is X meters past stop Y along route path). Used for: next-stop identification (pointId is current/previous stop, next stop determined by route sequence), arrival prediction (distance from pointId to next stop minus distanceFromPoint = remaining distance), and geographic contextualization (joining pointId with stops dataset retrieves stop name, coordinates, enabling "vehicle 250m past Arts-Loi metro toward Stockel" passenger-facing messages). May also represent other measurement points (route waypoints, timing points, virtual reference locations) depending on STIB telemetry implementation. The ~3.1 million historical records spanning Feb 2023-Aug 2025 indicate high-frequency real-time data collection—multiple distance updates per vehicle per trip enabling fine-grained trip progression monitoring essential for Brussels transit operations and passenger information accuracy.</td></tr>
+    </table>
+    <pre><code>[
+  {
+    "directionId": "string",
+    "distanceFromPoint": 0,
+    "lineId": "string",
+    "pointId": "string"
+  }
+]</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Data Information</h2>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Start date</td><td>2023-02-24 17:55:46</td></tr>
+      <tr><td>End date</td><td>2025-08-23 18:18:30</td></tr>
+      <tr><td>Count</td><td>3,120,908</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Measuring how far vehicles travel between stops for congestion or delay analysis.</li>
+      <li>Validating GPS telemetry and detecting stalled or looping vehicles.</li>
+      <li>Integrating distance data with live tracking dashboards.</li>
+      <li>Correlating distance with trip completion or punctuality metrics.</li>
+    </ul>
+  </div>
+
+  <div class="section" style="border-left: 4px solid #0066CC; padding: 15px; margin: 20px 0; background-color: #f8f9fa;">
+    <h3>Operational Context for Brussels Transit Ecosystem</h3>
+    <p>The STIB Vehicle Distance endpoint provides real-time trip progression telemetry by tracking how far each vehicle has traveled since its last reference point—essential for <em>passenger information systems</em> generating "next tram arriving in 150 meters" displays and mobile app notifications enabling precise wait-time estimates at Brussels stops. For <em>operations controllers</em>, distance progression rates reveal service quality issues: vehicles showing minimal distance change across consecutive observations flag stalled operations (traffic congestion, mechanical issues, driver break overruns), while comparing distances between consecutive vehicles on the same route detects bunching (two buses both 100m from same stop = inadequate spacing requiring dispatch intervention). The dataset's 3.1+ million records spanning February 2023 through August 2025 enable <em>performance analysts</em> to establish line-specific baselines (typical inter-stop distances and travel patterns for tram Line 81 vs. metro M1), identify congestion corridors through slow distance accumulation rates (chronic delays on specific segments indicating infrastructure bottlenecks or traffic interference), and validate GPS positioning accuracy by comparing odometer-based distanceFromPoint with GPS-calculated distances (persistent discrepancies suggest sensor calibration issues). For <em>software developers</em>, this endpoint integrates with GTFS stop sequences and route shapes to provide complete vehicle location context: joining pointId with stops.txt retrieves geographic coordinates and stop names, calculating "distance remaining to next stop" enables arrival predictions, and correlating with vehicle-position GPS feeds validates positional accuracy across telemetry systems. <em>Urban mobility researchers</em> leverage historical distance patterns to quantify service reliability (consistency of inter-stop travel times and distances), evaluate infrastructure interventions (did dedicated bus lanes reduce distance-to-time variability?), and model passenger experience (frequent vehicle stalls = poor service perception). The simple four-field structure (lineId, directionId, pointId, distanceFromPoint) provides fundamental building blocks for Brussels transit monitoring—when a vehicle on Line 81 direction 0 shows 250 meters from Arts-Loi stop, operators know the tram is mid-journey toward Montgomery, passengers can estimate 30-second arrival times, and quality systems confirm normal progression rather than service disruption.</p>
+  </div>
+</div>

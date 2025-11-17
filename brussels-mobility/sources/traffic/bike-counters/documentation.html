@@ -1,0 +1,132 @@
+<!-- Embedded fragment: Bike Counters -->
+<div id="bike-counters">
+  <style>
+    /* Scoped styles */
+    #bike-counters { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #bike-counters h1,
+    #bike-counters h2,
+    #bike-counters h3 { color: #16324a; margin-top: 1.1rem; }
+    #bike-counters code,
+    #bike-counters pre { background: #f6f8fa; border-radius: 6px; }
+    #bike-counters pre { padding: 12px; overflow: auto; }
+    #bike-counters table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #bike-counters th,
+    #bike-counters td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #bike-counters th { background: #f3f6f9; }
+    #bike-counters .muted { color:#566; font-size: 0.95rem; }
+    #bike-counters ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #bike-counters .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>Bike Counters</h1>
+  <pre><code>GET /traffic/bike-counters</code></pre>
+  <p class="muted">
+    Geospatial positions and metadata of active and historical bike counters in Brussels, returned as GeoJSON.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Returns a GeoJSON dataset describing the locations and metadata of bike counters across the Brussels-Capital Region.
+      Each feature includes multilingual descriptions, activity status, schematics, photos, and road names.  
+      Useful for mapping, infrastructure management, and linking with live bike count data.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication / Response Schema / Other Status Codes -->
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+      <tr>
+        <td><code>timestamp</code></td>
+        <td>integer</td>
+        <td>No</td>
+        <td>If omitted, returns the latest available dataset; otherwise, the closest snapshot ≤ the given timestamp.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Output Format</h2>
+    <p><strong>Content-Type:</strong> <code>application/json</code> (GeoJSON)</p>
+    <p>Responds with a GeoJSON <code>FeatureCollection</code> containing metadata for each bike counter.</p>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <p>The following structure describes each feature in the GeoJSON response:</p>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>features</code></td><td>array</td><td>Collection of bike counter location features, each representing one physical counting device deployed in Brussels cycling infrastructure. Array includes both active counters (currently collecting data) and historical installations (decommissioned or relocated devices maintaining archival record). Enables comprehensive mapping of Brussels' bicycle monitoring network, identification of coverage gaps, and historical analysis of network evolution (where counters have been added/removed over time).</td></tr>
+      <tr><td><code>features[].geometry</code></td><td>object</td><td>GeoJSON geometry object defining the precise geographic location of the bike counter installation. Always Point type representing the counter's physical mounting position (typically roadside, embedded in pavement, or attached to infrastructure). Critical for: mapping counter locations on interactive dashboards, spatial queries ("which counters are within 500m of this location?"), joining with count data to create geographic visualizations of cycling volumes, and infrastructure planning (analyzing counter coverage relative to bike lane network).</td></tr>
+      <tr><td><code>geometry.coordinates</code></td><td>array</td><td>Coordinate pair [longitude, latitude] in WGS84 (EPSG:4326) specifying the counter's exact position. For Brussels: longitude ~4.24-4.48°E, latitude ~50.79-50.91°N. Precision typically to 5-6 decimal places (~1-10m accuracy), reflecting GPS measurement at installation or surveyed position. Essential for: plotting counters on web maps, calculating distances between counters and other infrastructure (bike lanes, transit stations, points of interest), performing spatial joins with road network databases, and enabling location-based queries in applications ("show me the nearest counter").</td></tr>
+      <tr><td><code>geometry.geometry_name</code></td><td>string</td><td>Internal GeoJSON property name, typically "geometry". Standard metadata field from some GeoJSON implementations but not required by core specification. Generally can be ignored in application logic—use <code>geometry.type</code> and <code>geometry.coordinates</code> for actual geometric information.</td></tr>
+      <tr><td><code>geometry.type</code></td><td>string</td><td>GeoJSON geometry type, always <code>Point</code> for bike counters (single coordinate pair). Indicates zero-dimensional feature representing discrete sensor location. Consistent type across all features simplifies mapping logic—no need to handle LineString or Polygon geometries. Point representation appropriate for sensors monitoring specific road segments or intersections from fixed installation points.</td></tr>
+      <tr><td><code>features[].id</code></td><td>string</td><td>Unique identifier for this counter feature, typically matching the device/counter ID used in count data feeds (e.g., "CB1101"). Stable across time, enabling persistent joining between this location metadata and time-series count data from the bike-count endpoint. Critical for: linking counter locations to their volume readings ("where is counter CB1101 that showed 1,000 bikes today?"), creating integrated dashboards combining geography and metrics, and historical tracking (identifying which physical location a historical count dataset refers to). This ID is the primary key for all bike counter data integration.</td></tr>
+      <tr><td><code>features[].properties</code></td><td>object</td><td>Rich metadata object containing all descriptive attributes about the counter: operational status, multilingual descriptions, road names, device information, visual documentation (schematics, photos), and configuration details. Enables: multi-language user interfaces (presenting counter info in user's preferred language), public engagement (showing photos of counter installations), technical documentation (schematics for maintenance staff), and filtering (showing only active counters, specific device types).</td></tr>
+      <tr><td><code>properties.active</code></td><td>boolean</td><td>Operational status flag: <code>true</code> if counter is currently collecting data, <code>false</code> if decommissioned, relocated, or under maintenance. Essential for: filtering map displays to show only functioning counters (avoid user confusion from inactive devices), data quality assessment (explaining why a counter has no recent data—check active status), network planning (identifying active coverage vs. gaps), and historical analysis (understanding network evolution by tracking when counters became inactive). Applications should generally filter to active=true for live dashboards but include inactive counters for historical studies or infrastructure management tools.</td></tr>
+      <tr><td><code>properties.basic_schema</code></td><td>string</td><td>Reference (URL or identifier) to basic schematic diagram showing counter installation configuration. Typically simplified technical drawing illustrating device mounting, sensor positioning, and road geometry. Used by: maintenance staff (understanding installation for repair/calibration), city planners (replicating successful installations at new locations), and documentation (archiving infrastructure knowledge). May be null if schematic not available for this counter.</td></tr>
+      <tr><td><code>properties.detailed_schema</code></td><td>string</td><td>Reference to detailed technical schematic with comprehensive installation specifications: exact sensor positions, wiring diagrams, mounting hardware, calibration parameters, detection zones. More technical than basic_schema, intended for specialized users (installation contractors, engineers, troubleshooting technicians). Enables: precise replication of counter setups, advanced diagnostics, and technical documentation for procurement/installation contracts. May be null for simple installations or if detailed documentation unavailable.</td></tr>
+      <tr><td><code>properties.lane_schema</code></td><td>string</td><td>Lane configuration details describing which travel lanes or paths the counter monitors: bidirectional bike lane (both directions counted together or separately), unidirectional path, multi-lane separation (distinguishing main lane vs. side path). Critical for: interpreting count data accurately (does 100 bikes mean 100 in each direction or total?), comparing counters fairly (bidirectional counters naturally show higher volumes), and understanding infrastructure context (is this a major bidirectional cycling artery or single-direction lane?). May reference diagram showing lane monitoring zones.</td></tr>
+      <tr><td><code>properties.descr_en</code></td><td>string</td><td>Human-readable description of the counter location and context in English. Typically includes: nearby landmarks ("near Central Station"), road characteristics ("protected bike lane on Avenue Louise"), and directional context ("northbound approach to canal crossing"). Used for: English-language map popups/tooltips, public dashboards, reports, and international stakeholder communication. Provides context beyond raw coordinates and road names, helping users understand "what kind of place this is" (commuter corridor, recreational path, mixed-traffic street).</td></tr>
+      <tr><td><code>properties.descr_fr</code></td><td>string</td><td>French-language description equivalent to descr_en. Brussels being officially bilingual (French/Dutch), French descriptions ensure accessibility for Francophone residents and French-speaking Belgian stakeholders. Essential for: French-language public interfaces, government reports (Brussels-Capital Region administration operates in French and Dutch), and community engagement with Francophone populations. Content parallels descr_en but may include French-specific naming conventions or references.</td></tr>
+      <tr><td><code>properties.descr_nl</code></td><td>string</td><td>Dutch-language description (Nederlands) equivalent to descr_en and descr_fr. Completes Brussels' trilingual infrastructure data provision (French/Dutch official languages + English for international access). Critical for: Flemish/Dutch-speaking Brussels residents (significant minority), Dutch-language city services, and cross-regional coordination with Flanders. Multilingual completeness ensures equitable access to public infrastructure information regardless of language preference, fulfilling Brussels' legal bilingualism obligations.</td></tr>
+      <tr><td><code>properties.device_name</code></td><td>string</td><td>Descriptive name assigned to the counter device, often combining location reference with device type (e.g., "Avenue Louise Counter", "Canal Towpath Eco-Counter"). More human-friendly than feature ID. Used for: map labels, dashboard titles, reports ("the Avenue Louise counter recorded..."), and public communication. Names often incorporate locally-recognized landmarks or road names, making counters identifiable to residents familiar with the area. Useful for creating intuitive user interfaces where technical IDs would be cryptic.</td></tr>
+      <tr><td><code>properties.picture_1</code></td><td>string</td><td>URL or file path to primary photograph of the counter installation. Visual documentation showing: device mounting (how counter is physically installed), surrounding infrastructure (bike lane configuration, road context), and site conditions (pavement type, signage, nearby features). Critical for: public engagement (showing citizens what counters look like, building trust in data), technical staff (identifying devices in field for maintenance), and planners (assessing installation quality, documenting best practices). May be null if photography unavailable. Enables non-technical audiences to understand physical reality behind abstract count data.</td></tr>
+      <tr><td><code>properties.picture_2</code></td><td>string</td><td>URL or path to secondary photograph, typically showing alternative view angle or additional context not captured in picture_1. May show: wider site context (intersection geometry, approaching cyclists), detail views (sensor technology, display screen), or seasonal/temporal variation (installation at different times). Provides richer visual documentation for comprehensive site understanding. May be null if additional photography unnecessary or unavailable.</td></tr>
+      <tr><td><code>properties.road_en</code></td><td>string</td><td>English road/street name where counter is installed (e.g., "Avenue Louise", "Canal Towpath"). Provides location context more intuitive than coordinates for users familiar with Brussels geography. English naming useful for: international users, tourism/visitor applications, and cross-language consistency. Often matches official road names but may use English conventions (e.g., "Avenue" instead of French "Avenue" or Dutch "Laan"). Critical for spatial queries ("show me counters on Avenue Louise") and human-readable location descriptions.</td></tr>
+      <tr><td><code>properties.road_fr</code></td><td>string</td><td>Official French road name (e.g., "Avenue Louise", "Chemin de halage du canal"). Brussels street names are officially bilingual (French and Dutch), and road_fr provides the French version used on street signs, maps, and official documents. Essential for: French-language interfaces, accurate geocoding with French address databases, and compliance with Brussels' bilingual infrastructure requirements. Many Brussels roads have identical or similar French/Dutch names; others differ significantly (e.g., French "Rue de la Loi" vs. Dutch "Wetstraat").</td></tr>
+      <tr><td><code>properties.road_nl</code></td><td>string</td><td>Official Dutch road name (e.g., "Louizalaan", "Kanaaljaagpad"). Completes bilingual road naming alongside road_fr, reflecting Brussels' French-Dutch bilingual status. Dutch names appear on street signs (alongside French) and official maps, particularly important in Dutch-speaking contexts or Flemish regional coordination. Essential for: Dutch-language applications, accurate geocoding with Dutch address systems, and ensuring equitable multilingual data access. Some roads have completely different French/Dutch names (not just translations), requiring both for complete identification.</td></tr>
+      <tr><td><code>requestDate</code></td><td>string</td><td>ISO-8601 timestamp indicating when the API server processed this request. Distinct from counter installation dates or data freshness—this reflects API query time. Used for: response validation, API performance monitoring, audit trails in data pipelines, and timestamping cached datasets (knowing "this counter list snapshot was retrieved at..."). Enables diagnosis: if requestDate is current but metadata seems outdated, issue likely lies in backend data refresh rather than API serving.</td></tr>
+      <tr><td><code>totalFeatures</code></td><td>integer</td><td>Total count of counter features included in this response. Reflects number of array elements in <code>features</code>. Useful for: validating complete data retrieval (did we receive all counters?), pagination management (if implemented), summary statistics ("Brussels has 45 bike counters"), and monitoring network growth over time (comparing totalFeatures across historical snapshots reveals counter deployment expansion). Typically ranges from dozens to 100+ as Brussels expands cycling monitoring infrastructure.</td></tr>
+      <tr><td><code>type</code></td><td>string</td><td>Top-level GeoJSON type, always <code>FeatureCollection</code>. Standard geospatial format enabling direct use in mapping libraries (Leaflet, Mapbox GL JS, OpenLayers) and GIS software (QGIS, ArcGIS). FeatureCollection structure allows iteration over all counter locations for map rendering, spatial analysis, and geographic queries.</td></tr>
+    </table>
+
+    <pre><code>{
+  "type": "FeatureCollection",
+  "totalFeatures": 45,
+  "features": [
+    {
+      "type": "Feature",
+      "id": "CB1101",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [4.3517, 50.8503]
+      },
+      "properties": {
+        "active": true,
+        "device_name": "Avenue Louise Counter",
+        "descr_en": "Bike counter near Avenue Louise intersection",
+        "road_en": "Avenue Louise",
+        "road_fr": "Avenue Louise",
+        "road_nl": "Louizalaan"
+      }
+    }
+  ],
+  "requestDate": "2025-08-23T09:00:00Z"
+}</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Source</h3>
+    <ul>
+      <li>Brussels Mobility — asset management system for bike counters</li>
+    </ul>
+
+    <h3>Pipeline</h3>
+    <ol>
+      <li><strong>Geo Extraction:</strong> Coordinates derived from field GPS or metadata.</li>
+      <li><strong>Schema Linking:</strong> Associate schematic and visual resources from the asset database.</li>
+      <li><strong>Multilingual Enrichment:</strong> Attach EN/FR/NL descriptions and road names.</li>
+      <li><strong>Status Validation:</strong> Determine activity from device status reports.</li>
+      <li><strong>Serialization:</strong> Output as GeoJSON <code>FeatureCollection</code>.</li>
+    </ol>
+  </div>
+
+  <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #28A745; font-size: 0.95em;">
+    <strong>Operational Context:</strong> This bike counter location metadata feed provides the essential geographic and descriptive foundation for Brussels' cycling infrastructure monitoring network, enabling applications to map counter positions, link them with volume data, and present contextual information in multiple languages for diverse stakeholders. <em>For mapping applications and public dashboards</em>, the GeoJSON format enables immediate visualization: plot counter locations on web maps, create interactive popups with device_name and multilingual descriptions (descr_en/fr/nl), display counter photos (picture_1/2) for public engagement, and show active vs. inactive status to guide users to functioning devices. Joining this location data with bike-count volumes creates powerful geographic visualizations—heat maps of cycling intensity, corridor comparisons, network-wide dashboards showing "live" counts at each mapped location. <em>For city planners and infrastructure managers</em>, the metadata supports strategic analysis: identifying coverage gaps (neighborhoods without counters despite bike lane presence), evaluating network balance (are high-volume corridors monitored? are diverse infrastructure types represented?), and planning expansion (which locations would maximize monitoring value?). The active field enables operational oversight—tracking decommissioned counters, understanding network reliability, planning maintenance interventions. <em>For technical staff and contractors</em>, schematics (basic_schema, detailed_schema, lane_schema) provide installation documentation: replicating successful configurations at new sites, troubleshooting malfunctioning devices, training installers on proper mounting techniques, and archiving institutional knowledge (how was this tricky intersection configured?). Photos document real-world installations, essential for field identification and quality assurance. <em>For multilingual Brussels context</em>, trilingual data (EN/FR/NL descriptions and road names) ensures equitable access for all linguistic communities: Francophones see French road names (road_fr) matching their street signs, Flemish users access Dutch versions (road_nl), international stakeholders use English (road_en/descr_en). This linguistic completeness fulfills Brussels' legal bilingualism obligations while supporting international engagement. <em>For developers and researchers</em>, the stable feature IDs enable robust data joins: link counter locations to time-series count data (bike-count endpoint), correlate counter positions with infrastructure databases (protected bike lane locations, intersection types, road network characteristics), and conduct spatial analyses (coverage equity, proximity to transit stations, socioeconomic correlations). The combination of precise coordinates, rich descriptive metadata, visual documentation, and multilingual support makes this feed essential for any application involving Brussels' cycling monitoring data—transforming abstract count numbers into geographically-grounded, contextually-rich infrastructure intelligence accessible to diverse users.
+  </p>
+</div>

@@ -1,0 +1,99 @@
+<!-- Embedded fragment: no , no , <head>, or  -->
+<div id="dott-vehicle-position">
+  <style>
+    /* Scope all styles to this fragment to avoid leaking to the host page */
+    #dott-vehicle-position { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #dott-vehicle-position h1,
+    #dott-vehicle-position h2,
+    #dott-vehicle-position h3 { color: #16324a; margin-top: 1.1rem; }
+    #dott-vehicle-position code,
+    #dott-vehicle-position pre { background: #f6f8fa; border-radius: 6px; }
+    #dott-vehicle-position pre { padding: 12px; overflow: auto; }
+    #dott-vehicle-position table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #dott-vehicle-position th,
+    #dott-vehicle-position td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #dott-vehicle-position th { background: #f3f6f9; }
+    #dott-vehicle-position .muted { color:#566; font-size: 0.95rem; }
+    #dott-vehicle-position ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #dott-vehicle-position .section { margin-bottom: 18px; }
+  </style>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Supplies up-to-date vehicle locations and operational attributes (availability, range, type) for Dott e-scooters and e-bikes. Data originates from Dott’s GBFS feeds and is exposed through MobilityTwin.Brussels as a GeoJSON snapshot for mapping, analytics, and monitoring. If no timestamp is specified elsewhere, the latest snapshot is returned; otherwise the closest available snapshot is used.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+
+  <!-- Removed: Output Format -->
+
+  <!-- Removed: Response Schema (200 OK, headers/body) and Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>GeoJSON object type, always <code>FeatureCollection</code>. This standard format enables direct integration with mapping libraries (Leaflet, Mapbox, OpenLayers) and GIS tools for visualizing live vehicle distributions, density heatmaps, and spatial availability analyses across Dott's Brussels deployment.</td></tr>
+      <tr><td>features</td><td>array</td><td>Collection of vehicle features, each representing one physical Dott e-scooter available in the Brussels fleet at the snapshot time. Array length indicates current deployment size and fluctuates based on demand patterns, rebalancing operations, maintenance schedules, and regulatory deployment limits (city permit caps).</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>GeoJSON feature type, always <code>Feature</code>. Standard GeoJSON designation for individual geographic entities (vehicles in this case), enabling consistent parsing across geospatial tools and applications.</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Ephemeral feature identifier unique within this snapshot, used primarily for GeoJSON rendering and client-side map indexing. For persistent vehicle tracking across time, rental sessions, and maintenance events, use <code>properties.bike_id</code> instead, which remains constant throughout the asset's operational lifecycle.</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON geometry object describing the vehicle's geographic location. Always contains a <code>type</code> field (Point) and <code>coordinates</code> array. Enables spatial queries (proximity searches, geofence containment checks) and map rendering of vehicle availability.</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td>Geometry type, always <code>Point</code>. Vehicles are represented as discrete GPS coordinates reflecting their last reported position, typically updated every few minutes while idle or actively rented. This enables real-time map overlays showing current availability distributions and density patterns for demand analysis.</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>Geographic position as [longitude, latitude] in decimal degrees using the WGS84 datum (EPSG:4326). Longitude ranges approximately 4.24–4.48°E and latitude 50.79–50.91°N for Brussels coverage. Position accuracy reflects onboard GPS quality and may be slightly rounded (~10-50m precision) by the provider for privacy, competitive positioning, or data optimization. Critical for proximity searches ("nearest scooter"), geofence compliance validation, and availability heatmaps.</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Operational metadata bundle containing vehicle state, availability status, pricing information, and app integration links. These attributes drive rider-facing functionality (availability displays, deep linking), fleet management (rebalancing priorities, maintenance scheduling), and compliance reporting (regulatory disclosure of fleet composition and utilization).</td></tr>
+      <tr><td>properties.bike_id</td><td>string</td><td>Provider's persistent, globally unique identifier for this physical scooter (historical "bike" naming convention inherited from GBFS specification). This ID remains constant across rental sessions, battery swaps, maintenance events, and redeployments, enabling longitudinal tracking of asset utilization patterns, maintenance history, and performance analytics. Essential for data joins with trip records, service logs, compliance audits, and cross-temporal analyses of fleet health and operational efficiency.</td></tr>
+      <tr><td>properties.vehicle_type_id</td><td>string</td><td>Classification key referencing a specific Dott vehicle model or hardware generation (e.g., "scooter_gen4", "heavy_duty"). Distinguishes capabilities (max speed, range, load capacity, terrain suitability) and enables type-specific business rules (differentiated pricing, geofence restrictions, parking regulations). Operators use this for fleet mix optimization (deploying appropriate models per neighborhood characteristics) and strategic planning (phasing out older models, testing new vehicle categories).</td></tr>
+      <tr><td>properties.current_range_meters</td><td>number</td><td>Estimated remaining travel distance in meters before battery depletion, calculated from current state-of-charge and average urban consumption patterns (accounting for Brussels topography, typical rider weights, stop-and-go traffic). Typically ranges 0–40,000m. Riders rely on this for trip planning ("Can I complete my commute?"), while operators use it for prioritizing battery swapping schedules, rebalancing low-battery vehicles to charging hubs, and maximizing rentable fleet availability to prevent mid-trip stranding.</td></tr>
+      <tr><td>properties.is_disabled</td><td>boolean</td><td><code>true</code> when the scooter is unavailable for public rental due to operational, safety, or regulatory constraints: active maintenance, damage requiring repair, battery below minimum operational threshold, positioned in restricted zones (no-parking areas, geofence exclusions), or administratively locked by the operator. Disabled vehicles remain visible in fleet management systems for rebalancing crews but are hidden from customer apps. Essential for accurately calculating effective fleet size (rentable vehicles) vs. nominal count (total deployed assets).</td></tr>
+      <tr><td>properties.is_reserved</td><td>boolean</td><td><code>true</code> when a rider has reserved this scooter through the Dott app but hasn't yet initiated the rental trip. Reservations typically hold the vehicle for 10–15 minutes, during which it's locked to that user and excluded from availability searches for others. Useful for real-time supply calculations and demand pattern analysis (high reservation rates signal supply-demand imbalances or popular pickup locations).</td></tr>
+      <tr><td>properties.last_reported</td><td>number</td><td>Unix timestamp (seconds since epoch, 1970-01-01 00:00:00 UTC) indicating when the provider last received telemetry from this vehicle. Used to assess data freshness and vehicle connectivity. Large time gaps (>1 hour) may indicate offline vehicles (GPS/cellular failure, battery depletion, theft, or vandalism). Operators monitor reporting latency for fleet health diagnostics; analysts filter stale data for accurate availability metrics.</td></tr>
+      <tr><td>properties.pricing_plan_id</td><td>string</td><td>Identifier of the commercial tariff structure currently applied to this scooter (e.g., "standard", "student_discount", "evening_promo"). Pricing plans define unlock fees, per-minute rates, pause charges, and zone-based surcharges or discounts. Enables dynamic pricing displays in third-party aggregator apps, cost estimation tools, and revenue attribution analytics. Operators adjust pricing plans to manage demand (surge pricing during peak commute times) and incentivize behavior (discounted rates for parking in rebalancing-priority zones).</td></tr>
+      <tr><td>properties.rental_uris.android</td><td>string</td><td>Deep link URI that opens the Dott Android app directly to this scooter's rental flow, pre-selecting the asset for one-tap unlock. Typically follows <code>dott://scooter/{bike_id}</code> or similar app scheme. Enables seamless handoff from third-party discovery channels (Google Maps, multimodal trip planners, QR code scans) to the native rental experience, reducing friction in the user journey and improving conversion from browsing to riding.</td></tr>
+      <tr><td>properties.rental_uris.ios</td><td>string</td><td>Deep link URI that opens the Dott iOS app directly to this scooter's rental flow, pre-selecting the asset for one-tap unlock. Mirrors Android deep linking functionality for iPhone users. Critical for omnichannel integrations (Apple Maps, mobility-as-a-service platforms, transit apps) where users discover scooters outside the native Dott app and expect frictionless transitions to complete rentals.</td></tr>
+    </table>
+    
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #007bff; font-size: 0.95em;">
+      <strong>Operational Context:</strong> This live vehicle position feed enables comprehensive micromobility intelligence across Dott's Brussels operations. 
+      <em>For riders and mobility platforms</em>, it powers real-time "find a scooter" features, multimodal trip planning (solving first/last-mile transit connections), and availability predictions based on historical patterns. 
+      <em>For Dott's operations</em>, the data drives dynamic rebalancing (moving scooters from low-demand to high-demand areas), preventive maintenance (flagging vehicles with low range or frequent disablement for service intervention), and regulatory compliance (proving adherence to deployment caps, parking rules, and operational zones). 
+      <em>For city planners and researchers</em>, time-series aggregation reveals mobility patterns (commute vs. leisure usage), infrastructure needs (popular origin-destination pairs suggesting bike lane improvements), and the role of micromobility in reducing car dependency. 
+      The <code>last_reported</code> timestamp enables data quality assessment, while the persistent <code>bike_id</code> supports longitudinal asset tracking for lifecycle analysis (total kilometers traveled, maintenance frequency, battery degradation rates).
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Live snapshots typically: several hundred vehicles (varies by time and day)</li>
+      <li class="muted">Observed dataset stats (historical): ~85,068 entries aggregated between 2024-08-21 and 2025-08-04</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Dott official GBFS (<code>free_bike_status.json</code>) for Brussels</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Retrieve:</strong> periodically poll Dott GBFS vehicle availability.</li>
+      <li><strong>Archive:</strong> store snapshots by timestamp for historical queries.</li>
+      <li><strong>Resolve:</strong> on request, select the latest or nearest snapshot.</li>
+      <li><strong>Emit:</strong> return vehicles as GeoJSON <code>Feature</code> points with operational properties.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Live fleet tracking</li>
+      <li>Mobility heatmaps &amp; density analysis</li>
+      <li>Policy impact studies (before/after analyses)</li>
+      <li>Trip planning integrations (nearby vehicle lookup)</li>
+    </ul>
+  </div>
+</div>

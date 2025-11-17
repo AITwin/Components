@@ -1,0 +1,138 @@
+<!-- Embedded fragment: STIB/MIVB — Vehicle Position -->
+<div id="stib-vehicle-position">
+  <style>
+    /* Scoped styles */
+    #stib-vehicle-position { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #stib-vehicle-position h1,
+    #stib-vehicle-position h2,
+    #stib-vehicle-position h3 { color: #16324a; margin-top: 1.1rem; }
+    #stib-vehicle-position code,
+    #stib-vehicle-position pre { background: #f6f8fa; border-radius: 6px; }
+    #stib-vehicle-position pre { padding: 12px; overflow: auto; }
+    #stib-vehicle-position table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #stib-vehicle-position th,
+    #stib-vehicle-position td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #stib-vehicle-position th { background: #f3f6f9; }
+    #stib-vehicle-position .muted { color:#566; font-size: 0.95rem; }
+    #stib-vehicle-position ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #stib-vehicle-position .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>STIB/MIVB — Vehicle Position</h1>
+  <pre><code>GET /stib/vehicle-position</code></pre>
+  <p class="muted">
+    Returns estimated vehicle positions across the STIB/MIVB network based on GTFS data and proprietary APIs.
+    Because the STIB API does not provide unique vehicle identifiers, MobilityTwin.Brussels generates trip-scoped
+    synthetic IDs to distinguish vehicles for each journey.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      This endpoint provides estimated real-time vehicle locations derived from a fusion of
+      <strong>GTFS static</strong> and <strong>STIB/MIVB proprietary APIs</strong>.  
+      The MobilityTwin.Brussels platform assigns consistent internal IDs per trip to overcome the lack
+      of official vehicle identifiers in the STIB API.
+    </p>
+    <p>
+      Each record represents a single vehicle, with its current coordinates, route, direction,
+      and associated metadata (line, stop, distance, etc.).
+    </p>
+  </div>
+
+  <!-- Removed: Authentication -->
+  <!-- Removed: Output Format -->
+  <!-- Removed: Response Schema -->
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+      <tr>
+        <td><code>timestamp</code></td>
+        <td>integer</td>
+        <td>No</td>
+        <td>Unix timestamp (seconds since epoch). If not specified, returns the latest snapshot; otherwise, the closest snapshot ≤ timestamp.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <p>The response is a GeoJSON <code>FeatureCollection</code>, where each feature represents one vehicle.</p>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>Always <code>FeatureCollection</code>. GeoJSON standard container format enabling direct integration with mapping libraries and GIS tools. Each snapshot represents the complete set of STIB/MIVB vehicles (trams, buses, metros) operating in Brussels at the query timestamp, enabling real-time vehicle tracking, service monitoring, and passenger information systems.</td></tr>
+      <tr><td>features</td><td>array</td><td>Collection of vehicle features, each representing one STIB/MIVB transit vehicle actively in service at the snapshot time. Array length indicates operational fleet size and varies throughout the day based on service schedules (peak vs. off-peak), line frequencies, and special events. Includes all modalities: trams (lines 3-97), buses (lines 12-95 excluding tram numbers), and metros (lines 1-6). Essential for real-time passenger information, service reliability monitoring, and operational dashboards.</td></tr>
+      <tr><td>features[].type</td><td>string</td><td>Always <code>Feature</code>. Standard GeoJSON designation for individual geographic entities (vehicles in this context), ensuring consistent structure for geospatial processing and map rendering across all Brussels transit data consumers.</td></tr>
+      <tr><td>features[].id</td><td>string</td><td>Platform-generated unique identifier for this specific vehicle instance within the trip context. Since STIB's source API lacks persistent vehicle IDs, MobilityTwin.Brussels creates consistent trip-level identifiers by fusing GTFS-Static schedule data with real-time proprietary STIB APIs. Use <code>properties.uuid</code> for globally unique trip identification across time. Critical for de-duplicating vehicles across sequential snapshots and tracking individual trips from origin to destination.</td></tr>
+      <tr><td>features[].geometry</td><td>object</td><td>GeoJSON geometry object describing the vehicle's current estimated geographic location. Contains <code>type</code> (Point) and <code>coordinates</code> array. Position is estimated through fusion of GTFS-Static route shapes and real-time distance-from-stop data from STIB's proprietary API, interpolating between known stop locations along the route geometry. Accuracy typically within 50-100m depending on stop spacing and route complexity.</td></tr>
+      <tr><td>geometry.type</td><td>string</td><td>Geometry type, typically <code>Point</code>. Transit vehicles are represented as discrete estimated positions along their scheduled routes, derived by interpolating between stops using <code>distanceFromPoint</code> and known route geometries. This enables real-time map overlays showing "where buses/trams are now" for passenger waiting time prediction and service monitoring.</td></tr>
+      <tr><td>geometry.coordinates</td><td>array</td><td>Estimated geographic position as [longitude, latitude] in WGS84 (EPSG:4326). For Brussels: longitude ~4.24-4.48°E, latitude ~50.79-50.91°N. Since STIB's source API doesn't provide direct GPS coordinates, MobilityTwin.Brussels estimates positions by combining: (1) last reported stop (<code>pointId</code>), (2) distance traveled since that stop (<code>distanceFromPoint</code>), (3) GTFS-Static route shapes. Position accuracy varies with stop density—higher on dense tram corridors, lower on express bus routes with sparse stops. Essential for passenger apps showing real-time vehicle locations and estimated arrival predictions.</td></tr>
+      <tr><td>features[].properties</td><td>object</td><td>Operational metadata bundle containing vehicle state, route assignment, positioning context, and schedule alignment information. These attributes power passenger information displays (next vehicle arrival, service disruptions), operational analytics (punctuality monitoring, headway regularity), and multimodal trip planning (real-time STIB integration with other Brussels mobility services).</td></tr>
+      <tr><td>properties.color</td><td>string</td><td>Hexadecimal color code (e.g., <code>#0065AE</code> for Metro, <code>#008000</code> for certain tram lines) associated with this transit line per STIB's official branding guidelines. Used for consistent line identification across passenger apps, printed materials, and wayfinding signage. Enables color-coded map displays where lines are visually distinguished by their official STIB colors, improving rapid line recognition for passengers familiar with Brussels transit network.</td></tr>
+      <tr><td>properties.direction</td><td>integer</td><td>Direction index, typically 0 or 1, distinguishing the two opposite travel directions for this line (e.g., direction 0 might be "northbound" or "to terminus A", direction 1 "southbound" or "to terminus B"). STIB internally uses this to differentiate services on the same line operating in opposite directions. Critical for accurate arrival predictions (only showing vehicles traveling toward user's destination), schedule alignment, and understanding service patterns. Direction semantics are line-specific and should be cross-referenced with GTFS-Static trip data for human-readable terminus names.</td></tr>
+      <tr><td>properties.distance</td><td>number|null</td><td>Optional distance metric in meters, when provided by source API. May represent cumulative distance traveled along the route from origin stop, or distance to next timing point. Often <code>null</code> in STIB data due to source API limitations. When available, useful for precise positioning estimates and schedule adherence calculations (comparing actual vs. scheduled distance-time profiles).</td></tr>
+      <tr><td>properties.distanceFromPoint</td><td>integer</td><td>Distance in meters traveled since the vehicle last departed from the stop identified by <code>pointId</code>. This is the primary positioning signal from STIB's real-time API, used by MobilityTwin.Brussels to estimate vehicle coordinates by interpolating along the GTFS-Static route shape. Values typically 0 (just departed stop) to ~2000m (maximum inter-stop spacing on express routes). Critical for calculating estimated arrival times at downstream stops ("if vehicle is 800m past stop X, it's approximately 2 minutes from stop Y"). Enables dead-reckoning position estimates between GPS fixes.</td></tr>
+      <tr><td>properties.id</td><td>integer</td><td>Internal numeric vehicle identifier at the trip level, assigned by MobilityTwin.Brussels to maintain consistency within a single operational trip (from origin terminus to destination terminus). Since STIB's source API lacks persistent vehicle IDs, this platform-generated identifier enables tracking a specific vehicle's progress along its assigned route within a snapshot timeframe. Not persistent across different trips or days; use <code>uuid</code> for globally unique trip identification.</td></tr>
+      <tr><td>properties.lineId</td><td>string</td><td>Transit line identifier matching STIB/MIVB's official line numbering system. Examples: <code>"95"</code> (tram), <code>"71"</code> (bus), <code>"1"</code> (metro). This is the primary line designator displayed to passengers on vehicles, stops, and maps. Essential for filtering vehicles by line ("show me all tram 81 vehicles"), joining with GTFS-Static route/trip data for schedule information, and presenting line-specific service status to passengers. Line IDs are stable over time and consistent across STIB's various data APIs.</td></tr>
+      <tr><td>properties.pointId</td><td>integer</td><td>Identifier of the reference point (typically a stop or station) from which <code>distanceFromPoint</code> is measured. This represents the last stop the vehicle departed from according to STIB's real-time tracking system. Can be cross-referenced with GTFS-Static <code>stops.txt</code> or STIB stops API to obtain stop name, coordinates, and accessibility features. Critical for understanding vehicle position context ("vehicle is 500m past Gare du Midi stop"), estimating arrivals at subsequent stops along the route, and detecting service irregularities (vehicles skipping stops, stuck at locations).</td></tr>
+      <tr><td>properties.timestamp</td><td>integer</td><td>Unix timestamp (seconds since epoch, 1970-01-01 00:00:00 UTC) when this vehicle position record was generated or observed. Represents the temporal validity of the position estimate. Used to assess data freshness (age of position fix), synchronize vehicle positions with other real-time data sources (traffic conditions, passenger counts), and filter historical vs. current data. In time-series analysis, enables trajectory reconstruction, travel time calculation between stops, and schedule adherence studies. Timestamps typically align with API snapshot collection intervals (e.g., every 30-60 seconds for real-time feeds).</td></tr>
+      <tr><td>properties.uuid</td><td>string</td><td>Platform-generated universally unique identifier (UUID) for this specific trip-vehicle combination, providing persistent tracking across the entire journey from origin to destination terminus. Unlike the numeric <code>id</code> which may be reused across different trips, the UUID enables globally unique trip identification in databases, cross-system integrations, and longitudinal analyses. Critical for tracking complete trip trajectories over time, linking vehicle positions with passenger boarding/alighting events, calculating end-to-end trip durations, and joining with other trip-level data sources (fare collection, passenger counts, schedule adherence metrics). Format follows standard UUID conventions (e.g., <code>550e8400-e29b-41d4-a716-446655440000</code>).</td></tr>
+    </table>
+
+    <pre><code>{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "string",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [0, 0]
+      },
+      "properties": {
+        "color": "string",
+        "direction": 0,
+        "distance": null,
+        "distanceFromPoint": 0,
+        "id": 0,
+        "lineId": "string",
+        "pointId": 0,
+        "timestamp": 0,
+        "uuid": "string"
+      }
+    }
+  ]
+}</code></pre>
+    
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #00a4e0; font-size: 0.95em;">
+      <strong>Operational Context:</strong> This vehicle position feed is foundational to Brussels' public transit intelligence, fusing GTFS-Static schedules with STIB/MIVB's proprietary real-time APIs to overcome the absence of direct GPS coordinates in the source data. 
+      <em>For passengers and mobility apps</em>, it enables critical real-time features: "where's my tram?" tracking on live maps, estimated arrival time predictions at stops ("next tram 81 in 3 minutes"), service disruption alerts (missing vehicles indicating delays/cancellations), and multimodal journey planning integrating STIB positions with other Brussels transport modes. 
+      <em>For STIB operations and transit authorities</em>, the data powers performance monitoring: schedule adherence analysis (comparing actual positions to timetables), headway regularity assessment (gaps between consecutive vehicles on same line), service reliability metrics, and operational dashboards for dispatch and traffic management. 
+      <em>For urban planners and researchers</em>, longitudinal aggregation reveals transit network dynamics: peak-hour congestion patterns, line-level service quality, dead-heading (empty vehicle movements), and the effectiveness of Brussels' integrated transit network. 
+      The platform's data fusion methodology (<code>distanceFromPoint</code> + GTFS route shapes → estimated coordinates) provides position estimates even without direct vehicle GPS, maintaining service visibility across STIB's entire tram, bus, and metro fleet. 
+      The dual identification system (<code>id</code> for trip-level tracking, <code>uuid</code> for globally unique trip identification) enables both real-time operational use and historical trip trajectory reconstruction.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Data Information</h2>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Start date</td><td>2024-08-21 14:54:58</td></tr>
+      <tr><td>End date</td><td>2025-08-23 18:17:29</td></tr>
+      <tr><td>Count</td><td>1,460,189</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Rendering live vehicle positions on network maps</li>
+      <li>Trip reconstruction and path tracking over time</li>
+      <li>Service reliability and congestion monitoring</li>
+      <li>Integration with GTFS data for analytics or visualization</li>
+    </ul>
+  </div>
+</div>

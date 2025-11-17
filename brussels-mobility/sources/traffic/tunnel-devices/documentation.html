@@ -1,0 +1,143 @@
+<!-- Embedded fragment: Tunnel Devices -->
+<div id="tunnel-devices">
+  <style>
+    /* Scoped styles */
+    #tunnel-devices { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #tunnel-devices h1,
+    #tunnel-devices h2,
+    #tunnel-devices h3 { color: #16324a; margin-top: 1.1rem; }
+    #tunnel-devices code,
+    #tunnel-devices pre { background: #f6f8fa; border-radius: 6px; }
+    #tunnel-devices pre { padding: 12px; overflow: auto; }
+    #tunnel-devices table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #tunnel-devices th,
+    #tunnel-devices td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #tunnel-devices th { background: #f3f6f9; }
+    #tunnel-devices .muted { color:#566; font-size: 0.95rem; }
+    #tunnel-devices ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #tunnel-devices .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>Tunnel Devices</h1>
+  <pre><code>GET /traffic/tunnel-devices</code></pre>
+  <p class="muted">
+    Geospatial locations and metadata of traffic measurement devices installed in Brussels tunnels, returned as GeoJSON.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Provides details on fixed sensing equipment — such as loop detectors, radars, or flow counters — within Brussels’ tunnel infrastructure.  
+      Each feature represents one physical device and includes its spatial coordinates and attributes (tunnel name, detector type, number of lanes, and orientation).  
+      The dataset is returned as a GeoJSON <code>FeatureCollection</code>, ideal for use in maps, asset management tools, and infrastructure analytics.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication / Response Schema / Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Format</h2>
+    <p><strong>Content-Type:</strong> <code>application/json</code> (GeoJSON)</p>
+    <p>Returns a GeoJSON <code>FeatureCollection</code> where each feature represents a tunnel traffic device with its coordinates and descriptive attributes.</p>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>type</code></td><td>string</td><td>GeoJSON object type, always <code>"FeatureCollection"</code> for this endpoint. Standard GeoJSON top-level container indicating structure contains spatial features array with coordinate reference system (default WGS84/EPSG:4326). Enables direct compatibility with geospatial tools (QGIS, ArcGIS, Leaflet, Mapbox) expecting GeoJSON input for tunnel infrastructure visualization and analysis.</td></tr>
+      <tr><td><code>features</code></td><td>array</td><td>Array of GeoJSON Feature objects, each representing one physical traffic measurement device installed in Brussels tunnel infrastructure. Devices include inductive loop detectors (embedded in road surface counting axle crossings), radar sensors (measuring speed via Doppler), magnetometers, and video/image-based systems. Each feature contains geometric location (coordinates) and descriptive properties (tunnel name, lane count, orientation). Brussels' major tunnels (Leopold II, Annie Cordy, Stéphanie, etc.) typically equipped with multiple devices per direction at strategic locations—entry, mid-tunnel, exit—enabling flow monitoring, incident detection, and capacity management across the tunnel network.</td></tr>
+      <tr><td><code>features[].type</code></td><td>string</td><td>GeoJSON feature type, always <code>"Feature"</code>. Standard GeoJSON designation indicating object contains geometry (spatial coordinates) and properties (descriptive attributes). Distinguishes individual features from FeatureCollection container.</td></tr>
+      <tr><td><code>features[].id</code></td><td>string</td><td>Unique persistent identifier for the tunnel traffic device (e.g., "TUN-001", "LEOPOLD-ENTRY-02"). Stable infrastructure ID enabling: device-specific data retrieval when querying traffic metrics endpoint (join on DEVICE_ID), longitudinal tracking (monitoring same device performance over months/years), maintenance records association (linking sensor installation/calibration history), and spatial joins with other datasets (correlating device readings with tunnel geometry, incident locations, air quality sensors). Critical for connecting this device metadata with time-series traffic observations (count/occupancy/speed) from tunnels endpoint.</td></tr>
+      <tr><td><code>features[].geometry.type</code></td><td>string</td><td>Geometry type, typically <code>"Point"</code> for tunnel devices—representing single fixed location where sensor is installed. Point geometries define precise lat/lon coordinates of device enabling accurate map visualization, proximity analysis (finding devices near incident locations), and spatial joins with tunnel centerline geometries (determining which tunnel segment device monitors). Some complex installations might use alternative geometries, but Point is standard for discrete sensor locations.</td></tr>
+      <tr><td><code>features[].geometry.coordinates</code></td><td>array</td><td>GeoJSON coordinate array in format <code>[longitude, latitude]</code> (note: longitude first per GeoJSON spec). Brussels tunnel coordinates typically: longitude 4.24°E to 4.48°E, latitude 50.79°N to 50.91°N (WGS84/EPSG:4326). Precise location essential for: mapping device positions on tunnel infrastructure diagrams, calculating inter-device distances (spacing between detectors along tunnel), correlating readings with tunnel geometry (curves, grades, lane merges that affect traffic flow), and emergency response (guiding maintenance crews to exact sensor locations for repair/calibration). Example: [4.3365, 50.8379] places device in central Brussels tunnel network area.</td></tr>
+      <tr><td><code>features[].properties.descr_en</code></td><td>string</td><td>Device description in English, typically including: device type (loop detector, radar sensor), location context (tunnel name, entry/mid/exit position), and lane/direction information. Example: "Loop detector near Rogier Tunnel entrance". English descriptions support international users (European Commission, multinational logistics, tourism/navigation providers) while maintaining accessibility for Brussels' diverse resident and visitor population. Complements French and Dutch descriptions providing equivalent information in all three languages.</td></tr>
+      <tr><td><code>features[].properties.descr_fr</code></td><td>string</td><td>Device description in French, one of Brussels' two official languages. Provides identical information to English description but in French: "Boucle de détection près de l'entrée du tunnel Rogier" (loop detector near Rogier Tunnel entrance). Essential for Brussels French-speaking community, Belgian federal government operations, and Wallonia regional coordination. Bilingual metadata (FR/NL) fulfills Brussels legal obligations while EN supports international use.</td></tr>
+      <tr><td><code>features[].properties.descr_nl</code></td><td>string</td><td>Device description in Dutch (Flemish), Brussels' second official language. Parallel to French/English descriptions: "Lusdetector nabij de ingang van de Rogiertunnel" (loop detector near Rogier Tunnel entrance). Essential for Brussels Dutch-speaking community, Flanders regional coordination, and fulfilling bilingual signage/documentation requirements. Ensures equitable access to infrastructure information for all Brussels linguistic communities in compliance with Belgian language laws.</td></tr>
+      <tr><td><code>features[].properties.detectors</code></td><td>array</td><td>Array of detector IDs associated with this device, supporting complex installations where one physical device location houses multiple detection units (e.g., separate detectors per lane, per direction, or per vehicle classification). Enables: multi-lane monitoring (single device location with detectors for each lane), redundancy tracking (primary + backup detectors), and detailed data attribution (linking specific detector serial numbers to measurements). May be empty array or null for simple single-detector devices. When populated, IDs reference sub-units whose individual readings aggregate into device-level traffic metrics.</td></tr>
+      <tr><td><code>features[].properties.number_of_lanes</code></td><td>integer</td><td>Number of traffic lanes monitored by this device at its location—typically 1-3 for Brussels tunnels depending on tunnel configuration and position. Single-lane devices (1) monitor specific lane (e.g., right lane only at merge point for heavy vehicle tracking), dual-lane devices (2) cover standard two-lane tunnel sections, triple-lane devices (3) monitor wide tunnel entrances/exits with auxiliary lanes. Critical for: interpreting traffic metrics (a device showing 200 vehicles/5-min across 3 lanes indicates lighter traffic than 200 vehicles/5-min across 1 lane), capacity calculations (maximum throughput = lanes × per-lane capacity), and infrastructure planning (identifying single-lane bottlenecks within multi-lane tunnels).</td></tr>
+      <tr><td><code>features[].properties.orientation</code></td><td>integer|null</td><td>Device orientation in degrees (0-360° compass bearing), indicating direction of monitored traffic flow: 0° = north, 90° = east, 180° = south, 270° = west. Null when orientation not applicable (omnidirectional sensors) or not recorded. Example: orientation 90° indicates device monitors eastbound traffic. Essential for: directional traffic analysis (correlating device readings with compass-based flow directions), network visualization (arrows showing monitored flow directions on tunnel maps), and understanding directional coverage gaps (ensuring both directions monitored adequately). Combined with tunnel geometry, orientation clarifies whether device monitors inbound (toward center), outbound (away from center), circumferential (ring road), or radial (spoke) flows critical for Brussels' radial-ring tunnel network structure.</td></tr>
+      <tr><td><code>features[].properties.traverse_name</code></td><td>string</td><td>Name of the tunnel or tunnel segment where device is installed—e.g., "Leopold II", "Annie Cordy", "Stéphanie", "Bailli", "Rogier", etc. Identifies which Brussels tunnel infrastructure the device monitors, critical for: tunnel-specific reporting (aggregating all Leopold II devices for tunnel-wide status), incident management (directing emergency response to correct tunnel), infrastructure planning (evaluating device coverage per tunnel), and public communication (tunnel names used in traffic reports and navigation alerts). Major Brussels tunnels serve distinct network functions: Leopold II/Annie Cordy connect ring road to city, Stéphanie serves European Quarter, Bailli handles Louise/Cambre corridor—traverse_name enables functional analysis by tunnel role.</td></tr>
+      <tr><td><code>features[].properties.type</code></td><td>string</td><td>Device sensor technology type—e.g., "loop" (inductive loop detector embedded in pavement), "radar" (Doppler radar measuring speed), "magnetometer" (magnetic field disturbance detection), "video" (camera-based image processing), "infrared" (thermal/IR sensor). Different technologies have distinct capabilities: loops excel at vehicle counting and presence detection but require pavement cutting for installation, radar measures speeds accurately at distance without road surface disruption, video enables vehicle classification (car/truck/bus) and multi-lane monitoring but requires good visibility/lighting. Understanding device type essential for: data quality assessment (loops reliable for counts, radar for speeds), maintenance planning (loops require pavement repair, cameras need cleaning), and sensor network design (choosing optimal technology for specific tunnel monitoring requirements).</td></tr>
+      <tr><td><code>requestDate</code></td><td>string</td><td>ISO-8601 timestamp indicating when the API server generated this GeoJSON response. Metadata field supporting: API performance monitoring, response caching validation (checking if cached device inventory is current), audit trails in automated collection systems, and diagnosing data freshness issues. Since tunnel devices are relatively static infrastructure (installations/removals infrequent compared to traffic measurements), requestDate primarily useful for cache management—device inventory typically updated daily/weekly rather than real-time.</td></tr>
+      <tr><td><code>totalFeatures</code></td><td>integer</td><td>Total count of tunnel device features included in this GeoJSON response. Quick reference indicating Brussels tunnel monitoring network size without iterating through features array. Typical use: validating complete data retrieval (did all expected devices return?), monitoring network expansion (tracking device count over time as new tunnels equipped), and API pagination verification (if implementing paged retrieval, confirming total matches sum of pages). Brussels tunnel network includes dozens of devices across major tunnels—totalFeatures provides immediate sense of monitoring coverage scale.</td></tr>
+    </table>
+
+    <pre><code>{
+  "type": "FeatureCollection",
+  "totalFeatures": 3,
+  "features": [
+    {
+      "type": "Feature",
+      "id": "TUN-001",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [4.3365, 50.8379]
+      },
+      "properties": {
+        "descr_en": "Loop detector near Rogier Tunnel entrance",
+        "descr_fr": "Boucle de détection près de l'entrée du tunnel Rogier",
+        "descr_nl": "Lusdetector nabij de ingang van de Rogiertunnel",
+        "detectors": ["LD-1001"],
+        "number_of_lanes": 3,
+        "orientation": 90,
+        "traverse_name": "Rogier Tunnel",
+        "type": "loop"
+      }
+    }
+  ],
+  "requestDate": "2025-08-23T09:00:00Z"
+}</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Typical feature count: ~280–300 devices per response.</li>
+      <li>Each feature corresponds to a distinct sensor or loop detector.</li>
+      <li>Dataset is semi-static, updated when infrastructure changes occur.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Brussels Mobility infrastructure registry and detector configuration databases.</li>
+    </ul>
+
+    <h3>Pipeline</h3>
+    <ol>
+      <li><strong>Registry Synchronisation:</strong> Pull data from official infrastructure databases.</li>
+      <li><strong>Geo-Enrichment:</strong> Assign precise GIS coordinates to each device.</li>
+      <li><strong>Standardisation:</strong> Normalise language fields and key attributes.</li>
+      <li><strong>Detector Mapping:</strong> Link each device with relevant detector IDs.</li>
+      <li><strong>Serialization:</strong> Output as GeoJSON with feature metadata.</li>
+      <li><strong>Timestamp Indexing:</strong> Include <code>requestDate</code> for version control.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Infrastructure audits and inventory management.</li>
+      <li>Asset dashboards showing lane coverage and device orientation.</li>
+      <li>Integration with traffic flow datasets for capacity analysis.</li>
+      <li>Maintenance and monitoring of detector networks.</li>
+      <li>Lane-based modelling for instrumented tunnel segments.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3 style="border-left: 4px solid #FF6B35; padding-left: 10px;">Operational Context for Brussels Tunnel Device Infrastructure</h3>
+    <p>
+      This endpoint provides authoritative geospatial inventory of traffic monitoring devices installed across Brussels' tunnel network—the fixed sensor infrastructure that generates the continuous traffic observations (count/occupancy/speed) available through the tunnels endpoint. <em>For infrastructure asset managers and maintenance teams</em>, the GeoJSON device catalog supports comprehensive equipment lifecycle management: tracking installation dates and locations (coordinates) for preventive maintenance scheduling, mapping device types (loop/radar/video) to plan technology-specific service procedures (loops require pavement access, cameras need cleaning/alignment, radar units need calibration), and monitoring coverage gaps (identifying tunnel segments lacking instrumentation where incidents might go undetected). The multilingual descriptions (descr_en/fr/nl) enable maintenance crew communication across Brussels' trilingual workforce while supporting public documentation accessibility. Device IDs provide stable infrastructure identifiers linking to historical performance data—has device TUN-001 shown degraded data quality suggesting sensor malfunction requiring replacement?
+    </p>
+    <p>
+      <em>For traffic operations centers and transport planners</em>, device metadata enables sophisticated spatial analysis connecting sensor geography to traffic observations. Joining this device inventory with time-series traffic data (from tunnels endpoint) by device ID creates complete picture: device at coordinates [4.3365, 50.8379] in Leopold II tunnel entrance monitoring 2 lanes at 90° orientation (eastbound) currently showing occupancy 0.45 and speed 35 km/h—indicating heavy but flowing traffic. The traverse_name field aggregates devices by tunnel (all Leopold II devices vs. all Annie Cordy devices) for tunnel-wide status reporting, while number_of_lanes enables per-lane flow rate calculations (200 vehicles/5-min across 3 lanes = 66 veh/lane vs. 200 vehicles/5-min across 1 lane = 200 veh/lane indicating severe congestion). Orientation field reveals directional coverage: ensuring both inbound and outbound flows monitored adequately, critical for detecting asymmetric congestion during commute peaks when one direction dominates. Device spacing analysis (calculating inter-device distances along tunnel centerlines) identifies monitoring granularity—closely-spaced devices enable precise queue length estimation, while wide gaps create blind spots where incidents might propagate undetected.
+    </p>
+    <p>
+      <em>For research institutions and urban analytics teams</em>, the device infrastructure catalog supports methodological transparency and spatial analysis reproducibility. Understanding sensor network characteristics—device types (loop detectors excel at counts, radar at speeds), lane coverage (single vs. multi-lane monitoring), and geographic distribution (which tunnels instrumented, which lacking data)—is essential for valid statistical inference and modeling. Researchers studying tunnel traffic patterns can overlay device locations with tunnel geometry (curves, grades, lane merges) to explain observed traffic behavior: do speed reductions correlate with geometric constraints or pure congestion? The totalFeatures count provides immediate assessment of monitoring network scale, while GeoJSON format enables direct import to spatial analysis tools (QGIS, ArcGIS, Python geopandas) for visualization and spatial statistics. Integration with external datasets—air quality sensors (do tunnel ventilation triggers correlate with high-occupancy devices?), incident reports (proximity analysis matching device anomalies to documented accidents), infrastructure planning (comparing monitored vs. unmonitored tunnel capacity)—leverages this device inventory as foundational spatial reference layer. By providing comprehensive, multilingual, geocoded infrastructure metadata with stable identifiers, this endpoint supports Brussels tunnel monitoring ecosystem from operational real-time management through strategic planning to academic research—connecting physical sensor hardware to digital traffic intelligence infrastructure.
+    </p>
+  </div>
+</div>

@@ -1,0 +1,89 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "0",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.37439,
+          50.83863
+        ]
+      },
+      "properties": {
+        "id": "6522",
+        "label": "1,2-XYLENE O-XYLENE 6522 - btx, o-xyleen - procedure, 41B006 - Bruxelles (Parlement UE)",
+        "uom": "µg/m³",
+        "firstValue.timestamp": 1338296400000,
+        "firstValue.value": 2.0,
+        "lastValue.timestamp": 1621508400000,
+        "lastValue.value": 6.5,
+        "parameters.phenomenon.id": "482",
+        "parameters.phenomenon.label": "1,2-XYLENE O-XYLENE",
+        "parameters.category.id": "482",
+        "parameters.category.label": "1,2-XYLENE O-XYLENE",
+        "parameters.procedure.id": "6522",
+        "parameters.procedure.label": "6522 - btx, o-xyleen - procedure",
+        "station.properties.id": 1112,
+        "station.properties.label": "41B006 - Bruxelles (Parlement UE)"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.51648,
+          51.02706
+        ]
+      },
+      "properties": {
+        "id": "10892",
+        "label": "Ammonia 10892 - MINI DOAS - procedure, 42BO01 - Bonheiden",
+        "uom": "µg/m³",
+        "firstValue.timestamp": 1514768400000,
+        "firstValue.value": 0.375,
+        "lastValue.timestamp": 1755180000000,
+        "lastValue.value": 15.0,
+        "parameters.phenomenon.id": "35",
+        "parameters.phenomenon.label": "Ammonia",
+        "parameters.category.id": "35",
+        "parameters.category.label": "Ammonia",
+        "parameters.procedure.id": "10892",
+        "parameters.procedure.label": "10892 - MINI DOAS - procedure",
+        "station.properties.id": 1738,
+        "station.properties.label": "42BO01 - Bonheiden"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "2",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.01179,
+          51.34655
+        ]
+      },
+      "properties": {
+        "id": "10893",
+        "label": "Ammonia 10893 - MINI DOAS - procedure, 42OT02 - Oud-Turnhout",
+        "uom": "µg/m³",
+        "firstValue.timestamp": 1514768400000,
+        "firstValue.value": 0.37,
+        "lastValue.timestamp": 1755180000000,
+        "lastValue.value": 11.5,
+        "parameters.phenomenon.id": "35",
+        "parameters.phenomenon.label": "Ammonia",
+        "parameters.category.id": "35",
+        "parameters.category.label": "Ammonia",
+        "parameters.procedure.id": "10893",
+        "parameters.procedure.label": "10893 - MINI DOAS - procedure",
+        "station.properties.id": 1739,
+        "station.properties.label": "42OT02 - Oud-Turnhout"
+      }
+    }
+  ]
+}

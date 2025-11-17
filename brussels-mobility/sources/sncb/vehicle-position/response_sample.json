@@ -1,0 +1,62 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "0",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.22,
+          50.52798
+        ]
+      },
+      "properties": {
+        "ptcarid_end": "592",
+        "trip_id": "88____:007::8814001:8841004:46:1908:20250822",
+        "name_start": "STATTE",
+        "name_end": "HUY",
+        "ptcarid_start": "1102",
+        "trip_headsign": "Liège-Guillemins"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.88547,
+          50.81666
+        ]
+      },
+      "properties": {
+        "ptcarid_end": "1176",
+        "trip_id": "88____:007::8831005:8891405:36:2041:20251212",
+        "name_start": "TIRLEMONT",
+        "name_end": "VERTRIJK",
+        "ptcarid_start": "1146",
+        "trip_headsign": "Blankenberge"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "2",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5.07892,
+          50.74824
+        ]
+      },
+      "properties": {
+        "ptcarid_end": "684",
+        "trip_id": "88____:075::8822004:8833605:31:1844:20250814",
+        "name_start": "NEERWINDEN",
+        "name_end": "LANDEN",
+        "ptcarid_start": "900",
+        "trip_headsign": "Landen"
+      }
+    }
+  ]
+}

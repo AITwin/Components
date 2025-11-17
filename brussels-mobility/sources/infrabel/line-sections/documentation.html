@@ -1,0 +1,134 @@
+<!-- Embedded fragment: INFRABEL — Line Sections -->
+<div id="infrabel-line-sections">
+  <style>
+    /* Scoped styles */
+    #infrabel-line-sections { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #infrabel-line-sections h1,
+    #infrabel-line-sections h2,
+    #infrabel-line-sections h3 { color: #16324a; margin-top: 1.1rem; }
+    #infrabel-line-sections code,
+    #infrabel-line-sections pre { background: #f6f8fa; border-radius: 6px; }
+    #infrabel-line-sections pre { padding: 12px; overflow: auto; }
+    #infrabel-line-sections table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #infrabel-line-sections th,
+    #infrabel-line-sections td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #infrabel-line-sections th { background: #f3f6f9; }
+    #infrabel-line-sections .muted { color:#566; font-size: 0.95rem; }
+    #infrabel-line-sections ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #infrabel-line-sections .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>INFRABEL — Line Sections</h1>
+  <pre><code>GET /infrabel/line-sections</code></pre>
+  <p class="muted">
+    Returns segmentation of Belgium's rail network according to infrastructure characteristics and operational capabilities.
+    Each section defines a segment of track between operational points with specific technical attributes.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      This endpoint provides detailed segmentation of the Belgian railway network infrastructure managed by Infrabel, the national rail infrastructure company.
+      Line sections represent logical divisions of the rail network based on physical characteristics (track type, electrification, signaling systems), operational properties (speed limits, capacity, traffic patterns), and administrative boundaries (maintenance zones, traffic control sectors).
+      Each section connects two operational points (stations, junctions, borders) and includes route geometry, technical specifications, and operational status.
+      Critical for infrastructure planning, capacity analysis, maintenance scheduling, and understanding network topology for routing algorithms and timetable optimization.
+      This data is intended for schematic network representations (maximum scale 1:25,000) and should be associated with the Operational Points dataset for complete geolocation of section endpoints.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+      <tr>
+        <td><code>timestamp</code></td>
+        <td>integer</td>
+        <td>No</td>
+        <td>Timestamp in seconds since epoch. If not specified, the latest dataset will be returned. If specified, returns the closest available dataset with timestamp ≤ provided value (less than or equal), enabling historical network configuration queries. Useful for analyzing infrastructure changes over time (new sections, closures, status changes) and validating historical routing/capacity models.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <p>The response is a GeoJSON <code>FeatureCollection</code> representing line sections across Belgium's rail network.</p>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td>type</td><td>string</td><td>Always <code>FeatureCollection</code>. Standard GeoJSON container format enabling direct import into GIS platforms (QGIS, ArcGIS Pro, MapInfo) and integration with web mapping libraries (Leaflet, OpenLayers, Mapbox GL JS). Each feature represents one line section, collectively forming a complete network graph of Belgium's rail infrastructure. Facilitates topological analysis (network connectivity, shortest path routing), visualization (interactive network maps showing section attributes color-coded by status/speed/electrification), and integration with train position data for real-time network state visualization.</td></tr>
+      <tr><td>features</td><td>array</td><td>Collection of line section features representing logical track segments between operational points (stations, junctions, borders). Array size corresponds to Infrabel's network segmentation granularity—typically 500-1000+ sections covering Belgium's ~3600 km main line network plus secondary tracks. Feature count includes active operational sections (regular passenger/freight traffic), sections under maintenance (temporary closures, speed restrictions), inactive/mothballed lines (preserved but not in revenue service), and sections under construction (network expansion projects). Each section is defined by endpoint operational point IDs (ptcarid), enabling graph construction: nodes = operational points, edges = line sections. Used for network topology analysis (identifying bottlenecks, analyzing redundancy/alternative routes), capacity modeling (aggregating section capacities along corridors), and infrastructure investment planning (prioritizing upgrades by section criticality). Derived from Infrabel's authoritative infrastructure database, published to <a href="https://opendata.infrabel.be" target="_blank" style="color: #0366d6;">opendata.infrabel.be</a> for transparency and stakeholder coordination.</td></tr>
+      <tr><td>features[].geometry.type</td><td>string</td><td>Geometry type, typically <code>LineString</code> representing linear track alignment, or <code>MultiLineString</code> for complex sections with parallel tracks or branch configurations. LineString is most common (single continuous track path), while MultiLineString handles cases like: (a) double-track sections modeled as separate geometries (up-line and down-line), (b) sections with complex track layouts (turnouts, crossovers), (c) sections spanning multiple non-contiguous track segments (rare, usually data modeling artifact). Geometry reflects schematic routing (suitable for network diagrams, topological analysis) rather than precise centimeter-level surveyed alignment (engineering-grade data uses separate specialized systems). Important: geometries are simplified for readability at 1:25,000 scale, not suitable for precision applications like signal placement or construction engineering.</td></tr>
+      <tr><td>features[].geometry.coordinates</td><td>array</td><td>Nested array of coordinate pairs <code>[[lon1, lat1], [lon2, lat2], ...]</code> defining track alignment in WGS84 (EPSG:4326) decimal degrees. For Belgium: longitude 2.5-6.4°E, latitude 49.5-51.5°N. LineString contains 2+ coordinate pairs (minimum: start and end points), with intermediate vertices representing curves, junctions, and alignment changes. Coordinate density (vertices per kilometer) varies: straight sections may have few points, curves and complex junctions have denser vertex spacing for geometry fidelity. Precision typically 5-6 decimal places (~1-10 meter accuracy), balancing spatial detail with data payload size. Used for map rendering (drawing rail network overlays), spatial queries (which sections intersect this bounding box/polygon?), and distance calculations (section length, route mileage). Note: coordinates represent schematic alignment, not exact track centerline—sufficient for planning and analysis, but not for engineering design or GPS-based train positioning which require higher-precision geodetic data.</td></tr>
+      <tr><td>features[].properties.id</td><td>string</td><td>Unique identifier for this line section in Infrabel's infrastructure database. Typically alphanumeric code following Infrabel's internal line numbering and segmentation conventions (e.g., "L12_A", "161/0", "S45/2"). ID structure often encodes: base line number (matching public line designations like "L12" = Brussels-Antwerp main line), segment subdivision (letters/numbers distinguishing sub-sections along same line), and sometimes track type (main line vs. siding). Stable identifier persisting across data updates (unless major infrastructure reconfiguration results in line renumbering). Essential for joining with other Infrabel datasets (punctuality data by section, maintenance records, capacity allocations), referencing sections in infrastructure reports and engineering documentation, and building time-series analyses tracking section attribute changes (status transitions, upgrade projects). Also used in operational systems for train routing (specifying which sections a train will traverse) and capacity management (allocating time slots per section).</td></tr>
+      <tr><td>properties.linecnum</td><td>integer</td><td>Numeric line code, typically matching main line designation (e.g., 12 for line L12, 161 for line 161). Simplified numeric representation of linecalfa (below), omitting sub-section designators for higher-level line aggregation. Enables grouping sections by parent line for corridor-level analysis ("all sections on Brussels-Antwerp corridor"), filtering by major routes, and quick visual identification on maps. Some lines use 2-digit codes (regional lines), others 3-digit (secondary lines). Corresponds to line numbers used in public timetables and signage, though timetable lines may span multiple infrastructure line sections. Used in reporting ("line 12 capacity utilization"), network planning (prioritizing investments by line), and integration with passenger-facing data (mapping GTFS routes to underlying infrastructure).</td></tr>
+      <tr><td>properties.linecalfa</td><td>string</td><td>Alphanumeric line section code, typically combining linecnum with subdivision suffix (e.g., "12/0", "161A", "S45/2/B"). More specific than linecnum, uniquely identifying sub-sections along a line. Format conventions: numeric line base + slash/letter/number for sub-division. Used in detailed engineering documentation, maintenance planning (specifying exact section for track work), and capacity modeling (different sub-sections may have different characteristics—electrified vs. non-electrified portions, single vs. double track). Essential for precise infrastructure referencing in technical reports, construction project specifications, and operational procedures. Corresponds to internal Infrabel nomenclature used by engineers and traffic controllers.</td></tr>
+      <tr><td>properties.trackcode</td><td>string</td><td>Alphanumeric track identifier code specific to this section, typically more granular than linecalfa. May distinguish individual tracks in multi-track sections (e.g., "12/0/UP" for up-line, "12/0/DN" for down-line), sidings (e.g., "12/0/S1" for siding 1), or specialized track types (freight-only tracks, high-speed dedicated tracks). Format varies by section complexity: simple sections may reuse linecalfa, complex junctions/stations have detailed track hierarchies. Used in train planning systems specifying exact track routing through complex nodes (e.g., "train X will use platform 3 via trackcode Y"), signal engineering (each track has distinct signaling configuration), and maintenance (work on specific track without affecting parallel tracks). Critical for operations at major stations and junctions where multiple tracks converge and precise path specification prevents conflicts.</td></tr>
+      <tr><td>properties.trackname</td><td>string</td><td>Human-readable track or section name, providing descriptive context beyond alphanumeric codes. Format varies: (a) Endpoint-based: "Section_OperationalPointA_to_OperationalPointB" (e.g., "Brussels_Midi_to_Halle"), clearly identifying section location along corridor. (b) Line-based: "Line 12 Brussels-Antwerp Section 0", explicitly stating parent line and position. (c) Location-based: "Brussels South Access", naming by geographic area or operational context. Used in reports, presentations, and stakeholder communications where human-readable names improve clarity over codes. Facilitates data exploration ("which section is linecalfa 161A?" → look up trackname), map labeling (annotating network visualizations), and integration with geographic search interfaces. May include multilingual variants (French/Dutch) for bilingual Belgium, though typically standardized to one language per dataset.</td></tr>
+      <tr><td>properties.etat</td><td>string</td><td>Section state/status, typically in French ("état" = state). Values indicate operational status: <strong>"En service" (In service)</strong> = active operational track carrying scheduled traffic, <strong>"Hors service" (Out of service)</strong> = temporarily closed for maintenance, repairs, or awaiting removal, <strong>"En construction" (Under construction)</strong> = new section under development, not yet operational. Some datasets use Dutch equivalents or standardized codes. Critical for capacity modeling (exclude non-operational sections from available network), routing (avoid closed sections when planning train paths), and temporal analysis (tracking infrastructure availability over time via timestamp queries). When combined with timestamp parameter, enables historical questions: "Was this section operational on date X?" for accident investigation, schedule reconstruction, or performance analysis.</td></tr>
+      <tr><td>properties.exploitation</td><td>string</td><td>Operational/exploitation characteristics of the section, indicating usage type or traffic management regime. Values may include: <strong>"Normale" (Normal)</strong> = standard mixed traffic (passenger and freight), <strong>"Voyageurs" (Passenger-only)</strong> = dedicated passenger lines (urban metros, high-speed lines), <strong>"Fret" (Freight-only)</strong> = industrial spurs, port connections, <strong>"Non électrifié" (Non-electrified)</strong> = diesel traction only, <strong>"Grande vitesse" (High-speed)</strong> = lines rated for 200+ km/h. Enables filtering for analysis: capacity modeling considers only relevant sections (freight studies exclude passenger-only lines), electrification planning identifies non-electrified gaps requiring upgrade, and high-speed network mapping isolates premier infrastructure. Used in strategic planning (prioritizing freight corridor improvements), environmental studies (comparing electric vs. diesel line usage), and operational optimization (routing electric vs. diesel trains appropriately).</td></tr>
+      <tr><td>properties.status</td><td>string</td><td>Current operational status code or description, potentially overlapping with or complementing "etat" field. May provide additional detail: signaling system status (traditional vs. ETCS Level 1/2), track occupation (single vs. double track, track gauge), or administrative status (mainline vs. secondary line classification). Specific values depend on Infrabel data model evolution. Used for advanced filtering (e.g., "show only ETCS-equipped sections" for autonomous train pilot projects), compatibility analysis (identifying sections requiring train equipment modifications), and modernization tracking (monitoring signaling system rollout progress across network). When unclear, cross-reference with "etat" and "exploitation" for comprehensive status understanding.</td></tr>
+      <tr><td>properties.modifdate</td><td>string</td><td>Last modification date for this section record, typically ISO 8601 format (<code>YYYY-MM-DD</code> or <code>YYYY-MM-DDTHH:MM:SS</code>). Indicates when section attributes (geometry, status, characteristics) were last updated in Infrabel's authoritative database. Used for data quality assessment (identifying stale records requiring validation), change tracking (building diff reports: "which sections changed since last month?"), and version control (ensuring analysis uses appropriately recent data). Essential for time-series analysis: comparing modification dates with timestamp parameter reveals when specific infrastructure changes occurred. Enables audit trails for regulatory compliance and infrastructure documentation (proving section attributes matched published values at specific dates for accident investigations or contract disputes).</td></tr>
+      <tr><td>properties.geo_point_2d</td><td>object|null</td><td>Representative geographic point for the section, typically centroid of section geometry or approximate midpoint. Object contains <code>lat</code> (latitude) and <code>lon</code> (longitude) in WGS84 decimal degrees. May be null for sections with complex or undefined geometry. Used for quick distance calculations without parsing full LineString geometry (e.g., "sections within 50km of Brussels" using centroid distance), map marker placement (annotating sections with status icons at representative points), and spatial indexing (R-tree or geohash indexing on centroids for fast proximity queries before detailed geometry analysis). Less precise than full geometry for detailed routing but sufficient for many analytical tasks and significantly faster to process (single point vs. multi-vertex linestring).</td></tr>
+      <tr><td>properties.geo_shape</td><td>null</td><td>Reserved field for alternative geometry representation, currently null in this dataset. May be populated in future versions with complex shape definitions, multi-part geometries not representable as simple LineString, or additional spatial metadata. Present for schema completeness and forward compatibility. Applications should rely on <code>features[].geometry</code> for actual spatial data.</td></tr>
+    </table>
+
+    <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #28a745; font-size: 0.95em;">
+      <strong>Operational Context:</strong> Infrabel's line sections data forms the foundation for understanding Belgium's rail infrastructure topology and capabilities. 
+      <em>For infrastructure planners</em>, section data enables network-wide capacity modeling (identifying bottleneck sections limiting corridor throughput), strategic investment prioritization (upgrading critical sections for maximum network benefit), and scenario testing (impact of new high-speed sections on overall connectivity). 
+      <em>For train operators (SNCB, NMBS, freight companies)</em>, section data informs route planning (selecting paths based on section characteristics—electrification for electric trains, clearances for oversize freight), timetable design (section capacities and speed limits constrain scheduling), and operational contingency planning (rerouting around section closures). 
+      <em>For regulatory authorities</em>, section data supports safety oversight (ensuring section attributes match safety certifications), capacity allocation (equitable distribution of scarce section slots among competing operators), and performance monitoring (delay attribution to specific section issues). 
+      <em>For researchers and analysts</em>, the data enables network resilience studies (analyzing redundancy—alternate routes when sections fail), economic impact modeling (quantifying value of section upgrades for freight competitiveness), and historical infrastructure evolution analysis (tracking Belgium's rail network development). 
+      The combination of geometric, technical, and status attributes creates a comprehensive digital twin of rail infrastructure, essential for 21st-century network management, predictive maintenance (analyzing section-level failure patterns), and digital transformation initiatives (autonomous train operation, predictive capacity management, real-time network optimization). 
+      Timestamp-based queries enable longitudinal studies tracking infrastructure changes, validating historical models, and supporting evidence-based planning decisions.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Observed dataset stability: ~406 updates between 2024-08-21 and 2025-10-23 (approximately daily updates)</li>
+      <li>Typical response: 500-1000 line section features covering Belgium's entire rail network (~3600 km mainline + secondary tracks)</li>
+      <li>Response size depends on geometry detail (coordinate density), number of active sections (varies with construction projects adding/removing sections), and attribute completeness</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Infrabel authoritative infrastructure database, published to <a href="https://opendata.infrabel.be/explore/dataset/lijnsecties/information" target="_blank" style="color: #0366d6;">opendata.infrabel.be</a> (Lijnsecties / Line Sections dataset)</li>
+      <li>Data reflects official infrastructure records used for operational planning, regulatory compliance, and stakeholder coordination</li>
+      <li>Updated regularly (approximately daily) to reflect infrastructure changes (new sections, closures, attribute modifications)</li>
+    </ul>
+
+    <h3>Transformation Pipeline</h3>
+    <ol>
+      <li><strong>Data Ingestion:</strong> Periodic fetch from Infrabel Open Data portal (API or bulk download), extract line sections records in source format (typically CSV or JSON)</li>
+      <li><strong>Geometry Processing:</strong> Parse spatial data (WKT, GeoJSON, or proprietary format) into standardized GeoJSON geometries (LineString, MultiLineString), validate coordinate reference system (ensure WGS84), simplify geometries if needed for web delivery performance</li>
+      <li><strong>Attribute Normalization:</strong> Standardize field names (linecalfa, trackcode, etat), translate values to consistent vocabulary (status codes), parse dates (modifdate) to ISO 8601 format</li>
+      <li><strong>Quality Validation:</strong> Check for missing required attributes (id, linecnum), validate geometry topology (no self-intersections, reasonable coordinate bounds), flag anomalies for review</li>
+      <li><strong>Timestamp Versioning:</strong> Store snapshots with timestamps for historical queries, enable ≤ timestamp retrieval (find most recent version before specified date)</li>
+      <li><strong>API Formatting:</strong> Structure as GeoJSON FeatureCollection, add response metadata (X-Data-Timestamp header), compress for efficient delivery</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li><strong>Network Topology Visualization:</strong> Render interactive map of Belgium's rail network, color-code sections by status (active/closed/construction), enable filtering by line or exploitation type, support click-for-details (section attributes in popup)</li>
+      <li><strong>Capacity Bottleneck Analysis:</strong> Join section data with traffic data (trains per day by section), identify bottleneck sections with high utilization, prioritize for double-tracking or signaling upgrades</li>
+      <li><strong>Alternative Route Planning:</strong> Build graph representation (nodes=operational points, edges=line sections), compute shortest/fastest paths between stations, identify redundant routes for resilience analysis</li>
+      <li><strong>Infrastructure Investment Planning:</strong> Map non-electrified sections for electrification program planning, identify sections with outdated signaling for ETCS rollout, calculate costs based on section lengths</li>
+      <li><strong>Historical Network Analysis:</strong> Query past timestamps to reconstruct historical network configurations, analyze impact of new high-speed lines (comparing network before/after), study infrastructure evolution over decades</li>
+      <li><strong>Integration with Train Position Data:</strong> Map real-time train positions (from SNCB vehicle-position) onto line sections, visualize section occupancy, detect congestion in real-time, support operations control center displays</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Important Notes</h2>
+    <ul>
+      <li><strong>Scale Limitation:</strong> Data intended for maximum scale 1:25,000 (schematic representations). Not suitable for engineering design, precise GPS positioning, or construction-grade applications requiring centimeter accuracy.</li>
+      <li><strong>Coordinate with Operational Points:</strong> Line sections reference endpoint operational points by ID (ptcarid implicitly via section naming conventions). Must be used with Operational Points dataset for complete network topology (section endpoints geolocated at operational point coordinates).</li>
+      <li><strong>Geometry Simplification:</strong> Coordinates are simplified/generalized for web delivery and visualization. For precise engineering geometry (signal placement, track centerline surveys), consult Infrabel's engineering data systems (not public datasets).</li>
+    </ul>
+  </div>
+</div>

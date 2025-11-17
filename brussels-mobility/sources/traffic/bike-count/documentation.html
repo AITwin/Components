@@ -1,0 +1,124 @@
+<!-- Embedded fragment: Bike Count -->
+<div id="bike-count">
+  <style>
+    /* Scoped styles */
+    #bike-count { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #bike-count h1,
+    #bike-count h2,
+    #bike-count h3 { color: #16324a; margin-top: 1.1rem; }
+    #bike-count code,
+    #bike-count pre { background: #f6f8fa; border-radius: 6px; }
+    #bike-count pre { padding: 12px; overflow: auto; }
+    #bike-count table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #bike-count th,
+    #bike-count td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #bike-count th { background: #f3f6f9; }
+    #bike-count .muted { color:#566; font-size: 0.95rem; }
+    #bike-count ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #bike-count .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>Bike Count</h1>
+  <pre><code>GET /traffic/bike-count</code></pre>
+  <p class="muted">
+    Returns near real-time bicycle passage counts for automated counters across Brussels, as compact JSON.
+    Ideal for dashboards, trend analysis, and sustainable mobility insights.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Provides live and aggregated bicycle count data collected from automated counters in the Brussels-Capital Region.
+      For each counter, the API returns current readings, including hourly, daily, and year-to-date counts.
+      This data supports smart mobility monitoring, analytics, and policy evaluation.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication / Response Schema / Other Status Codes -->
+
+  <div class="section">
+    <h2>Query Parameters</h2>
+    <table>
+      <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
+      <tr>
+        <td><code>timestamp</code></td>
+        <td>integer</td>
+        <td>No</td>
+        <td>If omitted, returns the latest available snapshot; otherwise returns the closest snapshot ≤ the given timestamp.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Output Format</h2>
+    <p><strong>Content-Type:</strong> <code>application/json</code></p>
+    <p>Returns a single JSON object containing aggregated count data per counter.</p>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Path</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>data</code></td><td>object</td><td>Dictionary of all active bike counters, keyed by their unique counter identifier. Each counter represents a permanent automated bicycle counting station deployed at strategic locations across Brussels to monitor cycling volumes and track progress toward sustainable mobility targets. Counter IDs are stable infrastructure identifiers (e.g., "CB1101", "CB2205") that persist across time, enabling longitudinal trend analysis and infrastructure performance evaluation.</td></tr>
+      <tr><td><code>data.&lt;COUNTER_ID&gt;</code></td><td>object</td><td>Complete reading for one specific counter, containing temporal count aggregations (hourly, daily, yearly) and measurement timestamp. Structure enables rapid access to any counter's current state using its ID as key. Aggregated format optimized for dashboard applications requiring multi-temporal views (current hour activity vs. today's total vs. year-to-date cumulative progress). Essential for: real-time monitoring displays, comparative analysis across counters ("which locations see highest cycling volumes?"), and tracking daily/seasonal patterns.</td></tr>
+      <tr><td><code>data.&lt;COUNTER_ID&gt;.cnt_time</code></td><td>string</td><td>Measurement timestamp in ISO-8601 format indicating when this count was recorded or last updated. Represents the moment the counter reading was captured, crucial for understanding data freshness and temporal context. Used for: determining measurement recency (is this current hour's data or delayed?), synchronizing counts across multiple counters for comparative analysis at specific moments, and constructing time-series datasets by polling this endpoint repeatedly and tracking cnt_time changes. Essential for distinguishing real-time feeds from historical snapshots.</td></tr>
+      <tr><td><code>data.&lt;COUNTER_ID&gt;.hour_cnt</code></td><td>integer</td><td>Number of bicycles detected in the most recent complete hour (rolling 60-minute window preceding cnt_time, or last full hour boundary depending on counter configuration). Typical Brussels bike lane counters: 10-50 bikes/hour off-peak, 100-300/hour morning/evening peak, 5-15/hour overnight. Provides highest-resolution temporal granularity for understanding current cycling activity patterns. Used for: real-time dashboards showing "live" cycling intensity, identifying peak hours requiring infrastructure capacity (bike parking, signal timing), detecting anomalies (sudden drops suggesting counter malfunction, unusually high counts during events), and calculating short-term growth trends (this hour vs. same hour yesterday/last week).</td></tr>
+      <tr><td><code>data.&lt;COUNTER_ID&gt;.day_cnt</code></td><td>integer</td><td>Cumulative bicycle count for the current calendar day (from midnight to cnt_time, in local Brussels time). Typical Brussels: 200-800 daily passages on neighborhood bike lanes, 1,000-4,000 on major cycling corridors, 100-300 on recreational paths. Resets to zero at midnight each day. Critical for: daily trend monitoring (tracking day-to-day growth in cycling activity), comparing weekday vs. weekend patterns (commute-dominated vs. recreational cycling), weather impact analysis (rain/cold suppression effects), and seasonal comparisons (this Monday in January vs. last Monday in July). Daily aggregations smooth out hourly noise while remaining responsive to short-term changes, making them ideal for operational mobility monitoring and public engagement (posting daily totals on counter displays or social media to celebrate cycling growth).</td></tr>
+      <tr><td><code>data.&lt;COUNTER_ID&gt;.year_cnt</code></td><td>integer</td><td>Year-to-date cumulative count of all bicycles detected since January 1st. Typical Brussels major corridors: 50,000-300,000 annual passages; network-wide totals reach millions. Never resets during the calendar year, providing growing cumulative total. Essential for: tracking annual cycling growth targets (Brussels aims to triple cycling mode share by 2030—year_cnt enables monthly progress checks), comparing year-over-year growth (is this counter on track to exceed last year's total?), evaluating infrastructure ROI (did new bike lane construction increase annual volumes as projected?), and celebrating milestones (announcing when city-wide cumulative counts reach symbolic thresholds). Long-term metric smoothing short-term weather/seasonal variability, revealing sustained behavioral shifts in cycling adoption. Used by city authorities to report progress on sustainable mobility policy commitments and justify continued cycling infrastructure investments.</td></tr>
+      <tr><td><code>requestDate</code></td><td>string</td><td>ISO-8601 timestamp indicating when the API server processed this request and assembled the response. Distinct from cnt_time (which reflects counter measurement times). Used for: API response time validation, distinguishing API latency from data staleness (large gap between requestDate and cnt_time suggests data pipeline delays), and audit trails in automated data collection systems. Enables diagnosis of data freshness issues: if requestDate is current but cnt_time is hours old, problem lies in counter reporting/data ingestion rather than API serving.</td></tr>
+    </table>
+
+    <pre><code>{
+  "data": {
+    "CB1101": {
+      "cnt_time": "2025-08-23T09:00:00Z",
+      "hour_cnt": 42,
+      "day_cnt": 318,
+      "year_cnt": 58219
+    }
+  },
+  "requestDate": "2025-08-23T09:05:00Z"
+}</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>~20–25 counters per response</li>
+      <li>~250–300 bytes per counter</li>
+      <li>Typical payload: ~6–8 KB (uncompressed)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Brussels Mobility — Eco-Counter automated bicycle sensors</li>
+    </ul>
+
+    <h3>Pipeline</h3>
+    <ol>
+      <li><strong>Aggregation:</strong> Hourly, daily, and yearly totals computed from raw sensor detections.</li>
+      <li><strong>ID Mapping:</strong> Hardware device IDs mapped to public counter identifiers.</li>
+      <li><strong>Timestamp Alignment:</strong> All times normalized to UTC.</li>
+      <li><strong>Formatting:</strong> Compact JSON serialization per counter.</li>
+      <li><strong>Caching:</strong> Latest snapshot cached for low-latency API delivery.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Live dashboards of cycling activity by location.</li>
+      <li>Impact evaluation of new cycling infrastructure.</li>
+      <li>Monitoring seasonal and long-term cycling trends.</li>
+      <li>Integration into smart city mobility analytics.</li>
+      <li>Performance indicators for sustainable transport.</li>
+    </ul>
+  </div>
+
+  <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #28A745; font-size: 0.95em;">
+    <strong>Operational Context:</strong> This bike count feed provides critical infrastructure monitoring for Brussels' strategic bicycle network, tracking real-time and cumulative cycling volumes from permanent automated counters (Eco-Counter devices) deployed at key locations across the city's growing bike lane network. <em>For city planners and mobility managers</em>, the multi-temporal aggregations (hour/day/year) enable comprehensive cycling infrastructure performance evaluation: hour_cnt reveals peak capacity constraints requiring wider bike lanes or parallel routes, day_cnt enables immediate weather/seasonal impact assessment (quantifying ridership suppression during rain or cold), and year_cnt tracks progress toward Brussels' ambitious 2030 cycling mode share targets (tripling from ~5% to 15%). Before/after studies measure infrastructure ROI—did the new protected bike lane increase year_cnt by 50% as projected? Did intersection redesign reduce peak hour conflicts evident in smoother hour_cnt patterns? <em>For cycling advocates and community groups</em>, public counter data democratizes mobility intelligence: residents can monitor "their" counter's daily totals, celebrate growth milestones (posting on social media when year_cnt hits 100,000), and build data-driven cases for network expansion ("our neighborhood street sees 200+ daily cyclists but has no dedicated infrastructure"). <em>For researchers and policy analysts</em>, the dataset enables sophisticated mobility studies: temporal analysis revealing commute vs. recreational patterns (weekday spikes vs. weekend volumes), weather elasticity calculations (how much does rain reduce cycling?), seasonal adaptation research (winter cycling viability in Brussels climate), and equity analyses (which neighborhoods have counter coverage vs. infrastructure investment gaps?). <em>For app developers and civic tech builders</em>, the compact JSON format supports real-time public dashboards (live counter displays on websites, mobile apps showing nearby cycling activity), gamification (leaderboards of busiest counters, personal contribution tracking for regular cyclists), and integration with trip planners (routing cyclists to monitored routes with objective safety/popularity evidence). The combination of real-time granularity (hourly updates) and long-term cumulative tracking (year-to-date totals) makes this feed essential for both operational monitoring (today's cycling conditions) and strategic planning (are we winning the modal shift battle?), while permanent counter infrastructure provides consistency impossible with manual counts or short-term studies.
+  </p>
+</div>

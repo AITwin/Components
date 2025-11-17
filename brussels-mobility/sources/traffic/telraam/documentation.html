@@ -1,0 +1,134 @@
+<!-- Embedded fragment: Telraam -->
+<div id="telraam">
+  <style>
+    /* Scoped styles */
+    #telraam { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #telraam h1,
+    #telraam h2,
+    #telraam h3 { color: #16324a; margin-top: 1.1rem; }
+    #telraam code,
+    #telraam pre { background: #f6f8fa; border-radius: 6px; }
+    #telraam pre { padding: 12px; overflow: auto; }
+    #telraam table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #telraam th,
+    #telraam td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #telraam th { background: #f3f6f9; }
+    #telraam .muted { color:#566; font-size: 0.95rem; }
+    #telraam ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #telraam .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>Telraam</h1>
+  <pre><code>GET /traffic/telraam</code></pre>
+  <p class="muted">
+    Provides near real-time multimodal traffic observations for Telraam street segments in Brussels, returned as GeoJSON.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Returns live traffic counts from Telraam sensors across Brussels street segments.  
+      The data includes mode-specific counts (cars, bikes, pedestrians, heavy vehicles), uptime metrics, 
+      reporting intervals, and speed indicators such as <code>v85</code>.  
+      Each segment is enriched with geometry for direct use in mapping and analysis tools.  
+      If a timestamp is not specified, the latest snapshot is returned; otherwise, the closest ≤ snapshot is used.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication / Response Schema / Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Format</h2>
+    <p><strong>Content-Type:</strong> <code>application/json</code> (GeoJSON)</p>
+    <p>Returns a GeoJSON <code>FeatureCollection</code> where each feature represents a monitored street segment and its current metrics.</p>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>type</code></td><td>string</td><td>Top-level GeoJSON type, always <code>FeatureCollection</code>. Standard geospatial format enabling direct integration with mapping libraries (Leaflet, Mapbox GL JS, OpenLayers) and GIS platforms (QGIS, ArcGIS) for visualizing Brussels traffic patterns, mode-specific volumes, and speed distributions across the Telraam monitoring network.</td></tr>
+      <tr><td><code>features</code></td><td>array</td><td>Collection of street segment features, each representing one Telraam monitoring location with traffic counts, speed metrics, and sensor status. Array size reflects active sensor network coverage—Brussels deployment includes dozens to hundreds of sensors installed by citizen volunteers on residential streets, providing granular traffic intelligence unavailable from traditional infrastructure-based counting stations. Each feature enables localized traffic analysis, mode share calculations, and street-level mobility pattern understanding.</td></tr>
+      <tr><td><code>features[].geometry.type</code></td><td>string</td><td>Geometry type, typically <code>LineString</code> (street segment) or <code>MultiLineString</code> (complex intersection or non-contiguous monitored sections). LineString represents the road segment being monitored, with vertices defining its geographic extent. This spatial representation enables: segment-level traffic aggregation, proximity-based queries ("traffic counts near my location"), network-wide heat mapping of volumes/speeds, and correlation with road network characteristics (width, surface type, functional classification).</td></tr>
+      <tr><td><code>features[].geometry.coordinates</code></td><td>array</td><td>Ordered array of [longitude, latitude] coordinate pairs in WGS84 (EPSG:4326) defining the monitored road segment's geographic path. For Brussels: longitude ~4.24-4.48°E, latitude ~50.79-50.91°N. Coordinates trace the centerline of the street section visible to the Telraam sensor, typically spanning 20-100m depending on sensor placement height and street geometry. Enables precise mapping of count locations, spatial joins with road network databases for attribute enrichment (road type, speed limits, infrastructure characteristics), and geographic analysis of traffic patterns (corridor-level aggregations, neighborhood comparisons).</td></tr>
+      <tr><td><code>features[].properties.segment_id</code></td><td>number</td><td>Unique Telraam segment identifier persistently assigned to this monitoring location. Stable across time, enabling longitudinal tracking of traffic evolution at specific locations ("has bicycle traffic increased on segment 1234 over the past year?"). Essential for: time-series analysis (trend detection, before/after infrastructure intervention studies), joining with external Telraam metadata (sensor installation date, volunteer contact info, calibration history), and filtering/aggregating counts by location. Can be cross-referenced with Telraam's public database for additional segment context (street name, neighborhood, sensor type).</td></tr>
+      <tr><td><code>properties.date</code></td><td>string</td><td>Observation timestamp in ISO-8601 format (e.g., "2025-01-15T14:30:00Z"), indicating when this traffic count period concluded. Represents the end of the measurement interval (e.g., if period is "5m", this timestamp marks the end of that 5-minute window). Critical for: temporal alignment with other mobility datasets (correlating traffic volumes with weather, transit schedules, events), time-of-day pattern analysis (peak vs. off-peak volumes), and understanding measurement recency (data freshness assessment for real-time applications).</td></tr>
+      <tr><td><code>properties.period</code></td><td>string</td><td>Reporting interval duration indicating the time window over which counts were aggregated (e.g., "5m" for 5 minutes, "1h" for hourly, "1d" for daily). Shorter periods provide higher temporal resolution for detailed pattern analysis but with higher count variability (statistical noise); longer periods yield smoother trends but miss short-duration events. Typical Telraam reporting: 5-15 minute intervals for real-time applications, hourly for trend analysis, daily for long-term studies. Essential for correctly interpreting count magnitudes (5-minute car count of 10 vs. hourly count of 120 have very different implications) and calculating rates (vehicles per hour).</td></tr>
+      <tr><td><code>properties.timezone</code></td><td>string</td><td>Timezone identifier for the observation (e.g., "Europe/Brussels"), enabling proper conversion of UTC timestamps to local time for human interpretation and alignment with local activity patterns. Brussels uses CET (UTC+1) in winter and CEST (UTC+2) in summer with DST transitions. Critical for: understanding diurnal traffic patterns in local context (morning peak at 8 AM local time), seasonal analysis accounting for daylight shifts, and presenting data in formats familiar to local stakeholders (traffic reports, community dashboards).</td></tr>
+      <tr><td><code>properties.car</code></td><td>number|string</td><td>Count of cars detected during the measurement period. Telraam uses computer vision to classify vehicles by size/shape—cars include sedans, SUVs, small vans. Typical Brussels residential street: 20-100 cars/hour daytime, 5-20 cars/hour nighttime. Used for: calculating mode share (cars vs. bikes vs. pedestrians), identifying car-dominated corridors requiring traffic calming, measuring impacts of car-free zones or circulation plans, and understanding automobile pressure on local streets. String type may indicate missing data ("N/A") or privacy suppression for very low counts. High car volumes on residential streets often trigger community advocacy for traffic management interventions.</td></tr>
+      <tr><td><code>properties.bike</code></td><td>number|string</td><td>Count of bicycles (including e-bikes, cargo bikes) detected during the period. Telraam's computer vision distinguishes bikes by two-wheeled profile and size. Typical Brussels: highly variable by location and infrastructure—bike lanes see 50-200 bikes/hour peak, streets without facilities 5-20/hour. Critical for: cycling infrastructure planning (demonstrating demand for bike lanes), measuring effectiveness of bike-friendly interventions (before/after counts), calculating cycling mode share, and identifying high-potential corridors for cycling promotion. Bike counts often show stronger temporal patterns (sharp commute peaks) and weather sensitivity than other modes.</td></tr>
+      <tr><td><code>properties.pedestrian</code></td><td>number|string</td><td>Count of pedestrians detected crossing or walking along the monitored segment. Telraam sensors detect pedestrians passing through the camera's field of view. Typical counts vary dramatically by context: commercial streets 100-500/hour daytime, residential 10-50/hour. Used for: pedestrian infrastructure prioritization (demonstrating foot traffic supporting wider sidewalks, crossings), assessing walkability and street vitality, measuring impacts of pedestrianization schemes, and understanding neighborhood activity patterns. Note: counts may underestimate total pedestrian activity as sensors typically monitor street crossings rather than full sidewalk volumes.</td></tr>
+      <tr><td><code>properties.heavy</code></td><td>number|string</td><td>Count of heavy vehicles (trucks, buses, delivery vans) detected. Telraam classifies by larger size profile. Typical residential streets: 2-10 heavy vehicles/hour, commercial/arterial 20-100/hour. Critical for: identifying truck routes through inappropriate neighborhoods (residential streets used as shortcuts), measuring freight traffic impacts (noise, air quality, pavement wear), monitoring delivery vehicle concentrations (e-commerce impact), and enforcing weight/size restrictions. High heavy vehicle counts on local streets often indicate routing problems requiring traffic management interventions (signage, physical restrictions, enforcement).</td></tr>
+      <tr><td><code>properties.v85</code></td><td>number|string</td><td>85th percentile speed in km/h—the speed at or below which 85% of vehicles travel. Standard traffic engineering metric for understanding actual operating speeds vs. posted limits. For Brussels 30 km/h zones (common residential): v85 values above 40 km/h indicate poor compliance requiring enforcement or traffic calming; values 30-35 km/h suggest adequate but imperfect adherence. Used for: identifying speeding hotspots requiring intervention (speed cameras, road narrowing, chicanes), evaluating traffic calming effectiveness (before/after v85 reductions), prioritizing enforcement resources, and safety assessments (higher speeds correlate with severe injury crash risk). V85 provides more realistic speed picture than average (less affected by occasional very slow vehicles) and is standard for setting speed limits and designing interventions.</td></tr>
+      <tr><td><code>properties.uptime</code></td><td>number|string</td><td>Sensor operational uptime as percentage (0-100%) or ratio (0-1) during the reporting period. Indicates data quality and completeness—100% means sensor functioned entire period; 50% suggests intermittent operation (power issues, connectivity problems, obstructions). Low uptime (<80%) flags: data quality concerns (counts may underestimate actual volumes), sensor maintenance needs (battery replacement, cleaning, repositioning), or systematic issues (vandalism, weather damage). Essential for: weighting counts when aggregating across sensors (down-weighting low-uptime locations), identifying sensors needing volunteer intervention, and understanding coverage gaps in the monitoring network. Uptime metadata distinguishes "no traffic" from "sensor malfunction."</td></tr>
+      <tr><td><code>properties.last_data_package</code></td><td>string</td><td>ISO-8601 timestamp indicating when the sensor last successfully transmitted data to Telraam servers. Used to assess data freshness and sensor connectivity health. Large gaps between last_data_package and current time indicate: sensor offline (power failure, connectivity loss), configuration issues, or sensor removal. Critical for: network health monitoring (identifying dark sensors requiring attention), data currency assessment (determining if counts reflect recent conditions), and volunteer engagement (triggering alerts for sensor owners when devices go dark). Enables distinction between "sensor reported zero counts" (truly quiet period) vs. "sensor not reporting" (malfunction).</td></tr>
+      <tr><td><code>message</code></td><td>string</td><td>Optional informational or error message from the Telraam API providing context about data quality, processing status, or system conditions. May include: data coverage notes ("partial period coverage due to sensor downtime"), calibration warnings ("counts subject to verification"), or system announcements ("maintenance affecting data availability"). Used for: interpreting unusual data patterns, understanding API behavior, and providing user-facing explanations in applications consuming this data.</td></tr>
+      <tr><td><code>status_code</code></td><td>number</td><td>Optional numeric code describing API response state or data quality level. May indicate: successful data retrieval (200-series), partial data availability (warning codes), or data quality flags (calibration status, confidence levels). Complements the message field with machine-readable status for programmatic handling of edge cases, data quality filtering, and error handling in automated pipelines.</td></tr>
+    </table>
+
+    <pre><code>{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[4.3517, 50.8503], [4.3521, 50.8506]]
+      },
+      "properties": {
+        "segment_id": 12345,
+        "date": "2025-08-23T08:55:00Z",
+        "period": "5m",
+        "timezone": "Europe/Brussels",
+        "car": 12,
+        "bike": 3,
+        "pedestrian": 5,
+        "heavy": 0,
+        "v85": 47.2,
+        "uptime": 99.3,
+        "last_data_package": "2025-08-23T08:50:00Z"
+      }
+    }
+  ]
+}</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Each feature corresponds to a Telraam-monitored street segment.</li>
+      <li>The number of features depends on how many sensors are active at query time.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <ul>
+      <li>Telraam Live API — near real-time multimodal traffic data.</li>
+    </ul>
+
+    <h3>Pipeline</h3>
+    <ol>
+      <li><strong>Authentication:</strong> MobilityTwin retrieves snapshots via Telraam’s live API using secure keys.</li>
+      <li><strong>Ingestion:</strong> Fetch and harmonize data for each Telraam segment.</li>
+      <li><strong>GeoJSON Assembly:</strong> Attach geometry and normalize fields.</li>
+      <li><strong>Serving:</strong> Return the latest or nearest ≤ snapshot as a GeoJSON FeatureCollection.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Traffic mix analysis (cars, bikes, pedestrians, heavy vehicles).</li>
+      <li>Urban mobility trend and safety monitoring.</li>
+      <li>Infrastructure planning and intervention impact assessment.</li>
+      <li>Sensor uptime and network health tracking.</li>
+      <li>Speed compliance and V85 analytics.</li>
+    </ul>
+  </div>
+
+  <p style="margin-top: 1.5em; padding: 0.75em; background: #f8f9fa; border-left: 3px solid #FF6B35; font-size: 0.95em;">
+    <strong>Operational Context:</strong> This Telraam traffic monitoring feed represents a transformative approach to urban traffic intelligence—citizen-powered sensors providing modal disaggregation (car/bike/pedestrian/heavy) and speed data at granular street-segment level, filling massive gaps in traditional infrastructure-based monitoring that focuses on major corridors while leaving residential streets unmeasured. <em>For city traffic planners and mobility managers</em>, Telraam data enables evidence-based interventions: identifying residential streets with inappropriate through-traffic (high car volumes, speeding evident in v85 >40 km/h in 30 zones), demonstrating latent cycling demand on corridors lacking infrastructure (justifying bike lane investments), and measuring before/after impacts of traffic calming (quantifying volume reductions, speed decreases). <em>For neighborhood advocates and community groups</em>, the data democratizes traffic intelligence—residents can monitor their own streets, document speeding or truck intrusions with objective counts, and build data-driven cases for traffic management changes (speed cameras, turn restrictions, modal filters). <em>For researchers and policy analysts</em>, Brussels-wide Telraam coverage enables unprecedented mobility pattern studies: mode share calculations at neighborhood scale (tracking progress toward sustainable mobility targets), temporal analysis of car dependency (weekday vs. weekend patterns), weather/seasonal impacts on cycling volumes, and equity analyses (comparing traffic impacts across socioeconomic neighborhoods). <em>For app developers and civic tech builders</em>, the feed supports real-time neighborhood traffic dashboards, automated speeding alerts for community groups, before/after intervention visualizations, and integration with other mobility data (correlating car volumes with air quality, transit ridership, micromobility usage). The Telraam citizen science model—volunteers hosting window-mounted sensors, contributing to collective traffic intelligence—creates dense monitoring networks impossible with traditional infrastructure approaches, while the modal disaggregation (distinguishing cars/bikes/pedestrians/heavy at individual-vehicle level) provides insights critical for 21st-century sustainable mobility planning that car-only counts cannot deliver.
+  </p>
+</div>

@@ -1,0 +1,127 @@
+<!-- Embedded fragment: Tunnels -->
+<div id="tunnels">
+  <style>
+    /* Scoped styles */
+    #tunnels { font-family: Inter, Arial, sans-serif; max-width: 980px; margin: 28px auto; line-height: 1.6; color: #222; padding: 0 16px; }
+    #tunnels h1,
+    #tunnels h2,
+    #tunnels h3 { color: #16324a; margin-top: 1.1rem; }
+    #tunnels code,
+    #tunnels pre { background: #f6f8fa; border-radius: 6px; }
+    #tunnels pre { padding: 12px; overflow: auto; }
+    #tunnels table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    #tunnels th,
+    #tunnels td { border: 1px solid #e1e4e8; padding: 8px; text-align: left; vertical-align: top; }
+    #tunnels th { background: #f3f6f9; }
+    #tunnels .muted { color:#566; font-size: 0.95rem; }
+    #tunnels ul { margin: 0.4rem 0 0.8rem 1.1rem; }
+    #tunnels .section { margin-bottom: 18px; }
+  </style>
+
+  <h1>Tunnels</h1>
+  <pre><code>GET /traffic/tunnels</code></pre>
+  <p class="muted">
+    Real-time traffic metrics for Brussels tunnel devices, returned as structured JSON.
+  </p>
+
+  <div class="section">
+    <h2>Description</h2>
+    <p>
+      Provides near real-time traffic metrics per tunnel device.  
+      For each sensor, the API includes multiple aggregation windows (<code>1m</code>, <code>5m</code>, <code>15m</code>, <code>60m</code>) 
+      and direction buckets (<code>t1</code>, <code>t2</code>) reporting vehicle <code>count</code>, 
+      <code>occupancy</code>, <code>speed</code>, and their window timestamps.  
+      If a timestamp is omitted, the latest snapshot is returned; if provided, the closest ≤ dataset is served.
+    </p>
+  </div>
+
+  <!-- Removed: Authentication / Response Schema / Other Status Codes -->
+
+  <div class="section">
+    <h2>Output Format</h2>
+    <p><strong>Content-Type:</strong> <code>application/json</code></p>
+    <p>Each device’s data is organized by time window and direction, within a single JSON structure keyed by device ID.</p>
+  </div>
+
+  <div class="section">
+    <h2>Output Data Attributes</h2>
+    <table>
+      <tr><th>Path</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>data</code></td><td>object</td><td>Top-level container organizing tunnel traffic metrics by device identifier. Dictionary structure with device IDs as keys enables rapid lookup of specific tunnel detector data. Brussels tunnel network includes major road tunnels (Leopold II, Annie Cordy, Stéphanie, etc.) equipped with dozens of monitoring devices providing comprehensive traffic intelligence across the city's subterranean infrastructure critical for ring road and center access.</td></tr>
+      <tr><td><code>data.{DEVICE_ID}</code></td><td>object</td><td>Complete traffic metrics for one specific tunnel detector device, identified by unique ID (e.g., "TUN-DEV-1024"). Each device represents a fixed sensor installation at a specific tunnel location (entry, exit, mid-tunnel) and lane/direction. Contains multi-temporal aggregations (1m/5m/15m/60m windows) and directional splits (t1/t2) providing comprehensive view of traffic conditions at that detector point. Device IDs are stable infrastructure identifiers enabling longitudinal analysis and geographic mapping when joined with tunnel topology databases.</td></tr>
+      <tr><td><code>data.{DEVICE_ID}.results</code></td><td>object</td><td>Nested structure containing traffic aggregations organized by time window duration (1-minute, 5-minute, 15-minute, 60-minute). Multi-temporal approach enables applications to select appropriate granularity: 1m for real-time incident detection (rapid congestion onset), 5m for operational monitoring (standard tunnel management dashboards), 15m for trend analysis (smoothing short-term fluctuations), 60m for strategic planning (hourly traffic patterns). Each window contains directional traffic metrics (t1/t2) with count, occupancy, speed measurements.</td></tr>
+      <tr><td><code>results."1m" / "5m" / "15m" / "60m"</code></td><td>object</td><td>Time window aggregation level specifying the duration over which traffic metrics (count, occupancy, speed) are averaged. "1m" = 1-minute (highest temporal resolution, captures rapid changes, most volatile), "5m" = 5-minute (standard operational monitoring), "15m" = 15-minute (smooths short-term variability, common for trend charts), "60m" = hourly (strategic analysis, daily pattern visualization). Shorter windows detect incidents faster but show more noise; longer windows provide stable trends but lag real-time conditions. Critical for choosing data appropriate to use case: incident detection requires 1m, traffic reports use 5m, planning studies use 60m.</td></tr>
+      <tr><td><code>… .t1</code></td><td>object</td><td>Traffic metrics for direction bucket "t1", typically representing one travel direction through the tunnel (e.g., inbound toward city center, eastbound, north tube). Contains count, occupancy, speed, and temporal bounds for vehicles traveling in this direction during the aggregation window. Directional separation critical for: identifying asymmetric congestion (one direction flowing freely while opposite is congested—common during peak commute when flow is predominantly one-way), capacity management (tunnels may have different lane configurations per direction), and incident impact assessment (accidents typically affect one direction more severely).</td></tr>
+      <tr><td><code>… .t2</code></td><td>object</td><td>Traffic metrics for direction bucket "t2", representing the opposite travel direction from t1 (e.g., outbound from city center, westbound, south tube). Parallel structure to t1 with same metric types (count, occupancy, speed, timestamps). Enables: directional comparisons (is morning rush hour showing expected inbound dominance?), balanced flow analysis (tunnels operating at capacity in both directions or asymmetric?), and comprehensive network state assessment (understanding bidirectional tunnel utilization essential for Brussels ring road and radial corridor management).</td></tr>
+      <tr><td><code>… .t*.count</code></td><td>integer</td><td>Number of vehicles detected passing through the sensor in this direction during the time window. Direct measure of traffic volume—higher counts indicate heavier traffic. Typical Brussels tunnel values: 50-200 vehicles per 5-minute window during normal flow, 300+ during peak hours (indicating high but flowing traffic), <20 suggesting very light traffic or potential sensor/tunnel issues. Used for: volume analysis (is tunnel at capacity?), demand forecasting (typical hourly patterns for planning), incident detection (sudden count drops suggest blockage/closure), and capacity utilization (comparing observed counts to tunnel design capacity).</td></tr>
+      <tr><td><code>… .t*.occupancy</code></td><td>number</td><td>Occupancy ratio indicating the fraction of time the detection zone was occupied by vehicles during the window, typically expressed as decimal 0-1 (e.g., 0.31 = 31%) or percentage 0-100. Critical congestion indicator—higher occupancy means less gap time between vehicles, indicating denser traffic. Typical ranges: <0.15 (15%) free-flow conditions with large gaps, 0.15-0.30 moderate traffic with some bunching, 0.30-0.50 heavy traffic approaching capacity, >0.50 congested/stop-and-go conditions. More sensitive congestion indicator than count alone because high counts with low occupancy suggest fast-moving dense traffic (high throughput), while high occupancy with moderate counts indicates slow-crawling vehicles (congestion). Essential for: capacity management (tunnels designed for specific occupancy thresholds), incident detection (occupancy spikes when traffic stalls), and queue length estimation (high occupancy correlates with backed-up queues).</td></tr>
+      <tr><td><code>… .t*.speed</code></td><td>number</td><td>Average vehicle speed in kilometers per hour (km/h) across all vehicles detected during the window. Direct measure of traffic flow quality—higher speeds indicate free-flowing conditions, lower speeds suggest congestion or incidents. Typical Brussels tunnel speeds: 60-90 km/h free-flow (tunnels often have 70-90 km/h limits), 40-60 km/h moderate traffic (some slowdown but still flowing), 20-40 km/h heavy congestion, <20 km/h severe congestion/stop-and-go. Speed is most intuitive congestion metric for public communication ("traffic moving at 25 km/h in Leopold II tunnel—expect delays"). Critical for: travel time estimation (speed × distance = time through tunnel), incident detection (sudden speed drops flag accidents/breakdowns), congestion classification (speed thresholds define "free-flow" vs "congested"), and air quality correlation (low speeds in tunnels mean prolonged emission exposure, ventilation system activation).</td></tr>
+      <tr><td><code>… .t*.start_time</code></td><td>string</td><td>ISO-8601 timestamp marking the beginning of the aggregation window. For 5-minute window ending at 09:00:00, start_time would be 08:55:00. Defines temporal boundaries essential for: precise time-series construction (knowing exact observation periods), window alignment verification (ensuring consecutive windows don't overlap/gap), and correlating with external events (did traffic spike align with accident reported at 08:57?). Together with end_time, establishes exact measurement period covered by count/occupancy/speed metrics.</td></tr>
+      <tr><td><code>… .t*.end_time</code></td><td>string</td><td>ISO-8601 timestamp marking the end of the aggregation window—typically the moment users care most about for "current" traffic conditions. Represents when this measurement period concluded. Used for: data recency assessment (how fresh is this data?), temporal ordering (sorting observations chronologically), and real-time traffic reporting ("as of 09:00, tunnel traffic moving at..."). Gap between end_time and current time indicates data latency or reporting delay.</td></tr>
+      <tr><td><code>requestDate</code></td><td>string</td><td>ISO-8601 timestamp indicating when the API server generated this response. Distinct from measurement end_times (which reflect actual traffic observation periods). Used for: API performance monitoring, response caching validation, audit trails in automated data collection, and diagnosing freshness issues (if requestDate is current but all end_times are old, problem is in data pipeline rather than API serving).</td></tr>
+    </table>
+
+    <pre><code>{
+  "data": {
+    "TUN-DEV-1024": {
+      "results": {
+        "5m": {
+          "t1": { "count": 42, "occupancy": 0.31, "speed": 57.4, "start_time": "2025-08-23T08:55:00Z", "end_time": "2025-08-23T09:00:00Z" },
+          "t2": { "count": 39, "occupancy": 0.28, "speed": 60.1, "start_time": "2025-08-23T08:55:00Z", "end_time": "2025-08-23T09:00:00Z" }
+        },
+        "15m": {
+          "t1": { "count": 120, "occupancy": 0.33, "speed": 55.6, "start_time": "2025-08-23T08:45:00Z", "end_time": "2025-08-23T09:00:00Z" }
+        }
+      }
+    }
+  },
+  "requestDate": "2025-08-23T09:00:10Z"
+}</code></pre>
+  </div>
+
+  <div class="section">
+    <h2>Estimated Response Volume</h2>
+    <ul>
+      <li>Historical coverage: ~440k snapshots (2024-08-21 → 2025-08-04)</li>
+      <li>Per-response size depends on number of active devices</li>
+      <li>Lightweight JSON, optimized for analytics and monitoring</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Data Source &amp; Transformation Pipeline</h2>
+    <h3>Data Source</h3>
+    <p>Brussels tunnel detectors aggregated by MobilityTwin infrastructure.</p>
+
+    <h3>Pipeline</h3>
+    <ol>
+      <li><strong>Ingestion:</strong> Collect per-device data from tunnel sensors in near real-time.</li>
+      <li><strong>Normalization:</strong> Map detector outputs to a consistent structure across windows (<code>1m</code> → <code>60m</code>) and directions (<code>t1</code>, <code>t2</code>).</li>
+      <li><strong>Indexing:</strong> Store snapshots by timestamp to support historical queries.</li>
+      <li><strong>Serving:</strong> Return latest or nearest ≤ dataset for live or historical views.</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Example Application Scenarios</h2>
+    <ul>
+      <li>Real-time congestion dashboards for tunnel traffic.</li>
+      <li>Speed and occupancy trend analysis (1m–60m resolutions).</li>
+      <li>Incident detection using occupancy spikes or speed drops.</li>
+      <li>Integration with tunnel devices inventory for full coverage analytics.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3 style="border-left: 4px solid #FF6B35; padding-left: 10px;">Operational Context for Brussels Tunnel Traffic Monitoring</h3>
+    <p>
+      This endpoint provides comprehensive multi-temporal traffic monitoring for Brussels' critical tunnel infrastructure—major road tunnels including Leopold II (Koekelberg), Annie Cordy (connecting Brussels-South to the E19), Stéphanie (connecting European Quarter to the Ring), Bailli (Avenue Louise), and others that form essential arteries for ring road and center access. <em>For tunnel operators and traffic control centers</em>, the multi-window aggregation structure (1m/5m/15m/60m) enables layered situational awareness: 1-minute windows support incident detection systems that trigger alerts when speed drops below 30 km/h or occupancy exceeds 0.50 (indicating potential accidents/breakdowns requiring immediate response), 5-minute windows power operational dashboards showing current tunnel status for real-time ramp metering and variable message sign control, and 15/60-minute windows provide trend context distinguishing temporary fluctuations from sustained congestion patterns. The directional split (t1/t2) captures asymmetric traffic flows characteristic of Brussels commute patterns—morning rush sees heavy inbound flows (toward city center) with outbound relatively free-flowing, reversing in evening—critical for dynamic lane assignment and contraflow operations.
+    </p>
+    <p>
+      <em>For transport planners and infrastructure analysts</em>, the three-metric system (count, occupancy, speed) provides complementary insights into tunnel performance: vehicle counts measure demand and capacity utilization (are tunnels handling volumes they were designed for?), occupancy ratios indicate congestion intensity (high count + low occupancy = efficient high-throughput flow; moderate count + high occupancy = slow-crawling congestion consuming capacity), and speeds enable travel time estimation and level-of-service classification (free-flow >60 km/h, moderate 40-60 km/h, congested <40 km/h, severe <20 km/h). Historical 60-minute aggregations support strategic studies: identifying peak period durations (when do tunnels transition from free-flow to congestion?), evaluating seasonal patterns (summer traffic lighter than school-year patterns), and measuring infrastructure ROI (did new tunnel ramps reduce Leopold II congestion as predicted?). Integration with tunnel-devices endpoint geography enables spatial analysis—comparing entry vs. mid-tunnel vs. exit detector readings reveals queue propagation dynamics and bottleneck locations.
+    </p>
+    <p>
+      <em>For safety and environmental authorities</em>, tunnel traffic data directly informs critical public health and emergency management decisions. Prolonged high-occupancy + low-speed conditions (e.g., occupancy >0.40 with speeds <25 km/h sustained over multiple 5-minute windows) indicate severe congestion requiring ventilation system activation to manage air quality—vehicles idling in enclosed spaces produce concentrated emissions (CO, NOx, particulates) requiring enhanced air circulation. Sudden anomalies (count drops to near-zero in one direction while other direction remains normal, or simultaneous speed crashes in both directions) flag potential incidents requiring emergency response and tunnel closure procedures. The multi-temporal structure supports post-incident analysis: examining 1-minute data around accident timestamps reveals how quickly queues formed and how long clearance took, informing emergency protocol refinements. <em>For citizens and navigation systems</em>, this data powers real-time tunnel travel time predictions and route guidance—if Leopold II tunnel showing speeds <30 km/h, routing alternatives via surface streets or suggesting Basilique/Rogier alternative routes, reducing tunnel congestion and improving overall network efficiency. By combining high-frequency monitoring (1-minute windows) with strategic trend analysis (60-minute windows) and comprehensive traffic metrics (volume, density, speed), this endpoint supports Brussels' integrated tunnel traffic management system—balancing throughput maximization, safety assurance, environmental protection, and traveler information across the city's essential subterranean infrastructure network.
+    </p>
+  </div>
+</div>

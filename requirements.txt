@@ -1,36 +1,11 @@
-# Environment variables management system
-python-dotenv
-polars
-# Requests library
-requests
-
-# Scientific computing library
-numpy
-pandas
-geopandas
-shapely
-matplotlib
-scipy
-scikit-learn
-
-# Geo data library
-gtfs-kit
-gtfs-realtime-bindings
-
-# Data scraping library
-beautifulsoup4
-
-
-# Database utilities
-SQLAlchemy
-psycopg2-binary
-azure-storage-blob
-
-
-# Python utilities
-schedule
-pysftp
-
-
-jsonschema
-pyarrow
+requests>=2.31.0
+geopandas>=0.14.0
+folium>=0.15.0
+pandas>=2.0.0
+branca>=0.7.0
+lightgbm>=4.0.0
+scikit-learn>=1.3.0
+numpy>=1.24.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.14.0
