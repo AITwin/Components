@@ -14,11 +14,3 @@ DATA_FORMAT = "gtfs_realtime"
 DATA_TYPE = "binary"
 SCHEDULE = "20s"
 
-[handlers]
-
-[handlers.vehicle_schedule]
-
-PATH = "tec.handlers.vehicle_schedule.TECVehicleScheduleHandler"
-DATA_FORMAT = "geojson"
-DATA_TYPE = "json"
-QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }

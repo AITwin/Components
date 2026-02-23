@@ -13,12 +13,3 @@ PATH = "de_lijn.collectors.gtfs_realtime.DeLijnGTFSRealtimeCollector"
 DATA_FORMAT = "gtfs_realtime"
 DATA_TYPE = "binary"
 SCHEDULE = "20s"
-
-[handlers]
-
-[handlers.vehicle_schedule]
-
-PATH = "de_lijn.handlers.vehicle_schedule.DeLijnVehicleScheduleHandler"
-DATA_FORMAT = "geojson"
-DATA_TYPE = "json"
-QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }

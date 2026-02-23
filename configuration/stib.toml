@@ -80,14 +80,6 @@ DEPENDENCIES_LIMIT = [10, 1]
 
 [handlers]
 
-[handlers.vehicle_schedule]
-
-PATH = "stib.handlers.vehicle_schedule.STIBVehicleScheduleHandler"
-DATA_FORMAT = "geojson"
-DATA_TYPE = "json"
-QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }
-
-
 [handlers.trips]
 
 PATH = "stib.handlers.trips.STIBTripsHandler"

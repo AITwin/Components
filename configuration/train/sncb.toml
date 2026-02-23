@@ -26,13 +26,6 @@ DEPENDENCIES = ["sncb.gtfs", "infrabel.segments", "infrabel.operational_points"]
 
 [handlers]
 
-[handlers.vehicle_schedule]
-
-PATH = "train.sncb.handlers.vehicle_schedule.SNCBVehicleScheduleHandler"
-DATA_FORMAT = "geojson"
-DATA_TYPE = "json"
-QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }
-
 
 [handlers.trips]
 
