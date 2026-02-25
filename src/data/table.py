@@ -31,7 +31,7 @@ def load_simple_table_from_configuration(table_name: str, metadata_obj: MetaData
         Column("type", VARCHAR(24), nullable=True),
         Column("hash", VARCHAR(32), nullable=True),
         Column("copy_id", INTEGER, nullable=True),
-        Index("date_index", "date"),
+        Index(f"{table_name}_date_index", "date"),
     )
 
 
