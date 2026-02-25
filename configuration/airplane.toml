@@ -1,0 +1,8 @@
+[collectors]
+
+[collectors.opensky_position]
+
+PATH = "airplane.opensky.OpenSkyPositionCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "5m"

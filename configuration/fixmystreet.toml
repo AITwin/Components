@@ -1,0 +1,8 @@
+[collectors]
+
+[collectors.incidents]
+
+PATH = "fixmystreet.incidents.FixMyStreetIncidentsCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "04:00"

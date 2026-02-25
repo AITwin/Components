@@ -30,7 +30,7 @@ azure-storage-blob
 # Python utilities
 schedule
 pysftp
-
+pytz
 
 jsonschema
 pyarrow
