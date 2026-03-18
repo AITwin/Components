@@ -14,6 +14,27 @@ DATA_FORMAT = "gtfs_realtime"
 DATA_TYPE = "binary"
 SCHEDULE = "20s"
 
+[collectors.bmc_gtfs_static]
+
+PATH = "train.sncb.collectors.bmc_gtfs_static.SNCBBMCGTFSStaticCollector"
+DATA_FORMAT = "gtfs"
+DATA_TYPE = "binary"
+SCHEDULE = "00:10"
+
+[collectors.bmc_gtfs_rt_alert]
+
+PATH = "train.sncb.collectors.bmc_gtfs_rt_alert.SNCBBMCGTFSRTAlertCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "1m"
+
+[collectors.bmc_gtfs_rt_trip_update]
+
+PATH = "train.sncb.collectors.bmc_gtfs_rt_trip_update.SNCBBMCGTFSRTTripUpdateCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "20s"
+
 [harvesters]
 
 [harvesters.vehicle_position_geometry]

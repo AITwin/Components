@@ -1,5 +1,6 @@
 from sqlalchemy import (
     Column,
+    JSON,
     TIMESTAMP,
     INTEGER,
     Table,
@@ -8,6 +9,9 @@ from sqlalchemy import (
     Index,
 )
 from sqlalchemy.dialects.postgresql import JSONB
+
+# Use JSONB on PostgreSQL, fall back to JSON on other dialects (e.g. SQLite)
+JsonVariant = JSON().with_variant(JSONB, "postgresql")
 
 
 def load_simple_table_from_configuration(table_name: str, metadata_obj: MetaData):
@@ -57,13 +61,13 @@ def load_parquetize_table_from_configuration(table_name: str, metadata_obj: Meta
         Column("skipped", INTEGER, nullable=False),
         Column("original_size", INTEGER, nullable=False),
         Column("compressed_size", INTEGER, nullable=False),
-        Column("schema", JSONB, nullable=False),
+        Column("schema", JsonVariant, nullable=False),
         Column(
             "data",
             VARCHAR(512),
             nullable=True,
         ),
-        Column("keys", JSONB, nullable=True, index=True),
+        Column("keys", JsonVariant, nullable=True, index=True),
         Column("aggregation", VARCHAR(32), nullable=False),
         Index(
             f"{table_name}_aggregation_start_date_index", "aggregation", "start_date"

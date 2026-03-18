@@ -1,24 +1,23 @@
 import json
 from typing import Dict, List
 
-from components.stib.utils.constant import VEHICLE_POSITION_DATASET
-from components.stib.utils.fetch import fetch_stib_dataset_records
 from src.components import Collector
+from src.utilities.bmc import bmc_request
 
 
 class STIBVehiclePositionsCollector(Collector):
     def run(self) -> List[Dict]:
-        raw_results = fetch_stib_dataset_records(
-            dataset=VEHICLE_POSITION_DATASET,
-            limit=100,  # less than 100 lines
-        )
+        response = bmc_request("/api/datasets/stibmivb/rt/VehiclePositions")
+        raw = response.json()
 
         results = []
+        for record in raw.get("results", []):
+            line_id = str(record.get("lineid", ""))
+            vehicle_positions = record.get("vehiclepositions", "[]")
+            if isinstance(vehicle_positions, str):
+                vehicle_positions = json.loads(vehicle_positions)
 
-        for raw_result in map(lambda x: x["fields"], raw_results):
-            for vehicle_position in json.loads(raw_result["vehiclepositions"]):
-                results.append(
-                    {**vehicle_position, "lineId": str(raw_result["lineid"])}
-                )
+            for vehicle_position in vehicle_positions:
+                results.append({**vehicle_position, "lineId": line_id})
 
         return results

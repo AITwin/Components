@@ -1,11 +1,8 @@
-from components.stib.utils.fetch import auth_request_to_stib
 from src.components import Collector
+from src.utilities.bmc import bmc_request
 
 
 class STIBShapeFilesCollector(Collector):
-    def run(self) -> dict:
-        response = auth_request_to_stib(
-            "https://stibmivb.opendatasoft.com/api/explore/v2.1/catalog/datasets/shapefiles-production/exports/geojson"
-        )
-
-        return response.json()
+    def run(self) -> bytes:
+        response = bmc_request("/api/datasets/stibmivb/static/shape-files")
+        return response.content

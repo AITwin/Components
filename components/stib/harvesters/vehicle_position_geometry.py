@@ -5,7 +5,7 @@ from typing import Tuple, Dict, Any
 
 import geopandas as gpd
 import pandas as pd
-from shapely import LineString
+from shapely import LineString, Point
 
 from components.stib.utils.converter import convert_dataframe_column_stop_to_generic
 from src.components import Harvester
@@ -33,6 +33,13 @@ class _SegmentCache:
             _SegmentCache.segments_gdf = gpd.GeoDataFrame.from_features(
                 segments.data["features"], crs="epsg:4326"
             )
+            # Normalize stop ID columns to int to match vehicle data types
+            _SegmentCache.segments_gdf["start"] = pd.to_numeric(
+                _SegmentCache.segments_gdf["start"], errors="coerce"
+            ).astype("Int64")
+            _SegmentCache.segments_gdf["end"] = pd.to_numeric(
+                _SegmentCache.segments_gdf["end"], errors="coerce"
+            ).astype("Int64")
             _SegmentCache.segments_gdf_be_crs = _SegmentCache.segments_gdf.to_crs(
                 epsg=31370
             ).copy()
@@ -93,7 +100,16 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
         # Solve index must be unique for the to_json() method to work
         cleaned_data.index = list(range(len(cleaned_data)))
 
-        # Remove where position is null
+        # Fallback: for vehicles with no segment, use stop coordinates
+        no_position = cleaned_data["position"].isnull()
+        has_coords = cleaned_data["stop_lat"].notnull() & cleaned_data["stop_lon"].notnull()
+        fallback_mask = no_position & has_coords
+        cleaned_data.loc[fallback_mask, "position"] = cleaned_data.loc[fallback_mask].apply(
+            lambda row: Point(row["stop_lon"], row["stop_lat"]), axis=1
+        )
+        cleaned_data.loc[fallback_mask, "confidence_score"] = 1
+
+        # Remove where position is still null
         cleaned_data = cleaned_data[cleaned_data["position"].notnull()]
 
         # Remove uuid
@@ -108,6 +124,7 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
             line_to_color[line_id] = color
 
         for index, row in cleaned_data.iterrows():
+            color = line_to_color.get(row["line_id"], "#000000")
             output_data.append(
                 {
                     "id": index,
@@ -116,7 +133,7 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
                     "geometry": row["position"],
                     "direction": row["direction"],
                     "distanceFromPoint": row["distanceFromPoint"],
-                    "color": line_to_color[row["line_id"]],
+                    "color": color,
                 }
             )
 
@@ -209,7 +226,7 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
             # Rename direction_id to direction
             merged_data = merged_data.rename(columns={"direction_id": "direction"})
 
-            # Replace V by 0 and T by 1
+            # Replace V by 1 and F by 2
             merged_data["direction"] = merged_data["direction"].replace(
                 {"V": 1, "F": 2}
             )
@@ -370,9 +387,15 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
         # Remove rows where line_id is null
         realtime_data = realtime_data.dropna(subset=["line_id"]).copy()
 
-        # Convert line_id to string and remove ".0" and "T" from end of values
+        # Convert line_id to string, strip whitespace, and remove ".0" and "T"
         realtime_data["line_id"] = (
-            realtime_data["line_id"].astype(str).str.replace(".0|T", "", regex=True)
+            realtime_data["line_id"]
+            .astype(str)
+            .str.strip()
+            .str.replace(".0|T", "", regex=True)
         )
+
+        # Remove rows with empty line_id
+        realtime_data = realtime_data[realtime_data["line_id"] != ""]
 
         return realtime_data

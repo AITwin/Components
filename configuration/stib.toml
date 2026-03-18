@@ -7,17 +7,24 @@ DATA_FORMAT = "gtfs"
 DATA_TYPE = "binary"
 SCHEDULE = "04:20"
 
-[collectors.shapefile]
+[collectors.shapefile_raw]
 
 PATH = "stib.collectors.shapefile.STIBShapeFilesCollector"
-DATA_FORMAT = "geojson"
-DATA_TYPE = "json"
+DATA_FORMAT = "shapefile"
+DATA_TYPE = "binary"
 SCHEDULE = "03:20"
 
-[collectors.stops]
+[collectors.stops_by_line]
 
-PATH = "stib.collectors.stops.STIBStopsCollector"
-DATA_FORMAT = "geojson"
+PATH = "stib.collectors.stops_by_line.STIBStopsByLineCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "00:20"
+
+[collectors.stop_details]
+
+PATH = "stib.collectors.stop_details.STIBStopDetailsCollector"
+DATA_FORMAT = "json"
 DATA_TYPE = "json"
 SCHEDULE = "00:20"
 
@@ -29,8 +36,37 @@ DATA_TYPE = "json"
 SCHEDULE = "20s"
 PARQUETIZE = { BATCH = "1h", GROUPS = [{GROUP="1d"},{GROUP="1w", KEYS=["lineId"]},], SCHEMA = { type = "array", items = { type = "object", properties = { directionId = { type = "string" }, distanceFromPoint = { type = "integer" }, pointId = { type = "string" } } } } }
 
+[collectors.travellers_information]
+
+PATH = "stib.collectors.travellers_information.STIBTravellersInformationCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "15m"
+
+[collectors.waiting_times]
+
+PATH = "stib.collectors.waiting_times.STIBWaitingTimesCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "20s"
+
 
 [harvesters]
+
+[harvesters.shapefile]
+
+PATH = "stib.harvesters.shapefile_geojson.STIBShapefileGeoJSONHarvester"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SOURCE = "stib.shapefile_raw"
+
+[harvesters.stops]
+
+PATH = "stib.harvesters.stops.STIBStopsHarvester"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SOURCE = "stib.stops_by_line"
+DEPENDENCIES = ["stop_details"]
 
 [harvesters.segments]
 

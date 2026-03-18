@@ -36,3 +36,23 @@ DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "04:00"
 
+[collectors.tmc_event_codes]
+
+PATH = "brussels_mobility.collectors.tmc_event_codes.BrusselsMobilityTMCEventCodesCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "7d"
+
+[collectors.traffic_events]
+
+PATH = "brussels_mobility.collectors.traffic_events.BrusselsMobilityTrafficEventsCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+
+[collectors.villo]
+
+PATH = "brussels_mobility.collectors.villo.BrusselsMobilityVilloCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
