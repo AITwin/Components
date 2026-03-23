@@ -1,7 +1,7 @@
 import logging
 import time
 from datetime import datetime, timedelta
-from typing import Dict
+from typing import Dict, Optional
 
 from sqlalchemy import Table
 
@@ -19,6 +19,16 @@ ZERO_DATE = datetime(1970, 1, 1)
 
 
 logger = logging.getLogger("Harvester")
+
+_first_row_date_cache: Dict[str, Optional[datetime]] = {}
+
+
+def get_first_row_date(name: str, table: Table) -> Optional[datetime]:
+    """Get the first row date for a table, caching the result by name."""
+    if name not in _first_row_date_cache:
+        row = retrieve_first_row(table)
+        _first_row_date_cache[name] = row.date if row else None
+    return _first_row_date_cache[name]
 
 
 def run_harvester_on_schedule(
@@ -106,6 +116,16 @@ def run_harvester(
         latest_date = (row and (row.date - timedelta(seconds=1))) or ZERO_DATE
     else:
         latest_date = latest_row.date
+
+    # Clamp latest_date so we only look at source rows after each dependency's first datapoint.
+    # This prevents the harvester from trying to process source data that predates its dependencies.
+    for dependency in harvester_config.dependencies:
+        dependency_table = tables[dependency.name]
+        first_dep_date = get_first_row_date(dependency.name, dependency_table)
+        if first_dep_date is None:
+            return False  # Dependency has no data yet, can't run
+        if latest_date < first_dep_date - timedelta(seconds=1):
+            latest_date = first_dep_date - timedelta(seconds=1)
 
     # Get source range
     start_date, end_date, limit = source_range_to_period_and_limit(
