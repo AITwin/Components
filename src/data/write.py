@@ -21,7 +21,7 @@ def write_result(
     :param date:  The date of the data
     """
 
-    if data is str:
+    if isinstance(data, str):
         data_bytes = data.encode("utf-8")
     elif isinstance(data, dict) or isinstance(data, list):
         data_bytes = json.dumps(data).encode("utf-8")

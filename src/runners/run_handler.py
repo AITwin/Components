@@ -96,7 +96,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         # Execute handler
         result = handler_config.component(self.tables).run(**query_parameters)
-
         if result is None:
             self.send_error(404, "No data found for this specific query")
             return

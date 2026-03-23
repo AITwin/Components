@@ -127,6 +127,13 @@ def run_harvester(
         if latest_date < first_dep_date - timedelta(seconds=1):
             latest_date = first_dep_date - timedelta(seconds=1)
 
+    # Clamp for optional dependencies that have data, but don't block if they don't.
+    for dependency in harvester_config.optional_dependencies:
+        dependency_table = tables[dependency.name]
+        first_dep_date = get_first_row_date(dependency.name, dependency_table)
+        if first_dep_date is not None and latest_date < first_dep_date - timedelta(seconds=1):
+            latest_date = first_dep_date - timedelta(seconds=1)
+
     # Get source range
     start_date, end_date, limit = source_range_to_period_and_limit(
         latest_date, harvester_config.source_range
@@ -148,8 +155,8 @@ def run_harvester(
     if limit == 1 and not end_date:
         source_data = source_data[0]
 
+    # Resolve required dependencies
     dependencies = harvester_config.dependencies
-
     dependencies_data = {}
 
     for dependency, dependency_limit in zip(
@@ -165,6 +172,20 @@ def run_harvester(
                 raise ValueError(f"Dependency {dependency.name} not found")
 
             dependency_data = dependency_data[0]
+        dependencies_data[dependency.name] = dependency_data
+
+    # Resolve optional dependencies (pass None if no data available)
+    optional_deps = harvester_config.optional_dependencies
+    optional_limits = harvester_config.optional_dependencies_limit or [1] * len(optional_deps)
+
+    for dependency, dependency_limit in zip(optional_deps, optional_limits):
+        dependency_table = tables[dependency.name]
+        dependency_data = retrieve_latest_rows_before_datetime(
+            dependency_table, storage_date, dependency_limit
+        )
+
+        if dependency_limit == 1:
+            dependency_data = dependency_data[0] if dependency_data else None
         dependencies_data[dependency.name] = dependency_data
 
     # Harvest data

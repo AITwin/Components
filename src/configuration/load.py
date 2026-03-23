@@ -42,6 +42,7 @@ def load_all_components(config_path: str = "configuration") -> ComponentsConfigu
 
     source_hydration = {}
     dependencies_hydration = {}
+    optional_dependencies_hydration = {}
 
     for folder, _, files in os.walk(config_path):
         for file in files:
@@ -58,6 +59,7 @@ def load_all_components(config_path: str = "configuration") -> ComponentsConfigu
                         "collectors",
                         source_hydration,
                         dependencies_hydration,
+                        optional_dependencies_hydration,
                     )
                     extract_components(
                         harvesters,
@@ -66,6 +68,7 @@ def load_all_components(config_path: str = "configuration") -> ComponentsConfigu
                         "harvesters",
                         source_hydration,
                         dependencies_hydration,
+                        optional_dependencies_hydration,
                     )
                     extract_components(
                         handlers,
@@ -74,6 +77,7 @@ def load_all_components(config_path: str = "configuration") -> ComponentsConfigu
                         "handlers",
                         source_hydration,
                         dependencies_hydration,
+                        optional_dependencies_hydration,
                     )
 
     for component_configuration, source in source_hydration.items():
@@ -84,6 +88,15 @@ def load_all_components(config_path: str = "configuration") -> ComponentsConfigu
     for component_configuration, dependencies in dependencies_hydration.items():
         for dependency in dependencies:
             component_configuration.dependencies.append(
+                collectors.get(
+                    dependency,
+                    harvesters.get(dependency, handlers.get(dependency, None)),
+                )
+            )
+
+    for component_configuration, dependencies in optional_dependencies_hydration.items():
+        for dependency in dependencies:
+            component_configuration.optional_dependencies.append(
                 collectors.get(
                     dependency,
                     harvesters.get(dependency, handlers.get(dependency, None)),
@@ -112,6 +125,7 @@ def extract_components(
     key: str,
     source_hydration: dict,
     dependencies_hydration: dict,
+    optional_dependencies_hydration: dict,
 ):
     for component_name, component in config.get(key, {}).items():
         name = f"{file_name}_{component_name}"
@@ -144,6 +158,11 @@ def extract_components(
             source_range_strict=component.get("SOURCE_RANGE_STRICT", True),
             multiple_results=component.get("MULTIPLE_RESULTS", False),
             query_parameters=component.get("QUERY_PARAMETERS", None),
+            optional_dependencies=[],
+            optional_dependencies_limit=component.get(
+                "OPTIONAL_DEPENDENCIES_LIMIT",
+                [1 for _ in range(len(component.get("OPTIONAL_DEPENDENCIES", [])))] or None,
+            ),
         )
 
         target_list[name] = component_configuration
@@ -156,6 +175,12 @@ def extract_components(
         if dependencies is not None:
             dependencies_hydration[component_configuration] = list(
                 map(lambda x: _treat_name(file_name, x), dependencies)
+            )
+
+        optional_dependencies = component.get("OPTIONAL_DEPENDENCIES", None)
+        if optional_dependencies is not None:
+            optional_dependencies_hydration[component_configuration] = list(
+                map(lambda x: _treat_name(file_name, x), optional_dependencies)
             )
 
 

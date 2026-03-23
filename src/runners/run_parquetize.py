@@ -1,4 +1,5 @@
 import concurrent.futures
+import json
 import logging
 import time
 from datetime import timedelta
@@ -8,7 +9,6 @@ from typing import Dict
 import polars
 import pyarrow as pa
 import pyarrow.parquet as pq
-import requests
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import validate
 from sqlalchemy import Table, select, column
@@ -215,8 +215,7 @@ def _generate_group(
     data_rows = connection.execute(data_query).fetchall()
 
     urls = [row[0] for row in data_rows]
-    # Retrieve content from each data source
-    datas = [BytesIO(requests.get(url).content) for url in urls]
+    datas = [BytesIO(storage_manager.read(url)) for url in urls]
 
     table = None
 
@@ -331,8 +330,8 @@ def _generate_group(
 
 
 def fetch_data(row):
-    response = requests.get(row[0])
-    return response, row[1]
+    data = storage_manager.read(row[0])
+    return data, row[1]
 
 
 def _generate_batch(
@@ -354,7 +353,7 @@ def _generate_batch(
             future.result() for future in concurrent.futures.as_completed(future_to_row)
         ]
 
-        datas = [(r.json(), date) for r, date in responses]
+        datas = [(json.loads(data), date) for data, date in responses]
 
     not_skipped = 0
     validated_datas = []
@@ -388,7 +387,7 @@ def _generate_batch(
         output.getvalue(),
     )
 
-    original_size = sum([len(response.content) for response, _ in responses])
+    original_size = sum([len(data) for data, _ in responses])
     compressed_size = output.getbuffer().nbytes
 
     connection.execute(

@@ -17,8 +17,11 @@ class StibSegmentsSpeedHarvester(Harvester):
         time_delta = source.date - previous.date
 
         # Read both json into pandas
-        df1 = pd.DataFrame(source.data)
-        df2 = pd.DataFrame(previous.data)
+        try:
+            df1 = pd.DataFrame(source.data)
+            df2 = pd.DataFrame(previous.data)
+        except ValueError:
+            return
 
         # Make sure pointId is in both dataframes
         if "pointId" not in df1.columns or "pointId" not in df2.columns:

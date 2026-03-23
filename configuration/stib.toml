@@ -111,8 +111,10 @@ SOURCE = "stib.vehicle_position_geometry"
 SOURCE_RANGE = 20
 SOURCE_RANGE_STRICT = false
 MULTIPLE_RESULTS = true
-DEPENDENCIES = ["vehicle_identify", "shapefile"]
-DEPENDENCIES_LIMIT = [10, 1]
+DEPENDENCIES = ["shapefile"]
+DEPENDENCIES_LIMIT = [1]
+OPTIONAL_DEPENDENCIES = ["vehicle_identify"]
+OPTIONAL_DEPENDENCIES_LIMIT = [10]
 
 [handlers]
 

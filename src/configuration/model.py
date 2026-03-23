@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Self, Any
 
 from src.components import ComponentClass
@@ -33,6 +33,8 @@ class ComponentConfiguration:
     source_range_strict: bool = True
     multiple_results: bool = False
     query_parameters: Optional[Dict[str, str]] = None
+    optional_dependencies: List[Self] = field(default_factory=list)
+    optional_dependencies_limit: Optional[List[int]] = None
 
     def __hash__(self):
         return hash(self.name)
