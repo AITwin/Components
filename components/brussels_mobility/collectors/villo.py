@@ -24,4 +24,40 @@ class BrusselsMobilityVilloCollector(Collector):
                 break
             offset += LIMIT
 
-        return all_records
+        return self.to_geojson(all_records)
+
+    @staticmethod
+    def to_geojson(records):
+        features = []
+        for record in records:
+            geo_point = record.get("geo_point_2d")
+            if not geo_point:
+                continue
+
+            properties = {
+                "number": record.get("number"),
+                "name_fr": record.get("name_fr"),
+                "name_nl": record.get("name_nl"),
+                "address_fr": record.get("address_fr"),
+                "address_nl": record.get("address_nl"),
+                "municipality_fr": record.get("mu_fr"),
+                "municipality_nl": record.get("mu_nl"),
+                "available_bikes": record.get("available_bikes"),
+                "available_bike_stands": record.get("available_bike_stands"),
+                "bike_stands": record.get("bike_stands"),
+                "last_update": record.get("last_update"),
+            }
+
+            features.append({
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [geo_point["lon"], geo_point["lat"]],
+                },
+                "properties": properties,
+            })
+
+        return {
+            "type": "FeatureCollection",
+            "features": features,
+        }

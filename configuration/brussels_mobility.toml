@@ -53,6 +53,6 @@ SCHEDULE = "5m"
 [collectors.villo]
 
 PATH = "brussels_mobility.collectors.villo.BrusselsMobilityVilloCollector"
-DATA_FORMAT = "json"
+DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "5m"
