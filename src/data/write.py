@@ -34,7 +34,6 @@ def write_result(
         md5_digest = hashlib.md5(data_bytes).hexdigest()
 
     with engine.connect() as connection:
-        print(configuration.name)
         # Upload data to storage
         url = storage_manager.write(
             f"{configuration.name}/{date.strftime('%Y-%m-%d_%H-%M-%S')}",
