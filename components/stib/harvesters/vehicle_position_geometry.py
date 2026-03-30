@@ -127,7 +127,6 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
             color = line_to_color.get(row["line_id"], "#000000")
             output_data.append(
                 {
-                    "id": index,
                     "pointId": row["pointId"],
                     "lineId": row["line_id"],
                     "geometry": row["position"],

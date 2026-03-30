@@ -4,21 +4,15 @@ from src.components import Harvester
 
 
 class StibSegmentsSpeedHarvester(Harvester):
-    def run(self, source, stib_vehicle_distance):
-        if not stib_vehicle_distance:
-            return
+    def run(self, source):
+        previous = source[0]
+        current = source[1]
 
-        previous = stib_vehicle_distance[0]
-
-        # Make sure both source and previous are not empty
-        if not source or not previous:
-            return
-
-        time_delta = source.date - previous.date
+        time_delta = current.date - previous.date
 
         # Read both json into pandas
         try:
-            df1 = pd.DataFrame(source.data)
+            df1 = pd.DataFrame(current.data)
             df2 = pd.DataFrame(previous.data)
         except ValueError:
             return

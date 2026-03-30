@@ -109,7 +109,7 @@ def _encode_temporal_properties(
     return temporal_properties_data
 
 
-def fetch_geojsons_and_return_mf_json(
+def     fetch_geojsons_and_return_mf_json(
     table: Table,
     id_column: str,
     start_timestamp: int = None,

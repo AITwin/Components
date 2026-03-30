@@ -1,8 +1,10 @@
 import requests
 
 from src.components import Collector
+from src.utilities.bmc import bmc_request
 
 
 class DeLijnGTFSStaticCollector(Collector):
     def run(self):
-        return requests.get("https://gtfs.irail.be/de-lijn/de_lijn-gtfs.zip").content
+        response = bmc_request("/api/gtfs/feed/delijn/static")
+        return response.content

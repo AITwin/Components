@@ -14,23 +14,17 @@ DATA_FORMAT = "gtfs_realtime"
 DATA_TYPE = "binary"
 SCHEDULE = "20s"
 
-[collectors.bmc_gtfs_static]
 
-PATH = "tec.collectors.bmc_gtfs_static.TECBMCGTFSStaticCollector"
-DATA_FORMAT = "gtfs"
+[collectors.gtfs_rt_alert]
+
+PATH = "tec.collectors.gtfs_rt_alert.TECGTFSRTAlertCollector"
+DATA_FORMAT = "gtfs_realtime"
 DATA_TYPE = "binary"
-SCHEDULE = "03:45"
-
-[collectors.bmc_gtfs_rt_alert]
-
-PATH = "tec.collectors.bmc_gtfs_rt_alert.TECBMCGTFSRTAlertCollector"
-DATA_FORMAT = "json"
-DATA_TYPE = "json"
 SCHEDULE = "1m"
 
-[collectors.bmc_gtfs_rt_trip_update]
+[collectors.gtfs_rt_trip_update]
 
-PATH = "tec.collectors.bmc_gtfs_rt_trip_update.TECBMCGTFSRTTripUpdateCollector"
-DATA_FORMAT = "json"
-DATA_TYPE = "json"
+PATH = "tec.collectors.gtfs_rt_trip_update.TECGTFSRTTripUpdateCollector"
+DATA_FORMAT = "gtfs_realtime"
+DATA_TYPE = "binary"
 SCHEDULE = "20s"

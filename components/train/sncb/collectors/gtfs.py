@@ -1,10 +1,10 @@
 import requests
 
 from src.components import Collector
+from src.utilities.bmc import bmc_request
 
 
 class SNCBGTFSStaticCollector(Collector):
     def run(self):
-        endpoint = "https://sncb-opendata.hafas.de/gtfs/static/c21ac6758dd25af84cca5b707f3cb3de"
-
-        return requests.get(endpoint).content
+        response = bmc_request("/api/gtfs/feed/nmbssncb/static")
+        return response.content

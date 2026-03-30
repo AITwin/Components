@@ -14,23 +14,16 @@ DATA_FORMAT = "gtfs_realtime"
 DATA_TYPE = "binary"
 SCHEDULE = "20s"
 
-[collectors.bmc_gtfs_static]
+[collectors.gtfs_rt_alert]
 
-PATH = "de_lijn.collectors.bmc_gtfs_static.DeLijnBMCGTFSStaticCollector"
-DATA_FORMAT = "gtfs"
+PATH = "de_lijn.collectors.gtfs_rt_alert.DeLijnGTFSRTAlertCollector"
+DATA_FORMAT = "gtfs_realtime"
 DATA_TYPE = "binary"
-SCHEDULE = "05:00"
-
-[collectors.bmc_gtfs_rt_alert]
-
-PATH = "de_lijn.collectors.bmc_gtfs_rt_alert.DeLijnBMCGTFSRTAlertCollector"
-DATA_FORMAT = "json"
-DATA_TYPE = "json"
 SCHEDULE = "1m"
 
-[collectors.bmc_gtfs_rt_trip_update]
+[collectors.gtfs_rt_trip_update]
 
-PATH = "de_lijn.collectors.bmc_gtfs_rt_trip_update.DeLijnBMCGTFSRTTripUpdateCollector"
-DATA_FORMAT = "json"
-DATA_TYPE = "json"
+PATH = "de_lijn.collectors.gtfs_rt_trip_update.DeLijnGTFSRTTripUpdateCollector"
+DATA_FORMAT = "gtfs_realtime"
+DATA_TYPE = "binary"
 SCHEDULE = "20s"

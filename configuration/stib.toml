@@ -81,8 +81,8 @@ PATH = "stib.harvesters.speed.StibSegmentsSpeedHarvester"
 DATA_FORMAT = "json"
 DATA_TYPE = "json"
 SOURCE = "stib.vehicle_distance"
-DEPENDENCIES = ["vehicle_distance"]
-DEPENDENCIES_LIMIT = [2, 1]
+SOURCE_RANGE = 2
+SOURCE_RANGE_STRICT = true
 
 [harvesters.aggregated_speed]
 PATH = "stib.harvesters.aggregated_speed.StibSegmentsAggregatedSpeedHarvester"

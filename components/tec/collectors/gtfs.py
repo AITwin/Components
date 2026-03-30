@@ -1,9 +1,9 @@
 import requests
 
 from src.components import Collector
-
+from src.utilities.bmc import bmc_request
 
 class TECGTFSStaticCollector(Collector):
     def run(self):
-        endpoint = "https://opendata.tec-wl.be/Current%20GTFS/TEC-GTFS.zip"
-        return requests.get(endpoint).content
+        response = bmc_request("/api/gtfs/feed/tec/static")
+        return response.content
