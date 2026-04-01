@@ -19,7 +19,7 @@ SCHEDULE = "20s"
 PATH = "train.sncb.collectors.gtfs_rt_alert.SNCBGTFSRTAlertCollector"
 DATA_FORMAT = "gtfs_realtime"
 DATA_TYPE = "binary"
-SCHEDULE = "1m"
+SCHEDULE = "15m"
 
 [collectors.gtfs_rt_trip_update]
 

@@ -1,22 +1,31 @@
-import os
+import random
 
 import requests
 
+from src.utilities.tokens import get_all_tokens
+
 BMC_BASE_URL = "https://api-management-opendata-production.azure-api.net"
+
+BMC_KEY = "BELGIAN_MOBILITY_API_KEY"
 
 
 def bmc_request(path: str, params: dict = None) -> requests.Response:
     url = f"{BMC_BASE_URL}{path}"
-    response = requests.get(
-        url,
-        headers={
-            "Cache-Control": "no-cache",
-            "bmc-partner-key": os.environ["BELGIAN_MOBILITY_API_KEY"],
-        },
-        params=params,
-    )
+    tokens = get_all_tokens(BMC_KEY)
+    random.shuffle(tokens)
 
-    if not response.ok:
-        raise ValueError(f"BMC API error ({response.status_code}): {response.text}")
+    for token in tokens:
+        response = requests.get(
+            url,
+            headers={
+                "Cache-Control": "no-cache",
+                "bmc-partner-key": token,
+            },
+            params=params,
+        )
+        if response.ok:
+            return response
+        if response.status_code != 429:
+            break
 
-    return response
+    raise ValueError(f"BMC API error ({response.status_code}): {response.text}")

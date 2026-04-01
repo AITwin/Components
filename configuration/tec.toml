@@ -20,7 +20,7 @@ SCHEDULE = "20s"
 PATH = "tec.collectors.gtfs_rt_alert.TECGTFSRTAlertCollector"
 DATA_FORMAT = "gtfs_realtime"
 DATA_TYPE = "binary"
-SCHEDULE = "1m"
+SCHEDULE = "15m"
 
 [collectors.gtfs_rt_trip_update]
 
