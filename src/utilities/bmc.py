@@ -25,7 +25,6 @@ def bmc_request(path: str, params: dict = None) -> requests.Response:
         )
         if response.ok:
             return response
-        if response.status_code != 429:
-            break
+
 
     raise ValueError(f"BMC API error ({response.status_code}): {response.text}")
