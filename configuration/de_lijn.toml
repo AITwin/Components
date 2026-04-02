@@ -27,3 +27,12 @@ PATH = "de_lijn.collectors.gtfs_rt_trip_update.DeLijnGTFSRTTripUpdateCollector"
 DATA_FORMAT = "gtfs_realtime"
 DATA_TYPE = "binary"
 SCHEDULE = "20s"
+
+[harvesters]
+
+[harvesters.gtfs_parquet]
+
+PATH = "gtfs_parquet_harvester.GTFSParquetHarvester"
+DATA_FORMAT = "gtfs-parquet"
+DATA_TYPE = "binary"
+SOURCE = "de_lijn.gtfs"

@@ -34,3 +34,5 @@ pytz
 
 jsonschema
 pyarrow
+
+gtfs-parquet

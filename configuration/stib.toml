@@ -53,6 +53,13 @@ SCHEDULE = "20s"
 
 [harvesters]
 
+[harvesters.gtfs_parquet]
+
+PATH = "gtfs_parquet_harvester.GTFSParquetHarvester"
+DATA_FORMAT = "gtfs-parquet"
+DATA_TYPE = "binary"
+SOURCE = "stib.gtfs"
+
 [harvesters.shapefile]
 
 PATH = "stib.harvesters.shapefile_geojson.STIBShapefileGeoJSONHarvester"

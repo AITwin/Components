@@ -28,3 +28,12 @@ PATH = "tec.collectors.gtfs_rt_trip_update.TECGTFSRTTripUpdateCollector"
 DATA_FORMAT = "gtfs_realtime"
 DATA_TYPE = "binary"
 SCHEDULE = "20s"
+
+[harvesters]
+
+[harvesters.gtfs_parquet]
+
+PATH = "gtfs_parquet_harvester.GTFSParquetHarvester"
+DATA_FORMAT = "gtfs-parquet"
+DATA_TYPE = "binary"
+SOURCE = "tec.gtfs"

@@ -30,6 +30,13 @@ SCHEDULE = "20s"
 
 [harvesters]
 
+[harvesters.gtfs_parquet]
+
+PATH = "gtfs_parquet_harvester.GTFSParquetHarvester"
+DATA_FORMAT = "gtfs-parquet"
+DATA_TYPE = "binary"
+SOURCE = "sncb.gtfs"
+
 [harvesters.vehicle_position_geometry]
 
 PATH = "train.sncb.harvesters.vehicle_position_geometry.SNCBVehiclePositionGeometryHarvester"
