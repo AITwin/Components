@@ -169,7 +169,14 @@ def run_harvester(
 
         if dependency_limit == 1:
             if not dependency_data:
-                raise ValueError(f"Dependency {dependency.name} not found")
+                # No data before storage_date, fall back to latest available
+                latest = retrieve_latest_row(dependency_table)
+                if not latest:
+                    raise ValueError(f"Dependency {dependency.name} not found")
+                dependency_data = [latest]
+
+
+
 
             dependency_data = dependency_data[0]
         dependencies_data[dependency.name] = dependency_data
