@@ -38,7 +38,7 @@ def data_result(func) -> Optional[Union[Data, List[Data]]]:
 
         # If the result is a single row, return a single Data object
         if not isinstance(result, list):
-            return Data(date=result.date, _url=result.data)
+            return Data(date=result.date, _url=result.data, _data_type=result.type)
 
         return [
             Data(date=row.date, _url=row.data, _data_type=row.type) for row in result
