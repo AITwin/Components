@@ -1,10 +1,14 @@
 import io
+import logging
 import tempfile
 import os
+import zipfile
 
 from gtfs_parquet import parse_gtfs, write_parquet
 
 from src.components import Harvester
+
+logger = logging.getLogger(__name__)
 
 
 class GTFSParquetHarvester(Harvester):
@@ -24,7 +28,11 @@ class GTFSParquetHarvester(Harvester):
             with open(gtfs_path, "wb") as f:
                 f.write(gtfs_bytes)
 
-            feed = parse_gtfs(gtfs_path)
+            try:
+                feed = parse_gtfs(gtfs_path)
+            except zipfile.BadZipFile:
+                logger.warning("Source data is not a valid zip file, skipping")
+                return None
 
             output_path = os.path.join(tmpdir, "gtfs.parquet.zip")
             write_parquet(feed, output_path)
