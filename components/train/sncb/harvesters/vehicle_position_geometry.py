@@ -6,7 +6,7 @@ import pandas as pd
 from src.components import Harvester
 from src.utilities.gtfs import (
     load_gtfs_realtime_from_bytes_to_df,
-    load_gtfs_kit_from_zip_string,
+    load_gtfs_parquet_feed,
 )
 
 
@@ -15,9 +15,10 @@ class _CachedStopTimes:
     date = None
 
 
-def _cached_stop_times(gtfs_static: gpd.GeoDataFrame, date: str):
+def _cached_stop_times(gtfs_feed, date):
+    """Get stop_times for a date, using gtfs_parquet Feed with datetime.date."""
     if _CachedStopTimes.stop_times is None or _CachedStopTimes.date != date:
-        _CachedStopTimes.stop_times = gtfs_static.get_stop_times(date)[
+        _CachedStopTimes.stop_times = gtfs_feed.get_stop_times(date).to_pandas()[
             ["trip_id", "stop_id", "stop_sequence", "arrival_time", "departure_time"]
         ].copy()
         _CachedStopTimes.date = date
@@ -26,17 +27,17 @@ def _cached_stop_times(gtfs_static: gpd.GeoDataFrame, date: str):
 
 
 class SNCBVehiclePositionGeometryHarvester(Harvester):
-    def run(self, source, sncb_gtfs, infrabel_segments, infrabel_operational_points):
+    def run(self, source, sncb_gtfs_parquet, infrabel_segments, infrabel_operational_points):
         operational_points = gpd.GeoDataFrame.from_features(
             infrabel_operational_points.data["features"]
         )[["longnamefrench", "ptcarid", "commerciallongnamefrench"]]
 
         segments = gpd.GeoDataFrame.from_features(infrabel_segments.data["features"])
 
-        gtfs_static = load_gtfs_kit_from_zip_string(sncb_gtfs.data)
+        gtfs_static = load_gtfs_parquet_feed(sncb_gtfs_parquet.data)
         gtfs_rt = load_gtfs_realtime_from_bytes_to_df(source.data)
 
-        current_date = source.date.strftime("%Y%m%d")
+        current_date = source.date.date()
 
         stop_times = _cached_stop_times(gtfs_static, current_date)
 
@@ -97,14 +98,16 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
         )
 
         # Merge with stops to get stop lat/lon and name for both start and end
+        stops_df = gtfs_static.stops.to_pandas()[["stop_id", "stop_name", "stop_lat", "stop_lon"]]
+
         stop_times = stop_times.merge(
-            gtfs_static.stops[["stop_id", "stop_name", "stop_lat", "stop_lon"]],
+            stops_df,
             left_on="start_stop_id",
             right_on="stop_id",
         )
 
         stop_times = stop_times.merge(
-            gtfs_static.stops[["stop_id", "stop_name", "stop_lat", "stop_lon"]],
+            stops_df,
             left_on="end_stop_id",
             right_on="stop_id",
             suffixes=("_start", "_end"),
@@ -178,16 +181,15 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
         if final.empty:
             return
 
-        # Interp    olate point using geometry (linestring) and percentage
+        # Interpolate point using geometry (linestring) and percentage
         final["geometry"] = final.apply(
             lambda row: row["geometry"].interpolate(row["percentage"], normalized=True),
             axis=1,
         )
 
         # Merge with trips to get trip_headsign
-        final = final.merge(
-            gtfs_static.trips[["trip_id", "trip_headsign"]], on="trip_id"
-        )
+        trips_df = gtfs_static.trips.to_pandas()[["trip_id", "trip_headsign"]]
+        final = final.merge(trips_df, on="trip_id")
 
         final = final[
             [

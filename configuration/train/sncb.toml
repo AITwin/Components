@@ -43,7 +43,7 @@ PATH = "train.sncb.harvesters.vehicle_position_geometry.SNCBVehiclePositionGeome
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SOURCE = "sncb.gtfs_realtime"
-DEPENDENCIES = ["sncb.gtfs", "infrabel.segments", "infrabel.operational_points"]
+DEPENDENCIES = ["sncb.gtfs_parquet", "infrabel.segments", "infrabel.operational_points"]
 
 [handlers]
 

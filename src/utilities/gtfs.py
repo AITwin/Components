@@ -5,31 +5,25 @@ from functools import lru_cache
 from tempfile import NamedTemporaryFile
 
 import geopandas as gpd
-import gtfs_kit as gk
 import pandas as pd
 from google.transit import gtfs_realtime_pb2
+from gtfs_parquet import read_parquet
 from pytz import timezone
 
 
 @lru_cache(maxsize=32)
-def load_gtfs_kit_from_zip_string(zip_bytes: bytes):
+def load_gtfs_parquet_feed(zip_bytes: bytes):
     """
-    Load GTFS feed from zip string
-    @param zip_bytes: A zip file in bytes
-    @return: GTFS feed
+    Load GTFS feed from a parquet zip archive.
+    @param zip_bytes: A parquet zip file in bytes
+    @return: gtfs_parquet Feed
     """
-    print("Loading GTFS feed from zip string", hash(zip_bytes))
-
-    tmp = NamedTemporaryFile(delete=False)
+    tmp = NamedTemporaryFile(delete=False, suffix=".zip")
     tmp.write(zip_bytes)
-
-    # Close temporary file to allow GTFS kit to read it
     tmp.close()
 
-    # Load GTFS feed from temporary file
-    feed = gk.read_feed(tmp.name, dist_units="km")
+    feed = read_parquet(tmp.name)
 
-    # Remove temporary file to avoid clutter
     os.unlink(tmp.name)
 
     return feed
@@ -71,7 +65,6 @@ def load_gtfs_realtime_from_bytes_to_df(gtfs_realtime_bytes: bytes):
 
 
 def schedule_from_gtfs(gtfs_feed, start_timestamp: int, end_timestamp: int):
-    # Check if both timestamps are for the same day, Brussels time
     brussels_timezone = timezone("Europe/Brussels")
 
     start_date = datetime.utcfromtimestamp(start_timestamp).astimezone(
@@ -79,9 +72,9 @@ def schedule_from_gtfs(gtfs_feed, start_timestamp: int, end_timestamp: int):
     )
     end_date = datetime.utcfromtimestamp(end_timestamp).astimezone(tz=brussels_timezone)
 
-    source_date = end_date.strftime("%Y%m%d")
+    source_date = end_date.date()
 
-    stops = gtfs_feed.get_stops(source_date)[
+    stops = gtfs_feed.get_stops(source_date).to_pandas()[
         ["stop_id", "stop_name", "stop_lat", "stop_lon"]
     ]
 
@@ -102,8 +95,7 @@ def schedule_from_gtfs(gtfs_feed, start_timestamp: int, end_timestamp: int):
             gtfs_feed,
             stops,
             midnight,
-            end_date - timedelta(seconds=1)  # We need the time just
-            # before midnight.
+            end_date - timedelta(seconds=1)
         )
         output_data += compute_data_for_one_date(gtfs_feed, stops, start_date, midnight)
     else:
@@ -120,15 +112,18 @@ def schedule_from_gtfs(gtfs_feed, start_timestamp: int, end_timestamp: int):
 
 
 def compute_data_for_one_date(gtfs_feed, stops, start_date, end_date):
-    source_date = start_date.strftime("%Y%m%d")
+    source_date = start_date.date()
 
-    # Compute feed time series
-    trips = gtfs_feed.get_trips(source_date)
-    stop_times = gtfs_feed.get_stop_times(source_date)
-    # Filter departure_time and arrival_time
+    trips = gtfs_feed.get_trips(source_date).to_pandas()
+    stop_times = gtfs_feed.get_stop_times(source_date).to_pandas()
+
+    # arrival_time/departure_time are timedeltas from gtfs_parquet
+    start_td = pd.to_timedelta(start_date.strftime("%H:%M:%S"))
+    end_td = pd.to_timedelta(end_date.strftime("%H:%M:%S"))
+
     stop_times = stop_times[
-        (stop_times["departure_time"] >= start_date.strftime("%H:%M:%S"))
-        & (stop_times["arrival_time"] <= end_date.strftime("%H:%M:%S"))
+        (stop_times["departure_time"] >= start_td)
+        & (stop_times["arrival_time"] <= end_td)
     ]
 
     stop_times = stop_times.merge(trips, on="trip_id")
@@ -144,7 +139,6 @@ def compute_data_for_one_date(gtfs_feed, stops, start_date, end_date):
                     "stop_id",
                     "route_id",
                     "trip_headsign",
-                    # Headsign or short name, depending on the agency
                     "trip_short_name",
                 ]
             )
@@ -155,26 +149,33 @@ def compute_data_for_one_date(gtfs_feed, stops, start_date, end_date):
     for (stop_id, stop_name, stop_lat, stop_lon), group in stop_times.groupby(
         ["stop_id", "stop_name", "stop_lat", "stop_lon"]
     ):
+        # Convert timedeltas to HH:MM:SS strings for JSON output
+        schedule_cols = list(
+            set(group.columns).intersection(
+                [
+                    "trip_id",
+                    "arrival_time",
+                    "departure_time",
+                    "route_id",
+                    "trip_headsign",
+                    "trip_short_name",
+                ]
+            )
+        )
+        schedule_df = group[schedule_cols].copy()
+        for col in ["arrival_time", "departure_time"]:
+            if col in schedule_df.columns:
+                schedule_df[col] = schedule_df[col].apply(
+                    lambda x: str(x).split(" ")[-1] if pd.notna(x) else None
+                )
+
         output_data.append(
             {
                 "stop_id": stop_id,
                 "stop_name": stop_name,
                 "stop_lat": stop_lat,
                 "stop_lon": stop_lon,
-                "schedule": group[
-                    list(
-                        set(group.columns).intersection(
-                            [
-                                "trip_id",
-                                "arrival_time",
-                                "departure_time",
-                                "route_id",
-                                "trip_headsign",
-                                "trip_short_name",
-                            ]
-                        )
-                    )
-                ].to_dict(orient="records"),
+                "schedule": schedule_df.to_dict(orient="records"),
             }
         )
     return output_data
