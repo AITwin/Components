@@ -1,24 +1,22 @@
 import logging
+import multiprocessing
 import os
-import signal
 import tempfile
 import zipfile
-
-from gtfs_parquet import parse_gtfs, write_parquet
 
 from src.components import Harvester
 
 logger = logging.getLogger(__name__)
 
-TIMEOUT_SECONDS = 300
+TIMEOUT_SECONDS = 1800
 
 
-class _Timeout(Exception):
-    pass
+def _convert(gtfs_path, output_path):
+    """Run conversion in a subprocess so it can be hard-killed on timeout."""
+    from gtfs_parquet import parse_gtfs, write_parquet
 
-
-def _timeout_handler(signum, frame):
-    raise _Timeout()
+    feed = parse_gtfs(gtfs_path)
+    write_parquet(feed, output_path)
 
 
 class GTFSParquetHarvester(Harvester):
@@ -37,23 +35,27 @@ class GTFSParquetHarvester(Harvester):
             with open(gtfs_path, "wb") as f:
                 f.write(gtfs_bytes)
 
-            old_handler = signal.signal(signal.SIGALRM, _timeout_handler)
-            signal.alarm(TIMEOUT_SECONDS)
             try:
-                try:
-                    feed = parse_gtfs(gtfs_path)
-                except zipfile.BadZipFile:
-                    logger.warning("Source data is not a valid zip file, skipping")
-                    return None
+                zipfile.ZipFile(gtfs_path).close()
+            except zipfile.BadZipFile:
+                logger.warning("Source data is not a valid zip file, skipping")
+                return None
 
-                output_path = os.path.join(tmpdir, "gtfs.parquet.zip")
-                write_parquet(feed, output_path)
-            except _Timeout:
+            output_path = os.path.join(tmpdir, "gtfs.parquet.zip")
+
+            proc = multiprocessing.Process(target=_convert, args=(gtfs_path, output_path))
+            proc.start()
+            proc.join(timeout=TIMEOUT_SECONDS)
+
+            if proc.is_alive():
+                proc.kill()
+                proc.join()
                 logger.warning("GTFS to Parquet conversion timed out after %ds, skipping", TIMEOUT_SECONDS)
                 return None
-            finally:
-                signal.alarm(0)
-                signal.signal(signal.SIGALRM, old_handler)
+
+            if proc.exitcode != 0:
+                logger.warning("GTFS to Parquet conversion failed (exit code %d), skipping", proc.exitcode)
+                return None
 
             with open(output_path, "rb") as f:
                 return f.read()

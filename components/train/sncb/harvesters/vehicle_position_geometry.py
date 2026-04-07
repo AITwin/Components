@@ -45,7 +45,8 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
 
         # Only update arrival_delay from realtime data to avoid type clash
         # between timedelta64 (arrival_time) and float64 columns in gtfs_rt
-        stop_times.update(gtfs_rt[["arrival_delay"]])
+        if "arrival_delay" in gtfs_rt.columns:
+            stop_times.update(gtfs_rt[["arrival_delay"]])
 
         stop_times["next_stop_sequence"] = stop_times["stop_sequence"] + 1
 
