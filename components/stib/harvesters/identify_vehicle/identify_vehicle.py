@@ -110,12 +110,20 @@ class STIBVehicleIdentifyHarvester(Harvester):
         for (line_id, direction), data_for_line_id in data_df.groupby(
             ["lineId", "direction"]
         ):
-            shapefile_for_line = shapefile_gdf[shapefile_gdf["ligne"] == str(line_id)]
+            shapefile_for_line = shapefile_gdf[
+                (shapefile_gdf["ligne"] == str(line_id))
+                & (shapefile_gdf["variante"] != direction)
+            ]
 
             if len(shapefile_for_line) == 0:
                 continue
 
-            total_line_distance = shapefile_for_line.iloc[0]["geometry"].length
+            line_geometry = shapefile_for_line.iloc[0]["geometry"]
+
+            data_for_line_id = data_for_line_id.copy()
+            data_for_line_id["distance"] = data_for_line_id["be_geometry"].apply(
+                lambda point: line_geometry.project(point)
+            )
 
             algorithm = IdentifyVehicleAlgorithm(data_for_line_id, line_id)
 
