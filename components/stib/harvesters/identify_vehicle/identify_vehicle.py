@@ -85,6 +85,9 @@ class STIBVehicleIdentifyHarvester(Harvester):
                 # Make a copy of the data to avoid modifying the original data
                 data = data.copy()
 
+                # Ensure id matches uuid
+                data["id"] = data["uuid"]
+
                 data_gdp = gpd.GeoDataFrame(data, crs="EPSG:4326")
 
                 yield json.loads(data_gdp.to_json())
@@ -100,82 +103,49 @@ class STIBVehicleIdentifyHarvester(Harvester):
 
         return shapefile_gdf
 
-    def _process_group(self, data: GeoDataFrame, shapefile_gdf):
-        lines = {}
+    @staticmethod
+    def _process_group(data_df, shapefile_gdf):
+        result = []
 
-        def get_key(row):
-            return row["lineId"], row["direction"]
-
-        def get_line(row):
-            if get_key(row) not in lines:
-                lines[get_key(row)] = shapefile_gdf[
-                    (shapefile_gdf["ligne"] == row["lineId"])
-                    & (shapefile_gdf["variante"] != row["direction"])
-                    ].iloc[0]["geometry"]
-
-            return lines[get_key(row)]
-
-        def get_distance_on_line(row):
-            try:
-                line_geometry = get_line(row)
-                # Get the distance from the start of the line to the point
-                return line_geometry.project(row["be_geometry"])
-            except IndexError:
-                return 0
-
-        # Add distance column
-        data["distance"] = [get_distance_on_line(row) for _, row in data.iterrows()]
-
-        output_data = gpd.GeoDataFrame()
-
-        for (line_id, direction), rows_with_timestamp in data.groupby(
-                ["lineId", "direction"]
+        for (line_id, direction), data_for_line_id in data_df.groupby(
+            ["lineId", "direction"]
         ):
-            output_data = pd.concat(
-                [
-                    output_data,
-                    self.attribute_ids(
-                        rows_with_timestamp,
-                        line_id,
-                    ),
-                ]
-            )
+            shapefile_for_line = shapefile_gdf[shapefile_gdf["ligne"] == str(line_id)]
 
-        output_data.drop(
-            inplace=True,
-            columns=[
-                "be_geometry",
-            ],
-        )
+            if len(shapefile_for_line) == 0:
+                continue
 
-        output = []
+            total_line_distance = shapefile_for_line.iloc[0]["geometry"].length
 
-        for timestamp, rows in output_data.groupby("timestamp"):
-            # Set the timestamp of rows to the timestamp of the group
-            rows["timestamp"] = timestamp
+            algorithm = IdentifyVehicleAlgorithm(data_for_line_id, line_id)
 
-            # noinspection PyTypeChecker
-            output.append(
-                (
-                    rows,
-                    int(timestamp),
-                )
-            )
+            algorithm.match_iter()
 
-        return output
+            algorithm_result = algorithm.get_result()
+
+            if algorithm_result is None or algorithm_result.empty:
+                continue
+
+            for timestamp, data in algorithm_result.groupby("timestamp"):
+                data = gpd.GeoDataFrame(data, crs="EPSG:4326")
+
+                result.append((data, timestamp))
+
+        return result
 
     @staticmethod
-    def attribute_ids(
-            rows_with_timestamp: pd.DataFrame,
-            line_id,
+    def _process_line(
+        line_id, direction, data_for_line_id, shapefile_gdf
     ):
+        shapefile_for_line = shapefile_gdf[shapefile_gdf["ligne"] == str(line_id)]
 
-        # Drop all identical geometries and timestamps
-        rows_with_timestamp.drop_duplicates(
-            subset=["geometry", "timestamp"], inplace=True
-        )
-        # Print rows where distance is NaN
-        algorithm = IdentifyVehicleAlgorithm(rows_with_timestamp, line_id)
+        if len(shapefile_for_line) == 0:
+            return None
+
+        total_line_distance = shapefile_for_line.iloc[0]["geometry"].length
+
+        algorithm = IdentifyVehicleAlgorithm(data_for_line_id, line_id)
+
         algorithm.match_iter()
 
         return algorithm.get_result()
@@ -193,6 +163,7 @@ class STIBVehicleIdentifyHarvester(Harvester):
 
                 for feature in latest_data_with_uuid.data["features"]:
                     feature["properties"]["uuid"] = feature["id"]
+                    feature["properties"].pop("id", None)
                     features.append(feature)
 
                 latest_datas_with_uuid_df = pd.concat(
