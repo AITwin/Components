@@ -88,6 +88,8 @@ class STIBVehicleIdentifyHarvester(Harvester):
                 # Ensure id matches uuid
                 data["id"] = data["uuid"]
 
+                data.drop(columns=["be_geometry", "distance"], inplace=True, errors="ignore")
+
                 data_gdp = gpd.GeoDataFrame(data, crs="EPSG:4326")
 
                 yield json.loads(data_gdp.to_json())
