@@ -142,7 +142,7 @@ def     fetch_geojsons_and_return_mf_json(
         df = pd.concat([df, gdf_for_one_time])
 
     if columns_to_drop:
-        df.drop(columns=columns_to_drop, inplace=True)
+        df.drop(columns=columns_to_drop, inplace=True, errors="ignore")
 
     # Drop where only one row for id_column
     df = df.groupby(id_column).filter(lambda x: len(x) > 1)
