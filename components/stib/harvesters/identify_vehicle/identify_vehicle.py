@@ -107,58 +107,62 @@ class STIBVehicleIdentifyHarvester(Harvester):
 
     @staticmethod
     def _process_group(data_df, shapefile_gdf):
-        result = []
+        # Run the identification algorithm per (lineId, direction) group, then
+        # concatenate and regroup by timestamp. The harvester runner zips each
+        # yield with one source row, so yielding per-(line, timestamp) would
+        # truncate output to the first group only.
+        line_geometries = {}
 
-        for (line_id, direction), data_for_line_id in data_df.groupby(
+        def get_line_geometry(line_id, direction):
+            key = (line_id, direction)
+            if key not in line_geometries:
+                matches = shapefile_gdf[
+                    (shapefile_gdf["ligne"] == str(line_id))
+                    & (shapefile_gdf["variante"] != direction)
+                ]
+                line_geometries[key] = (
+                    matches.iloc[0]["geometry"] if len(matches) > 0 else None
+                )
+            return line_geometries[key]
+
+        def distance_for_row(row):
+            line_geometry = get_line_geometry(row["lineId"], row["direction"])
+            if line_geometry is None:
+                return 0
+            return line_geometry.project(row["be_geometry"])
+
+        data_df = data_df.copy()
+        data_df["distance"] = [distance_for_row(row) for _, row in data_df.iterrows()]
+
+        combined = gpd.GeoDataFrame()
+
+        for (line_id, direction), rows_with_timestamp in data_df.groupby(
             ["lineId", "direction"]
         ):
-            shapefile_for_line = shapefile_gdf[
-                (shapefile_gdf["ligne"] == str(line_id))
-                & (shapefile_gdf["variante"] != direction)
-            ]
-
-            if len(shapefile_for_line) == 0:
-                continue
-
-            line_geometry = shapefile_for_line.iloc[0]["geometry"]
-
-            data_for_line_id = data_for_line_id.copy()
-            data_for_line_id["distance"] = data_for_line_id["be_geometry"].apply(
-                lambda point: line_geometry.project(point)
+            rows_with_timestamp = rows_with_timestamp.copy()
+            rows_with_timestamp.drop_duplicates(
+                subset=["geometry", "timestamp"], inplace=True
             )
 
-            algorithm = IdentifyVehicleAlgorithm(data_for_line_id, line_id)
-
+            algorithm = IdentifyVehicleAlgorithm(rows_with_timestamp, line_id)
             algorithm.match_iter()
-
             algorithm_result = algorithm.get_result()
 
             if algorithm_result is None or algorithm_result.empty:
                 continue
 
-            for timestamp, data in algorithm_result.groupby("timestamp"):
-                data = gpd.GeoDataFrame(data, crs="EPSG:4326")
+            combined = pd.concat([combined, algorithm_result])
 
-                result.append((data, timestamp))
+        result = []
+
+        if combined.empty:
+            return result
+
+        for timestamp, rows in combined.groupby("timestamp"):
+            rows = gpd.GeoDataFrame(rows, crs="EPSG:4326")
+            result.append((rows, timestamp))
 
         return result
-
-    @staticmethod
-    def _process_line(
-        line_id, direction, data_for_line_id, shapefile_gdf
-    ):
-        shapefile_for_line = shapefile_gdf[shapefile_gdf["ligne"] == str(line_id)]
-
-        if len(shapefile_for_line) == 0:
-            return None
-
-        total_line_distance = shapefile_for_line.iloc[0]["geometry"].length
-
-        algorithm = IdentifyVehicleAlgorithm(data_for_line_id, line_id)
-
-        algorithm.match_iter()
-
-        return algorithm.get_result()
 
     def retrieve_data(self, sources, stib_vehicle_identify, stib_shapefile):
         shapefile_gdf = gpd.GeoDataFrame.from_features(
