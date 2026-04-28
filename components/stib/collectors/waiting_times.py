@@ -1,8 +1,7 @@
 from src.components import Collector
-from src.utilities.bmc import bmc_request
+from src.utilities.bmc import bmc_request_all
 
 
 class STIBWaitingTimesCollector(Collector):
     def run(self):
-        response = bmc_request("/api/datasets/stibmivb/rt/WaitingTimes")
-        return response.json()
+        return {"results": bmc_request_all("/api/datasets/stibmivb/rt/WaitingTimes")}

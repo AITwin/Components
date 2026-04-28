@@ -2,16 +2,13 @@ import json
 from typing import Dict, List
 
 from src.components import Collector
-from src.utilities.bmc import bmc_request
+from src.utilities.bmc import bmc_request_all
 
 
 class STIBVehiclePositionsCollector(Collector):
     def run(self) -> List[Dict]:
-        response = bmc_request("/api/datasets/stibmivb/rt/VehiclePositions")
-        raw = response.json()
-
         results = []
-        for record in raw.get("results", []):
+        for record in bmc_request_all("/api/datasets/stibmivb/rt/VehiclePositions"):
             line_id = str(record.get("lineid", ""))
             vehicle_positions = record.get("vehiclepositions", "[]")
             if isinstance(vehicle_positions, str):
