@@ -48,7 +48,7 @@ SCHEDULE = "15m"
 PATH = "stib.collectors.waiting_times.STIBWaitingTimesCollector"
 DATA_FORMAT = "json"
 DATA_TYPE = "json"
-SCHEDULE = "20s"
+SCHEDULE = "60s"
 
 
 [harvesters]

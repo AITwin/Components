@@ -8,7 +8,7 @@ BMC_BASE_URL = "https://api-management-opendata-production.azure-api.net"
 
 BMC_KEY = "BELGIAN_MOBILITY_API_KEY"
 
-BMC_PAGE_SIZE = 100
+BMC_PAGE_SIZE = 1000
 
 
 def bmc_request(path: str, params: dict = None) -> requests.Response:
