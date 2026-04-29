@@ -15,7 +15,11 @@ class STIBShapefileGeoJSONHarvester(Harvester):
             z.extractall(tmpdir)
 
             shp_files = [f for f in z.namelist() if f.endswith(".shp")]
-            lines_shp = next(f for f in shp_files if "LINES" in f.upper())
+            lines_shp = next(
+                f
+                for f in shp_files
+                if "LINES" in f.upper() or "LIGNES" in f.upper()
+            )
 
             gdf = gpd.read_file(f"{tmpdir}/{lines_shp}")
 
