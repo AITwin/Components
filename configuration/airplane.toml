@@ -6,3 +6,20 @@ PATH = "airplane.opensky.OpenSkyPositionCollector"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "5m"
+
+[collectors.airplanes_live_position]
+
+PATH = "airplane.airplanes_live.AirplanesLivePositionCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "1m"
+
+[harvesters]
+
+[harvesters.unified_position]
+
+PATH = "airplane.harvesters.unified_position.AirplaneUnifiedPositionHarvester"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SOURCE = "airplane.opensky_position"
+DEPENDENCIES = ["airplane.airplanes_live_position"]
