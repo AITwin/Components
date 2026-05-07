@@ -45,6 +45,14 @@ DATA_TYPE = "json"
 SOURCE = "sncb.gtfs_realtime"
 DEPENDENCIES = ["sncb.gtfs_parquet", "infrabel.segments", "infrabel.operational_points"]
 
+[harvesters.punctuality]
+
+PATH = "punctuality_harvester.PunctualityHarvester"
+DATA_FORMAT = "punctuality-parquet"
+DATA_TYPE = "binary"
+SOURCE = "sncb.gtfs_rt_trip_update"
+SOURCE_RANGE = "1d@Europe/Brussels"
+
 [handlers]
 
 

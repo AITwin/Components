@@ -2,6 +2,7 @@ import logging
 import time
 from datetime import datetime, timedelta
 from typing import Dict, Optional
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import Table
 
@@ -16,6 +17,7 @@ from src.data.retrieve import (
 from src.data.write import write_result
 
 ZERO_DATE = datetime(1970, 1, 1)
+_UTC = ZoneInfo("UTC")
 
 
 logger = logging.getLogger("Harvester")
@@ -45,6 +47,41 @@ def run_harvester_on_schedule(
             time.sleep(60)
 
 
+def _aligned_period(latest_date: datetime, source_range: str, tz: ZoneInfo):
+    """Floor `latest_date` to a wall-clock bucket in `tz` and return the
+    [start, end) window expressed as naive UTC datetimes.
+
+    Uses calendar arithmetic so DST transitions stretch/shrink the window
+    naturally (a Brussels day in March is 23 h, in October 25 h).
+    """
+    local = latest_date.replace(tzinfo=_UTC).astimezone(tz)
+    unit = source_range[-1]
+    n = int(source_range[:-1])
+
+    if unit == "d":
+        floor = local.replace(hour=0, minute=0, second=0, microsecond=0)
+        floor -= timedelta(days=floor.day % n)
+        end = floor + timedelta(days=n)
+    elif unit == "h":
+        floor = local.replace(minute=0, second=0, microsecond=0)
+        floor -= timedelta(hours=floor.hour % n)
+        end = floor + timedelta(hours=n)
+    elif unit == "m":
+        floor = local.replace(second=0, microsecond=0)
+        floor -= timedelta(minutes=floor.minute % n)
+        end = floor + timedelta(minutes=n)
+    elif unit == "s":
+        floor = local.replace(microsecond=0)
+        floor -= timedelta(seconds=floor.second % n)
+        end = floor + timedelta(seconds=n)
+    else:
+        raise ValueError(f"Invalid source_range: {source_range!r}")
+
+    return (floor.astimezone(_UTC).replace(tzinfo=None),
+            end.astimezone(_UTC).replace(tzinfo=None),
+            None)
+
+
 def source_range_to_period_and_limit(
     latest_date: datetime, source_range: str | int
 ) -> (datetime, datetime, int):
@@ -56,9 +93,14 @@ def source_range_to_period_and_limit(
     rounded to the previous period based on the given time unit. If the source range represents a limit, it returns
     the latest date and the specified limit.
 
-    :param latest_date: The latest date harvested.
+    A `@<tz>` suffix (e.g. ``"1d@Europe/Brussels"``) anchors the period to the
+    given IANA timezone's wall clock instead of the database's naive datetime.
+    Without it, periods are aligned in the legacy timezone-naive way.
+
+    :param latest_date: The latest date harvested (naive UTC).
     :param source_range: The source range, which can be expressed as a time period or a limit (count).
-        Time period examples: "3d" (3 days), "6h" (6 hours), "30m" (30 minutes), "120s" (120 seconds).
+        Time period examples: "3d" (3 days), "6h" (6 hours), "30m" (30 minutes), "120s" (120 seconds),
+        "1d@Europe/Brussels" (one calendar day in Brussels local time).
         Limit example: "100" (100 records).
     :return: A tuple containing the calculated start date, end date (for time periods), and limit (for counts).
     """
@@ -68,6 +110,10 @@ def source_range_to_period_and_limit(
 
     if type(source_range) == int or source_range.isdigit():
         return latest_date, None, int(source_range)
+
+    if "@" in source_range:
+        period, tz_name = source_range.split("@", 1)
+        return _aligned_period(latest_date, period, ZoneInfo(tz_name))
 
     if "d" in source_range:
         days = int(source_range.replace("d", ""))

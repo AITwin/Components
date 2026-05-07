@@ -36,3 +36,11 @@ PATH = "gtfs_parquet_harvester.GTFSParquetHarvester"
 DATA_FORMAT = "gtfs-parquet"
 DATA_TYPE = "binary"
 SOURCE = "de_lijn.gtfs"
+
+[harvesters.punctuality]
+
+PATH = "punctuality_harvester.PunctualityHarvester"
+DATA_FORMAT = "punctuality-parquet"
+DATA_TYPE = "binary"
+SOURCE = "de_lijn.gtfs_rt_trip_update"
+SOURCE_RANGE = "1d@Europe/Brussels"
