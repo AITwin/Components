@@ -41,6 +41,18 @@ def _ingest(feed_bytes: bytes, fallback_ts: int, acc: dict) -> int:
         trip = tu.trip
         ts = tu.timestamp or feed_ts
         direction_id = trip.direction_id if trip.HasField("direction_id") else None
+
+        # Cancelled trips are typically published with no stop_time_update entries;
+        # emit one synthetic trip-only row so the cancellation isn't dropped.
+        if trip.schedule_relationship == _CANCELED and len(tu.stop_time_update) == 0:
+            key = (trip.trip_id, trip.start_date, trip.start_time, None, None)
+            prior = acc.get(key)
+            if prior is None or prior[-1] < ts:
+                acc[key] = (trip.route_id, direction_id, _CANCELED,
+                            None, None, None, None, 0, ts)
+                seen += 1
+            continue
+
         for stu in tu.stop_time_update:
             seq = stu.stop_sequence if stu.HasField("stop_sequence") else None
             key = (trip.trip_id, trip.start_date, trip.start_time, seq, stu.stop_id)
@@ -74,6 +86,9 @@ class PunctualityHarvester(Harvester):
     order means the latest update wins. The accumulator is drained directly
     into columnar lists, so the dict and the column storage never coexist at
     full size.
+
+    Cancelled trips that arrive with no stop_time_update entries are kept as
+    a single synthetic row per trip-instance with null stop fields.
     """
 
     def run(self, source):
