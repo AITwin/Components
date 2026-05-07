@@ -52,11 +52,20 @@ class AirplanesLivePositionCollector(Collector):
     """
 
     def run(self):
-        lat = self.settings.get("lat", 50.5)
-        lon = self.settings.get("lon", 4.5)
-        radius_nm = self.settings.get("radius_nm", 150)
-        endpoint = f"https://api.airplanes.live/v2/point/{lat}/{lon}/{radius_nm}"
+        # Centre/radius for the airplanes.live point query. Defaults cover
+        # Belgium and a thin border margin; tighten via settings if needed.
+        lat = self.settings.get("lat", 50.85)
+        lon = self.settings.get("lon", 4.7)
+        radius_nm = self.settings.get("radius_nm", 90)
 
+        # Bounding box used to clip the response to Belgian airspace.
+        # Same envelope as the OpenSky collector for consistency.
+        lamin = self.settings.get("lamin", 49.5294835476)
+        lomin = self.settings.get("lomin", 2.51357303225)
+        lamax = self.settings.get("lamax", 51.4750237087)
+        lomax = self.settings.get("lomax", 6.15665815596)
+
+        endpoint = f"https://api.airplanes.live/v2/point/{lat}/{lon}/{radius_nm}"
         response = requests.get(endpoint, headers={"User-Agent": "CoDE-airplanes/1.0"}, timeout=20)
         response.raise_for_status()
         ac_list = response.json().get("ac") or []
@@ -68,6 +77,8 @@ class AirplanesLivePositionCollector(Collector):
         for a in ac_list:
             lat_v, lon_v = a.get("lat"), a.get("lon")
             if lat_v is None or lon_v is None:
+                continue
+            if not (lamin <= lat_v <= lamax and lomin <= lon_v <= lomax):
                 continue
             on_ground = a.get("alt_baro") == "ground"
             rows.append({
