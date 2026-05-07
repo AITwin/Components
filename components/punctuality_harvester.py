@@ -8,6 +8,9 @@ from src.components import Harvester
 
 logger = logging.getLogger(__name__)
 
+_CANCELED = gtfs_realtime_pb2.TripDescriptor.CANCELED
+_SKIPPED = gtfs_realtime_pb2.TripUpdate.StopTimeUpdate.SKIPPED
+
 _SCHEMA = {
     "trip_id": pl.Utf8,
     "start_date": pl.Utf8,
@@ -22,6 +25,7 @@ _SCHEMA = {
     "departure_time": pl.Int64,
     "departure_delay": pl.Int32,
     "stop_schedule_relationship": pl.Int32,
+    "cancelled": pl.Boolean,
 }
 
 
@@ -116,6 +120,8 @@ class PunctualityHarvester(Harvester):
             cols["departure_time"][i] = departure_time
             cols["departure_delay"][i] = departure_delay
             cols["stop_schedule_relationship"][i] = stop_schedule_relationship
+            cols["cancelled"][i] = (trip_schedule_relationship == _CANCELED
+                                    or stop_schedule_relationship == _SKIPPED)
             i += 1
 
         df = pl.DataFrame(cols, schema=_SCHEMA).with_columns(
