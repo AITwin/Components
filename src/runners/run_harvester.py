@@ -193,8 +193,8 @@ def run_harvester(
     if limit and harvester_config.source_range_strict and len(source_data) < limit:
         return False  # No new data to harvest, still building the amount of data specified by the limit
 
-    if end_date and not retrieve_after_datetime(table, latest_date, 1):
-        return False  # No new data to harvest, still building the same period
+    if end_date and not retrieve_after_datetime(source_table, end_date, 1):
+        return False  # Period not yet elapsed (no source data past end_date)
 
     storage_date = end_date or source_data[-1].date
 
