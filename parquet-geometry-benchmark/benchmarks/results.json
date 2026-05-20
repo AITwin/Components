@@ -1,0 +1,2669 @@
+[
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 16263
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 0.0381461549998221
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 262149.6190126275
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "storage_bytes",
+    "value": 26445
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "write_time_s",
+    "value": 0.06530796100014413
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "write_rows_per_s",
+    "value": 153120.68922160854
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "storage_bytes",
+    "value": 22717
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "write_time_s",
+    "value": 0.04787552000016149
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 208875.01587379666
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 59587
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 0.11258279000003313
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 88823.52267160067
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b_plus",
+    "metric": "storage_bytes",
+    "value": 20023
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b_plus",
+    "metric": "write_time_s",
+    "value": 0.0626941639998222
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b_plus",
+    "metric": "write_rows_per_s",
+    "value": 159504.4795561571
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.6149744753261486
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.7158955848043316
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.27292865893567386
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b_plus",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.812215951655596
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "point_in_time_ms",
+    "value": 2.3973971666616007
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 2.2194125666677182
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 3.9656401000002
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b_plus",
+    "metric": "point_in_time_ms",
+    "value": 2.4084615666727887
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 2.5164767000054176
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "range_read_ms",
+    "value": 2.118328999813457
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "range_read_rows",
+    "value": 50
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "range_read_ms",
+    "value": 1.9748760000766197
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "range_read_rows",
+    "value": 50
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 4.487381999979334
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "range_read_rows",
+    "value": 21000
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 2.5835670001015387
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "range_read_rows",
+    "value": 1050
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b_plus",
+    "metric": "range_read_ms",
+    "value": 2.426351999929466
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "spatial_temporal_ms",
+    "value": 5.9046280000529805
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "row_groups_touched",
+    "value": 2
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "row_groups_total",
+    "value": 2
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 29.035842999974193
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_touched",
+    "value": 2
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_total",
+    "value": 2
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 5.424256999958743
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 1
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 1
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 3.806007000093814
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 1
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 1
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 114438
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 0.6920601080000779
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 288992.23880706256
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "storage_bytes",
+    "value": 144106
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "write_time_s",
+    "value": 1.0855033569998795
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "write_rows_per_s",
+    "value": 184246.32103650158
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "storage_bytes",
+    "value": 131126
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "write_time_s",
+    "value": 0.9161553779999849
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 218303.5812512616
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 1391141
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 1.7823503219999566
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 112211.3860173022
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b_plus",
+    "metric": "storage_bytes",
+    "value": 125052
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b_plus",
+    "metric": "write_time_s",
+    "value": 1.253160233999779
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b_plus",
+    "metric": "write_rows_per_s",
+    "value": 159596.51014591265
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.7941237700026369
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8727330964110855
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.08226197056948217
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b_plus",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9151233087035793
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "point_in_time_ms",
+    "value": 3.86156283332942
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 3.7788269333380717
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 10.225932499997725
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b_plus",
+    "metric": "point_in_time_ms",
+    "value": 3.5048032999990633
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 6.292549299996608
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "range_read_ms",
+    "value": 6.150711999907799
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "range_read_ms",
+    "value": 4.092512000170245
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 30.611470999929224
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_rows",
+    "value": 404000
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 17.096752000043125
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_rows",
+    "value": 20200
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b_plus",
+    "metric": "range_read_ms",
+    "value": 4.60158600003524
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "spatial_temporal_ms",
+    "value": 14.66517200015005
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "spatial_temporal_matches",
+    "value": 3
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 322.6948479998555
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 3
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 61.49030700021285
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 3
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 26.511473000027763
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 3
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 65954219
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 0.8203443590000461
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 243800.055191199
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "storage_bytes",
+    "value": 68160766
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "write_time_s",
+    "value": 3.64727503600011
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "write_rows_per_s",
+    "value": 54835.45880853992
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "storage_bytes",
+    "value": 68147738
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "write_time_s",
+    "value": 3.416617573999929
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 58537.42646586415
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 66778115
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 2.429828520000001
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 82310.33521657731
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9676273151038238
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9678122992138052
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.987662185433057
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "point_in_time_ms",
+    "value": 111.1097381000036
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 111.21573176666668
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 13.498823700001594
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 14.643628799998016
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "range_read_ms",
+    "value": 58.805011000004015
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "range_read_ms",
+    "value": 52.3350930000106
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 31.32747500012556
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_rows",
+    "value": 404000
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 23.46549599997161
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_rows",
+    "value": 20200
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "spatial_temporal_ms",
+    "value": 1083.2151820000036
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 19128.1695539999
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 71.71938500005126
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 58.47503399991183
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 56389078
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 0.8608643160000611
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 232324.6489403631
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "storage_bytes",
+    "value": 65138810
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "write_time_s",
+    "value": 3.739507064999998
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "write_rows_per_s",
+    "value": 53482.984929191494
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "storage_bytes",
+    "value": 65125782
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "write_time_s",
+    "value": 4.0919874169999275
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 48876.00562238081
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 59374885
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 2.3663394790000893
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 84518.7268246529
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.86567559339816
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8658487663150056
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9497126268118246
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "point_in_time_ms",
+    "value": 111.68480170000142
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 112.94049159999607
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 17.1520604999993
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 20.260137533333967
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "range_read_ms",
+    "value": 54.0345840001919
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "range_read_ms",
+    "value": 52.54836900007831
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 46.17491899989545
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_rows",
+    "value": 403791
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 27.73491100015235
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_rows",
+    "value": 20200
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "spatial_temporal_ms",
+    "value": 683.016718999852
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "row_groups_touched",
+    "value": 5
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 19008.762498000124
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 94.20922200001769
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 82.3178299999654
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 130021311
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 4.353570824999906
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 459.3930087263581
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "storage_bytes",
+    "value": 149575381
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "write_time_s",
+    "value": 2.9676521019998745
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "write_rows_per_s",
+    "value": 673.9334434289713
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "storage_bytes",
+    "value": 149558048
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "write_time_s",
+    "value": 2.989709452999932
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 668.9613259887717
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 119135191
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 3.38523938000003
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 590.8001696470819
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8692694621984617
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8693702060085726
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 1.0913761912716453
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "point_in_time_ms",
+    "value": 328.28051449999975
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 327.3235595499955
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 9.43946565000715
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 3.23707940000304
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "range_read_ms",
+    "value": 114.71985299999687
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "range_read_ms",
+    "value": 89.7698890000811
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 11.236149999831468
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 10.048097999970196
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 89.35039800007871
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 309
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 245.19374900000912
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 309
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 20
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 20
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 3302399
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 0.04948918000013691
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 202064.37043354395
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "storage_bytes",
+    "value": 3917993
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "write_time_s",
+    "value": 0.2065595569999914
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "write_rows_per_s",
+    "value": 48412.18748353733
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "storage_bytes",
+    "value": 3914258
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "write_time_s",
+    "value": 0.17667636999999559
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 56600.66482009026
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 3686593
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 0.1765588299999763
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 56638.34541722633
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8428802705875177
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8436845501752822
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8957861635390725
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "point_in_time_ms",
+    "value": 24.07631169999907
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 23.53060370000245
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 4.581043366662622
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 3.3855571999993117
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "range_read_ms",
+    "value": 7.330656000021918
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "range_read_rows",
+    "value": 50
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "range_read_ms",
+    "value": 6.6613179999421845
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "range_read_rows",
+    "value": 50
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 5.923562999896603
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "range_read_rows",
+    "value": 21000
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 3.8966009999512607
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "range_read_rows",
+    "value": 1050
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "spatial_temporal_ms",
+    "value": 28.892411000015272
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "row_groups_touched",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "row_groups_total",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 991.5347470000597
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_touched",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_total",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 14.329523000014888
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 1
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 1
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 6.029049999824565
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 1
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 1
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 2819009
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 0.045374098999900525
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 220390.05116160924
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "storage_bytes",
+    "value": 3210841
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "write_time_s",
+    "value": 0.1906078439999419
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "write_rows_per_s",
+    "value": 52463.73806107921
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "storage_bytes",
+    "value": 3207106
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "write_time_s",
+    "value": 0.17294811000010668
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 57820.811109146154
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 3175011
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 0.15841545600005702
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 63125.153646601255
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8779659285526752
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8789884088645651
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8878737742955851
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "point_in_time_ms",
+    "value": 23.899535466663718
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 23.91531450000457
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 4.333080433328481
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 4.064050699995883
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "range_read_ms",
+    "value": 7.964298000160852
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "range_read_rows",
+    "value": 50
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "range_read_ms",
+    "value": 7.830196999975669
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "range_read_rows",
+    "value": 50
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 5.480432000013025
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "range_read_rows",
+    "value": 21065
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 4.411890000028507
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "range_read_rows",
+    "value": 1050
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "spatial_temporal_ms",
+    "value": 65.68259699997725
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "row_groups_touched",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "row_groups_total",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 966.77786500004
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_touched",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_total",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 6.604870000046503
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 1
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 1
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 4.918438000004244
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 1
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 1
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 4078022
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 0.13323261300001832
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 1876.4174504328428
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "storage_bytes",
+    "value": 4508502
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "write_time_s",
+    "value": 0.06205255200006832
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "write_rows_per_s",
+    "value": 4028.843165059912
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "storage_bytes",
+    "value": 4503928
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "write_time_s",
+    "value": 0.05765543899997283
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 4336.104352620016
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 4578029
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 0.11306795399991643
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 2211.059731391131
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9045181747729069
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9054367654189854
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8907811636841968
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "point_in_time_ms",
+    "value": 42.32009960001051
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 42.002911999998105
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 3.371244599975398
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 1.939935800010062
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_a",
+    "metric": "range_read_ms",
+    "value": 6.7498230000637705
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_a_nobbox",
+    "metric": "range_read_ms",
+    "value": 6.381621999935305
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 3.0809030001819337
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 1.5924720000839443
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 4.826438000009148
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 69
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 1
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 1
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 8.5970460002045
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 69
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 1
+  },
+  {
+    "workload": "w4_pointcloud_small",
+    "size_preset": "small",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 1
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 9575302
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 17.883673989999807
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 279584.60900125443
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a",
+    "metric": "storage_bytes",
+    "value": 6746844
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a",
+    "metric": "write_time_s",
+    "value": 27.41648332700015
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a",
+    "metric": "write_rows_per_s",
+    "value": 182372.04021990404
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a_nobbox",
+    "metric": "storage_bytes",
+    "value": 6685523
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a_nobbox",
+    "metric": "write_time_s",
+    "value": 23.820508995999944
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 209903.15533726104
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 43333405
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 44.642060451000134
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 112001.99877620082
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b_plus",
+    "metric": "storage_bytes",
+    "value": 12641209
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b_plus",
+    "metric": "write_time_s",
+    "value": 34.22303818500018
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b_plus",
+    "metric": "write_rows_per_s",
+    "value": 146100.4126217958
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 1.4192268266466515
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 1.4322442686982007
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.22096814224499553
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b_plus",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.7574672644048525
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a",
+    "metric": "point_in_time_ms",
+    "value": 11.93166336666612
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 11.43225433333252
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 21.15083979999781
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b_plus",
+    "metric": "point_in_time_ms",
+    "value": 8.71894809999958
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 14.347247799999725
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a",
+    "metric": "range_read_ms",
+    "value": 40.853824999885546
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a",
+    "metric": "range_read_rows",
+    "value": 1000
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a_nobbox",
+    "metric": "range_read_ms",
+    "value": 32.737793000023885
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a_nobbox",
+    "metric": "range_read_rows",
+    "value": 1000
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 641.6820790000202
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b",
+    "metric": "range_read_rows",
+    "value": 10020000
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 261.0410319998664
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "baseline_wkb",
+    "metric": "range_read_rows",
+    "value": 501000
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b_plus",
+    "metric": "range_read_ms",
+    "value": 26.001287999861233
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a",
+    "metric": "spatial_temporal_ms",
+    "value": 338.6116140000013
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a",
+    "metric": "spatial_temporal_matches",
+    "value": 6
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a",
+    "metric": "row_groups_touched",
+    "value": 30
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a",
+    "metric": "row_groups_total",
+    "value": 32
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 7266.438040000139
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 6
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_touched",
+    "value": 32
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a_nobbox",
+    "metric": "row_groups_total",
+    "value": 32
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 1078.6747480001395
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 6
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 63
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 96
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 777.8323880002063
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 6
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 100
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 100
+  }
+]

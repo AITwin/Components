@@ -264,26 +264,22 @@ columns. That's the empirical question that decides whether Design A's
 
 ---
 
-## Open questions for sanity check
+## Resolved sanity-check decisions
 
-Before I implement, three things I'd like you to confirm or redirect:
+1. **Design A polygon shape: per-vertex trajectories.** Each polygon
+   entity is `List<Struct<ring_idx, vertex_id, traj: List<Struct<t, x, y>>>>`.
+   `vertex_id` is stable across frames. Variable-vertex is handled
+   naturally: vertices that disappear just end their trajectory, vertices
+   that appear are new entries. This mirrors MEOS's tgeompoint structure.
+   For static (Workload 1) each vertex has a single-entry trajectory and
+   the observation timeline lives in a sibling `observations` column.
 
-1. **Design A polygon-frame shape.** I have it as
-   `List<Struct<t, rings: List<List<point2d>>>>`. The alternative is
-   per-vertex trajectories
-   `List<Struct<ring_idx, ring_pos, traj: List<Struct<t, point2d>>>>`
-   which lets you compress per-vertex motion better but is awkward for
-   variable-vertex polygons. I chose the first because it's a clean fit
-   for all three polygon workloads with the same shape. Push back if you
-   want the second instead.
+2. **Design A bbox sidecar: benchmark both.** Pure form vs. with per-row
+   `bbox_*` columns will both be measured. The pure form is the honest
+   "preserves MEOS structure" version; the sidecar form is the refined
+   variant.
 
-2. **Design A bbox sidecar.** I'm planning to benchmark Design A both with
-   and without the per-row bbox columns. If you'd rather the "pure" form
-   only, say so — but the pure form is likely to lose benchmark 5 badly,
-   and I want the comparison to be informative.
-
-3. **Design B static-collapse refinement.** For Workload 1 the
-   row-per-(vertex, timestamp) form is going to be ugly. I plan to report
-   it honestly and then sketch (not implement) a t_idx-range refinement
-   in the report. Tell me if you'd rather I implement the refinement and
-   benchmark it as "Design B+".
+3. **Design B+ static-collapse: implemented and labeled.** Workload 1 gets
+   both the raw Design B (one row per vertex×timestamp) and Design B+
+   (one row per vertex with `t_idx_start..t_idx_end`). They appear as
+   separate rows in the results table.
