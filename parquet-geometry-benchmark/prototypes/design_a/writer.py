@@ -1,9 +1,16 @@
 """Design A — Nested-MEOS-Arrow encoding.
 
-Polygons are stored as List<Struct<ring_idx, vertex_id, traj: List<Struct<t,x,y>>>>.
-Each per-vertex trajectory is a MEOS-shaped tgeompoint. Variable vertex
-counts are handled by per-vertex trajectories ending or beginning at
-different times — there is no positional ambiguity across frames.
+Two polygon shapes are supported:
+
+  A1 — per-vertex trajectories:
+       List<Struct<ring_idx, vertex_id, traj: List<Struct<t, x, y>>>>
+       Mirrors MEOS tgeompoint structure. Variable vertex counts handled
+       by per-vertex trajectories ending or beginning at different times.
+
+  A2 — snapshot-per-frame:
+       List<Struct<t, rings: List<List<Struct<x, y>>>>>
+       Each frame stores its polygon directly. Simpler shape, no per-
+       vertex identity required.
 
 Top-level flat columns (entity_id, subtype, interp, srid, flags, t_min,
 t_max, bbox_*) are present for row-group pruning. The bbox sidecar can be
@@ -52,6 +59,35 @@ def polygon_schema(with_bbox: bool) -> pa.Schema:
             pa.field("ring_idx", pa.int16()),
             pa.field("vertex_id", pa.int32()),
             pa.field("traj", _traj_type()),
+        ]))),
+    ]
+    return pa.schema(fields)
+
+
+def polygon_schema_snapshot(with_bbox: bool) -> pa.Schema:
+    fields = [
+        pa.field("entity_id", pa.int64()),
+        pa.field("subtype", pa.int8()),
+        pa.field("interp", pa.int8()),
+        pa.field("srid", pa.int32()),
+        pa.field("flags", pa.int32()),
+        pa.field("t_min", pa.timestamp("ms")),
+        pa.field("t_max", pa.timestamp("ms")),
+    ]
+    if with_bbox:
+        fields += [
+            pa.field("bbox_xmin", pa.float64()),
+            pa.field("bbox_xmax", pa.float64()),
+            pa.field("bbox_ymin", pa.float64()),
+            pa.field("bbox_ymax", pa.float64()),
+        ]
+    fields += [
+        pa.field("frames", pa.list_(pa.struct([
+            pa.field("t", pa.timestamp("ms")),
+            pa.field("rings", pa.list_(pa.list_(pa.struct([
+                pa.field("x", pa.float64()),
+                pa.field("y", pa.float64()),
+            ])))),
         ]))),
     ]
     return pa.schema(fields)
@@ -151,6 +187,37 @@ def write_polygon_workload(workload, path: str, with_bbox: bool = True, row_grou
         rows.append(row)
 
     schema = polygon_schema(with_bbox)
+    table = pa.Table.from_pylist(rows, schema=schema)
+    pq.write_table(table, path, compression="snappy", row_group_size=row_group_size)
+
+
+def write_polygon_workload_snapshot(workload, path: str, with_bbox: bool = True,
+                                     row_group_size: int = 32) -> None:
+    """A2 — snapshot-per-frame polygon shape."""
+    rows = []
+    for ent in workload.entities:
+        frames = []
+        xs_all, ys_all, all_t = [], [], []
+        for frame in ent.frames:
+            all_t.append(frame.t)
+            rings = []
+            for ring in frame.rings:
+                ring_pts = [{"x": float(x), "y": float(y)} for x, y in ring]
+                xs_all.extend(p["x"] for p in ring_pts)
+                ys_all.extend(p["y"] for p in ring_pts)
+                rings.append(ring_pts)
+            frames.append({"t": frame.t, "rings": rings})
+        row = {
+            "entity_id": ent.entity_id, "subtype": 2, "interp": workload.interp,
+            "srid": ent.srid, "flags": 0,
+            "t_min": min(all_t), "t_max": max(all_t),
+            "frames": frames,
+        }
+        if with_bbox:
+            row.update({"bbox_xmin": min(xs_all), "bbox_xmax": max(xs_all),
+                        "bbox_ymin": min(ys_all), "bbox_ymax": max(ys_all)})
+        rows.append(row)
+    schema = polygon_schema_snapshot(with_bbox)
     table = pa.Table.from_pylist(rows, schema=schema)
     pq.write_table(table, path, compression="snappy", row_group_size=row_group_size)
 

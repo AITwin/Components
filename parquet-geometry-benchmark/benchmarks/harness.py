@@ -59,8 +59,10 @@ def benchmark_one(workload_key: str, size: str, n_queries: int = 30) -> list[dic
     runs = {}
     if is_poly:
         runs["baseline_wkb"] = lambda p: wkb_writer.write_polygon_workload(workload, p[0])
-        runs["design_a"] = lambda p: a_writer.write_polygon_workload(workload, p[0], with_bbox=True)
-        runs["design_a_nobbox"] = lambda p: a_writer.write_polygon_workload(workload, p[0], with_bbox=False)
+        runs["design_a1"] = lambda p: a_writer.write_polygon_workload(workload, p[0], with_bbox=True)
+        runs["design_a1_nobbox"] = lambda p: a_writer.write_polygon_workload(workload, p[0], with_bbox=False)
+        runs["design_a2"] = lambda p: a_writer.write_polygon_workload_snapshot(workload, p[0], with_bbox=True)
+        runs["design_a2_nobbox"] = lambda p: a_writer.write_polygon_workload_snapshot(workload, p[0], with_bbox=False)
         runs["design_b"] = lambda p: b_writer.write_polygon_workload(workload, p[0], p[1])
         if workload.is_static:
             runs["design_b_plus"] = lambda p: b_writer.write_polygon_workload_plus(workload, p[0], p[1])
@@ -73,6 +75,11 @@ def benchmark_one(workload_key: str, size: str, n_queries: int = 30) -> list[dic
     # Paths
     paths = {
         "baseline_wkb": [f"{base}.wkb.parquet"],
+        "design_a1": [f"{base}.a1.parquet"],
+        "design_a1_nobbox": [f"{base}.a1_nobbox.parquet"],
+        "design_a2": [f"{base}.a2.parquet"],
+        "design_a2_nobbox": [f"{base}.a2_nobbox.parquet"],
+        # Kept for pointcloud workloads:
         "design_a": [f"{base}.a.parquet"],
         "design_a_nobbox": [f"{base}.a_nobbox.parquet"],
         "design_b": [f"{base}.b.main.parquet", f"{base}.b.timeline.parquet"],
@@ -123,27 +130,19 @@ def benchmark_one(workload_key: str, size: str, n_queries: int = 30) -> list[dic
 
     # ---- Point-in-time queries ----
     if is_poly:
-        # design_a
-        t0 = time.perf_counter()
-        for eid, t in zip(sample_entities, sample_times):
-            a_reader.materialize_at_time(paths["design_a"][0], eid, t, is_static=workload.is_static)
-        dt = (time.perf_counter() - t0) / n_queries
-        results.append({"workload": workload.name, "size_preset": size,
-                        "design": "design_a", "metric": "point_in_time_ms", "value": dt * 1000})
-
-        t0 = time.perf_counter()
-        for eid, t in zip(sample_entities, sample_times):
-            a_reader.materialize_at_time(paths["design_a_nobbox"][0], eid, t, is_static=workload.is_static)
-        dt = (time.perf_counter() - t0) / n_queries
-        results.append({"workload": workload.name, "size_preset": size,
-                        "design": "design_a_nobbox", "metric": "point_in_time_ms", "value": dt * 1000})
-
-        t0 = time.perf_counter()
-        for eid, t in zip(sample_entities, sample_times):
-            b_reader.materialize_polygon(paths["design_b"][0], paths["design_b"][1], eid, t, plus=False)
-        dt = (time.perf_counter() - t0) / n_queries
-        results.append({"workload": workload.name, "size_preset": size,
-                        "design": "design_b", "metric": "point_in_time_ms", "value": dt * 1000})
+        for dname, fn in [
+            ("design_a1", lambda eid, t: a_reader.materialize_at_time(paths["design_a1"][0], eid, t, is_static=workload.is_static)),
+            ("design_a1_nobbox", lambda eid, t: a_reader.materialize_at_time(paths["design_a1_nobbox"][0], eid, t, is_static=workload.is_static)),
+            ("design_a2", lambda eid, t: a_reader.materialize_at_time_snapshot(paths["design_a2"][0], eid, t)),
+            ("design_a2_nobbox", lambda eid, t: a_reader.materialize_at_time_snapshot(paths["design_a2_nobbox"][0], eid, t)),
+            ("design_b", lambda eid, t: b_reader.materialize_polygon(paths["design_b"][0], paths["design_b"][1], eid, t, plus=False)),
+        ]:
+            t0 = time.perf_counter()
+            for eid, t in zip(sample_entities, sample_times):
+                fn(eid, t)
+            dt = (time.perf_counter() - t0) / n_queries
+            results.append({"workload": workload.name, "size_preset": size,
+                            "design": dname, "metric": "point_in_time_ms", "value": dt * 1000})
 
         if workload.is_static:
             t0 = time.perf_counter()
@@ -169,8 +168,10 @@ def benchmark_one(workload_key: str, size: str, n_queries: int = 30) -> list[dic
 
     if is_poly:
         for dname, fn in [
-            ("design_a", lambda: a_reader.range_read(paths["design_a"][0], t1, t2)),
-            ("design_a_nobbox", lambda: a_reader.range_read(paths["design_a_nobbox"][0], t1, t2)),
+            ("design_a1", lambda: a_reader.range_read(paths["design_a1"][0], t1, t2)),
+            ("design_a1_nobbox", lambda: a_reader.range_read(paths["design_a1_nobbox"][0], t1, t2)),
+            ("design_a2", lambda: a_reader.range_read(paths["design_a2"][0], t1, t2)),
+            ("design_a2_nobbox", lambda: a_reader.range_read(paths["design_a2_nobbox"][0], t1, t2)),
             ("design_b", lambda: b_reader.range_read(paths["design_b"][0], paths["design_b"][1], t1, t2, plus=False)),
             ("baseline_wkb", lambda: wkb_reader.range_read(paths["baseline_wkb"][0], t1, t2)),
         ]:
@@ -199,8 +200,10 @@ def benchmark_one(workload_key: str, size: str, n_queries: int = 30) -> list[dic
         t_query = f0.t
 
         for dname, fn in [
-            ("design_a", lambda: a_reader.spatial_temporal_filter(paths["design_a"][0], bbox, t_query, with_bbox=True, is_static=workload.is_static)),
-            ("design_a_nobbox", lambda: a_reader.spatial_temporal_filter(paths["design_a_nobbox"][0], bbox, t_query, with_bbox=False, is_static=workload.is_static)),
+            ("design_a1", lambda: a_reader.spatial_temporal_filter(paths["design_a1"][0], bbox, t_query, with_bbox=True, is_static=workload.is_static)),
+            ("design_a1_nobbox", lambda: a_reader.spatial_temporal_filter(paths["design_a1_nobbox"][0], bbox, t_query, with_bbox=False, is_static=workload.is_static)),
+            ("design_a2", lambda: a_reader.spatial_temporal_filter_snapshot(paths["design_a2"][0], bbox, t_query, with_bbox=True)),
+            ("design_a2_nobbox", lambda: a_reader.spatial_temporal_filter_snapshot(paths["design_a2_nobbox"][0], bbox, t_query, with_bbox=False)),
             ("design_b", lambda: b_reader.spatial_temporal_filter(paths["design_b"][0], paths["design_b"][1], bbox, t_query, plus=False)),
             ("baseline_wkb", lambda: wkb_reader.spatial_temporal_filter(paths["baseline_wkb"][0], bbox, t_query)),
         ]:

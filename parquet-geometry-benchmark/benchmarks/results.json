@@ -11,56 +11,98 @@
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "write_time_s",
-    "value": 0.0381461549998221
+    "value": 0.03887501200006227
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "write_rows_per_s",
-    "value": 262149.6190126275
+    "value": 257234.64728406983
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "storage_bytes",
     "value": 26445
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "write_time_s",
-    "value": 0.06530796100014413
+    "value": 0.061289599000019734
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "write_rows_per_s",
-    "value": 153120.68922160854
+    "value": 163159.82096728648
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "storage_bytes",
     "value": 22717
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "write_time_s",
-    "value": 0.04787552000016149
+    "value": 0.04678616299997884
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "write_rows_per_s",
-    "value": 208875.01587379666
+    "value": 213738.4080845553
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "storage_bytes",
+    "value": 54232
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "write_time_s",
+    "value": 0.1576351829999112
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "write_rows_per_s",
+    "value": 63437.61468533096
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "storage_bytes",
+    "value": 50508
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "write_time_s",
+    "value": 0.14346162100014226
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 69705.05372994555
   },
   {
     "workload": "w1_static_small",
@@ -74,14 +116,14 @@
     "size_preset": "small",
     "design": "design_b",
     "metric": "write_time_s",
-    "value": 0.11258279000003313
+    "value": 0.10468882100008159
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
     "design": "design_b",
     "metric": "write_rows_per_s",
-    "value": 88823.52267160067
+    "value": 95521.18272486998
   },
   {
     "workload": "w1_static_small",
@@ -95,28 +137,42 @@
     "size_preset": "small",
     "design": "design_b_plus",
     "metric": "write_time_s",
-    "value": 0.0626941639998222
+    "value": 0.0631120230000306
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
     "design": "design_b_plus",
     "metric": "write_rows_per_s",
-    "value": 159504.4795561571
+    "value": 158448.41481305633
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "compression_ratio_vs_wkb",
     "value": 0.6149744753261486
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "compression_ratio_vs_wkb",
     "value": 0.7158955848043316
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.29987830063431187
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.3219885958660014
   },
   {
     "workload": "w1_static_small",
@@ -135,63 +191,105 @@
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "point_in_time_ms",
-    "value": 2.3973971666616007
+    "value": 2.6372490666669064
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "point_in_time_ms",
-    "value": 2.2194125666677182
+    "value": 2.365531299998717
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "point_in_time_ms",
+    "value": 17.48858946666587
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 16.407122000002044
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
     "design": "design_b",
     "metric": "point_in_time_ms",
-    "value": 3.9656401000002
+    "value": 4.377228900004108
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
     "design": "design_b_plus",
     "metric": "point_in_time_ms",
-    "value": 2.4084615666727887
+    "value": 2.660675833332486
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "point_in_time_ms",
-    "value": 2.5164767000054176
+    "value": 2.8787421999974567
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "range_read_ms",
-    "value": 2.118328999813457
+    "value": 2.46628799982318
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "range_read_rows",
     "value": 50
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "range_read_ms",
-    "value": 1.9748760000766197
+    "value": 2.1593330000087008
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
+    "metric": "range_read_rows",
+    "value": 50
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "range_read_ms",
+    "value": 9.964889000002586
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "range_read_rows",
+    "value": 50
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "range_read_ms",
+    "value": 7.104306999963228
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
     "metric": "range_read_rows",
     "value": 50
   },
@@ -200,7 +298,7 @@
     "size_preset": "small",
     "design": "design_b",
     "metric": "range_read_ms",
-    "value": 4.487381999979334
+    "value": 5.3980220000084955
   },
   {
     "workload": "w1_static_small",
@@ -214,7 +312,7 @@
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "range_read_ms",
-    "value": 2.5835670001015387
+    "value": 4.061197999817523
   },
   {
     "workload": "w1_static_small",
@@ -228,61 +326,117 @@
     "size_preset": "small",
     "design": "design_b_plus",
     "metric": "range_read_ms",
-    "value": 2.426351999929466
+    "value": 2.709868000010829
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "spatial_temporal_ms",
-    "value": 5.9046280000529805
+    "value": 6.357127999990553
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "spatial_temporal_matches",
     "value": 1
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "row_groups_touched",
     "value": 2
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "row_groups_total",
     "value": 2
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "spatial_temporal_ms",
-    "value": 29.035842999974193
+    "value": 28.41193800009023
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "spatial_temporal_matches",
     "value": 1
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "row_groups_touched",
     "value": 2
   },
   {
     "workload": "w1_static_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
+    "metric": "row_groups_total",
+    "value": 2
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "spatial_temporal_ms",
+    "value": 20.11309599993183
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "row_groups_touched",
+    "value": 2
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "row_groups_total",
+    "value": 2
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 689.1691759999503
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "row_groups_touched",
+    "value": 2
+  },
+  {
+    "workload": "w1_static_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
     "metric": "row_groups_total",
     "value": 2
   },
@@ -291,7 +445,7 @@
     "size_preset": "small",
     "design": "design_b",
     "metric": "spatial_temporal_ms",
-    "value": 5.424256999958743
+    "value": 6.871629999977813
   },
   {
     "workload": "w1_static_small",
@@ -319,7 +473,7 @@
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "spatial_temporal_ms",
-    "value": 3.806007000093814
+    "value": 3.461249999872962
   },
   {
     "workload": "w1_static_small",
@@ -341,1168 +495,6 @@
     "design": "baseline_wkb",
     "metric": "row_groups_total",
     "value": 1
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "storage_bytes",
-    "value": 114438
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "write_time_s",
-    "value": 0.6920601080000779
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "write_rows_per_s",
-    "value": 288992.23880706256
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "storage_bytes",
-    "value": 144106
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "write_time_s",
-    "value": 1.0855033569998795
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "write_rows_per_s",
-    "value": 184246.32103650158
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "storage_bytes",
-    "value": 131126
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "write_time_s",
-    "value": 0.9161553779999849
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "write_rows_per_s",
-    "value": 218303.5812512616
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "storage_bytes",
-    "value": 1391141
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "write_time_s",
-    "value": 1.7823503219999566
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "write_rows_per_s",
-    "value": 112211.3860173022
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b_plus",
-    "metric": "storage_bytes",
-    "value": 125052
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b_plus",
-    "metric": "write_time_s",
-    "value": 1.253160233999779
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b_plus",
-    "metric": "write_rows_per_s",
-    "value": 159596.51014591265
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 0.7941237700026369
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 0.8727330964110855
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 0.08226197056948217
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b_plus",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 0.9151233087035793
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "point_in_time_ms",
-    "value": 3.86156283332942
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "point_in_time_ms",
-    "value": 3.7788269333380717
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "point_in_time_ms",
-    "value": 10.225932499997725
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b_plus",
-    "metric": "point_in_time_ms",
-    "value": 3.5048032999990633
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "point_in_time_ms",
-    "value": 6.292549299996608
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "range_read_ms",
-    "value": 6.150711999907799
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "range_read_rows",
-    "value": 200
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "range_read_ms",
-    "value": 4.092512000170245
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "range_read_rows",
-    "value": 200
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "range_read_ms",
-    "value": 30.611470999929224
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "range_read_rows",
-    "value": 404000
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "range_read_ms",
-    "value": 17.096752000043125
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "range_read_rows",
-    "value": 20200
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b_plus",
-    "metric": "range_read_ms",
-    "value": 4.60158600003524
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "spatial_temporal_ms",
-    "value": 14.66517200015005
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "spatial_temporal_matches",
-    "value": 3
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "row_groups_touched",
-    "value": 7
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "row_groups_total",
-    "value": 7
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "spatial_temporal_ms",
-    "value": 322.6948479998555
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "spatial_temporal_matches",
-    "value": 3
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "row_groups_touched",
-    "value": 7
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "row_groups_total",
-    "value": 7
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "spatial_temporal_ms",
-    "value": 61.49030700021285
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "spatial_temporal_matches",
-    "value": 3
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "row_groups_touched",
-    "value": 4
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "row_groups_total",
-    "value": 4
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "spatial_temporal_ms",
-    "value": 26.511473000027763
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "spatial_temporal_matches",
-    "value": 3
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "row_groups_touched",
-    "value": 4
-  },
-  {
-    "workload": "w1_static_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "row_groups_total",
-    "value": 4
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "storage_bytes",
-    "value": 65954219
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "write_time_s",
-    "value": 0.8203443590000461
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "write_rows_per_s",
-    "value": 243800.055191199
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "storage_bytes",
-    "value": 68160766
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "write_time_s",
-    "value": 3.64727503600011
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "write_rows_per_s",
-    "value": 54835.45880853992
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "storage_bytes",
-    "value": 68147738
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "write_time_s",
-    "value": 3.416617573999929
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "write_rows_per_s",
-    "value": 58537.42646586415
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "storage_bytes",
-    "value": 66778115
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "write_time_s",
-    "value": 2.429828520000001
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "write_rows_per_s",
-    "value": 82310.33521657731
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 0.9676273151038238
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 0.9678122992138052
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 0.987662185433057
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "point_in_time_ms",
-    "value": 111.1097381000036
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "point_in_time_ms",
-    "value": 111.21573176666668
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "point_in_time_ms",
-    "value": 13.498823700001594
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "point_in_time_ms",
-    "value": 14.643628799998016
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "range_read_ms",
-    "value": 58.805011000004015
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "range_read_rows",
-    "value": 200
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "range_read_ms",
-    "value": 52.3350930000106
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "range_read_rows",
-    "value": 200
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "range_read_ms",
-    "value": 31.32747500012556
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "range_read_rows",
-    "value": 404000
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "range_read_ms",
-    "value": 23.46549599997161
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "range_read_rows",
-    "value": 20200
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "spatial_temporal_ms",
-    "value": 1083.2151820000036
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "spatial_temporal_matches",
-    "value": 2
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "row_groups_touched",
-    "value": 7
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "row_groups_total",
-    "value": 7
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "spatial_temporal_ms",
-    "value": 19128.1695539999
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "spatial_temporal_matches",
-    "value": 2
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "row_groups_touched",
-    "value": 7
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "row_groups_total",
-    "value": 7
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "spatial_temporal_ms",
-    "value": 71.71938500005126
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "spatial_temporal_matches",
-    "value": 2
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "row_groups_touched",
-    "value": 4
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "row_groups_total",
-    "value": 4
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "spatial_temporal_ms",
-    "value": 58.47503399991183
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "spatial_temporal_matches",
-    "value": 2
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "row_groups_touched",
-    "value": 4
-  },
-  {
-    "workload": "w2_fixed_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "row_groups_total",
-    "value": 4
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "storage_bytes",
-    "value": 56389078
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "write_time_s",
-    "value": 0.8608643160000611
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "write_rows_per_s",
-    "value": 232324.6489403631
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "storage_bytes",
-    "value": 65138810
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "write_time_s",
-    "value": 3.739507064999998
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "write_rows_per_s",
-    "value": 53482.984929191494
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "storage_bytes",
-    "value": 65125782
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "write_time_s",
-    "value": 4.0919874169999275
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "write_rows_per_s",
-    "value": 48876.00562238081
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "storage_bytes",
-    "value": 59374885
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "write_time_s",
-    "value": 2.3663394790000893
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "write_rows_per_s",
-    "value": 84518.7268246529
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 0.86567559339816
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 0.8658487663150056
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 0.9497126268118246
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "point_in_time_ms",
-    "value": 111.68480170000142
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "point_in_time_ms",
-    "value": 112.94049159999607
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "point_in_time_ms",
-    "value": 17.1520604999993
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "point_in_time_ms",
-    "value": 20.260137533333967
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "range_read_ms",
-    "value": 54.0345840001919
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "range_read_rows",
-    "value": 200
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "range_read_ms",
-    "value": 52.54836900007831
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "range_read_rows",
-    "value": 200
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "range_read_ms",
-    "value": 46.17491899989545
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "range_read_rows",
-    "value": 403791
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "range_read_ms",
-    "value": 27.73491100015235
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "range_read_rows",
-    "value": 20200
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "spatial_temporal_ms",
-    "value": 683.016718999852
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "spatial_temporal_matches",
-    "value": 2
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "row_groups_touched",
-    "value": 5
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "row_groups_total",
-    "value": 7
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "spatial_temporal_ms",
-    "value": 19008.762498000124
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "spatial_temporal_matches",
-    "value": 2
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "row_groups_touched",
-    "value": 7
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "row_groups_total",
-    "value": 7
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "spatial_temporal_ms",
-    "value": 94.20922200001769
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "spatial_temporal_matches",
-    "value": 2
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "row_groups_touched",
-    "value": 4
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "row_groups_total",
-    "value": 4
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "spatial_temporal_ms",
-    "value": 82.3178299999654
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "spatial_temporal_matches",
-    "value": 2
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "row_groups_touched",
-    "value": 4
-  },
-  {
-    "workload": "w3_variable_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "row_groups_total",
-    "value": 4
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "storage_bytes",
-    "value": 130021311
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "write_time_s",
-    "value": 4.353570824999906
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "write_rows_per_s",
-    "value": 459.3930087263581
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "storage_bytes",
-    "value": 149575381
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "write_time_s",
-    "value": 2.9676521019998745
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "write_rows_per_s",
-    "value": 673.9334434289713
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "storage_bytes",
-    "value": 149558048
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "write_time_s",
-    "value": 2.989709452999932
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "write_rows_per_s",
-    "value": 668.9613259887717
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "storage_bytes",
-    "value": 119135191
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "write_time_s",
-    "value": 3.38523938000003
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "write_rows_per_s",
-    "value": 590.8001696470819
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 0.8692694621984617
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 0.8693702060085726
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "compression_ratio_vs_wkb",
-    "value": 1.0913761912716453
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "point_in_time_ms",
-    "value": 328.28051449999975
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "point_in_time_ms",
-    "value": 327.3235595499955
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "point_in_time_ms",
-    "value": 9.43946565000715
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "point_in_time_ms",
-    "value": 3.23707940000304
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_a",
-    "metric": "range_read_ms",
-    "value": 114.71985299999687
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_a_nobbox",
-    "metric": "range_read_ms",
-    "value": 89.7698890000811
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "range_read_ms",
-    "value": 11.236149999831468
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "range_read_ms",
-    "value": 10.048097999970196
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "spatial_temporal_ms",
-    "value": 89.35039800007871
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "spatial_temporal_matches",
-    "value": 309
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "row_groups_touched",
-    "value": 4
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "design_b",
-    "metric": "row_groups_total",
-    "value": 4
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "spatial_temporal_ms",
-    "value": 245.19374900000912
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "spatial_temporal_matches",
-    "value": 309
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "row_groups_touched",
-    "value": 20
-  },
-  {
-    "workload": "w4_pointcloud_medium",
-    "size_preset": "medium",
-    "design": "baseline_wkb",
-    "metric": "row_groups_total",
-    "value": 20
   },
   {
     "workload": "w2_fixed_small",
@@ -1516,56 +508,98 @@
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "write_time_s",
-    "value": 0.04948918000013691
+    "value": 0.04827078200014512
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "write_rows_per_s",
-    "value": 202064.37043354395
+    "value": 207164.65707909883
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "storage_bytes",
     "value": 3917993
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "write_time_s",
-    "value": 0.2065595569999914
+    "value": 0.20488104799983375
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "write_rows_per_s",
-    "value": 48412.18748353733
+    "value": 48808.80929507992
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "storage_bytes",
     "value": 3914258
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "write_time_s",
-    "value": 0.17667636999999559
+    "value": 0.18673412599991934
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "write_rows_per_s",
-    "value": 56600.66482009026
+    "value": 53552.07542516529
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "storage_bytes",
+    "value": 3910486
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "write_time_s",
+    "value": 0.21173912099993686
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "write_rows_per_s",
+    "value": 47227.92818244949
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "storage_bytes",
+    "value": 3906754
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "write_time_s",
+    "value": 0.2014543699999649
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 49639.03240223452
   },
   {
     "workload": "w2_fixed_small",
@@ -1579,28 +613,42 @@
     "size_preset": "small",
     "design": "design_b",
     "metric": "write_time_s",
-    "value": 0.1765588299999763
+    "value": 0.17968581300010555
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
     "design": "design_b",
     "metric": "write_rows_per_s",
-    "value": 56638.34541722633
+    "value": 55652.69640956087
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "compression_ratio_vs_wkb",
     "value": 0.8428802705875177
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "compression_ratio_vs_wkb",
     "value": 0.8436845501752822
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8444983564702699
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.845305079357441
   },
   {
     "workload": "w2_fixed_small",
@@ -1612,56 +660,98 @@
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "point_in_time_ms",
-    "value": 24.07631169999907
+    "value": 24.449411199998394
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "point_in_time_ms",
-    "value": 23.53060370000245
+    "value": 24.300068333332092
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "point_in_time_ms",
+    "value": 17.267848633332505
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 17.546045433330924
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
     "design": "design_b",
     "metric": "point_in_time_ms",
-    "value": 4.581043366662622
+    "value": 5.070936633334592
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "point_in_time_ms",
-    "value": 3.3855571999993117
+    "value": 3.5012358333309144
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "range_read_ms",
-    "value": 7.330656000021918
+    "value": 9.201319999874613
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "range_read_rows",
     "value": 50
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "range_read_ms",
-    "value": 6.6613179999421845
+    "value": 8.028785999840693
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
+    "metric": "range_read_rows",
+    "value": 50
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "range_read_ms",
+    "value": 6.738089000009495
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "range_read_rows",
+    "value": 50
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "range_read_ms",
+    "value": 6.5317890000642365
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
     "metric": "range_read_rows",
     "value": 50
   },
@@ -1670,7 +760,7 @@
     "size_preset": "small",
     "design": "design_b",
     "metric": "range_read_ms",
-    "value": 5.923562999896603
+    "value": 5.016849999947226
   },
   {
     "workload": "w2_fixed_small",
@@ -1684,7 +774,7 @@
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "range_read_ms",
-    "value": 3.8966009999512607
+    "value": 4.194014000177049
   },
   {
     "workload": "w2_fixed_small",
@@ -1696,56 +786,112 @@
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "spatial_temporal_ms",
-    "value": 28.892411000015272
+    "value": 28.935212999840587
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "spatial_temporal_matches",
     "value": 1
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "row_groups_touched",
     "value": 2
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "row_groups_total",
     "value": 2
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "spatial_temporal_ms",
-    "value": 991.5347470000597
+    "value": 984.50614699982
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "spatial_temporal_matches",
     "value": 1
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "row_groups_touched",
     "value": 2
   },
   {
     "workload": "w2_fixed_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
+    "metric": "row_groups_total",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "spatial_temporal_ms",
+    "value": 23.401559999911115
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "row_groups_touched",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "row_groups_total",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 682.6216449999265
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "row_groups_touched",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
     "metric": "row_groups_total",
     "value": 2
   },
@@ -1754,7 +900,7 @@
     "size_preset": "small",
     "design": "design_b",
     "metric": "spatial_temporal_ms",
-    "value": 14.329523000014888
+    "value": 7.35270300015145
   },
   {
     "workload": "w2_fixed_small",
@@ -1782,7 +928,7 @@
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "spatial_temporal_ms",
-    "value": 6.029049999824565
+    "value": 4.7896290000153385
   },
   {
     "workload": "w2_fixed_small",
@@ -1817,56 +963,98 @@
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "write_time_s",
-    "value": 0.045374098999900525
+    "value": 0.044775339999887365
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "write_rows_per_s",
-    "value": 220390.05116160924
+    "value": 223337.22089045343
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "storage_bytes",
     "value": 3210841
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "write_time_s",
-    "value": 0.1906078439999419
+    "value": 0.20060846299998047
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "write_rows_per_s",
-    "value": 52463.73806107921
+    "value": 49848.345630368414
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "storage_bytes",
     "value": 3207106
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "write_time_s",
-    "value": 0.17294811000010668
+    "value": 0.18665493999992577
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "write_rows_per_s",
-    "value": 57820.811109146154
+    "value": 53574.79421655798
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "storage_bytes",
+    "value": 3210587
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "write_time_s",
+    "value": 0.2083747819999644
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "write_rows_per_s",
+    "value": 47990.45212679195
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "storage_bytes",
+    "value": 3206855
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "write_time_s",
+    "value": 0.18455523600005108
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 54184.32018909088
   },
   {
     "workload": "w3_variable_small",
@@ -1880,28 +1068,42 @@
     "size_preset": "small",
     "design": "design_b",
     "metric": "write_time_s",
-    "value": 0.15841545600005702
+    "value": 0.15313932300000488
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
     "design": "design_b",
     "metric": "write_rows_per_s",
-    "value": 63125.153646601255
+    "value": 65300.014418894105
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "compression_ratio_vs_wkb",
     "value": 0.8779659285526752
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "compression_ratio_vs_wkb",
     "value": 0.8789884088645651
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8780353872983352
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8790572071390818
   },
   {
     "workload": "w3_variable_small",
@@ -1913,56 +1115,98 @@
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "point_in_time_ms",
-    "value": 23.899535466663718
+    "value": 24.189238999989964
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "point_in_time_ms",
-    "value": 23.91531450000457
+    "value": 23.919092366668337
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "point_in_time_ms",
+    "value": 18.223091233327672
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 16.64095879999271
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
     "design": "design_b",
     "metric": "point_in_time_ms",
-    "value": 4.333080433328481
+    "value": 4.760072800005825
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "point_in_time_ms",
-    "value": 4.064050699995883
+    "value": 4.166102866671888
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "range_read_ms",
-    "value": 7.964298000160852
+    "value": 7.318577999740228
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "range_read_rows",
     "value": 50
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "range_read_ms",
-    "value": 7.830196999975669
+    "value": 7.340182999996614
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
+    "metric": "range_read_rows",
+    "value": 50
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "range_read_ms",
+    "value": 6.74886000024344
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "range_read_rows",
+    "value": 50
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "range_read_ms",
+    "value": 6.660542000190617
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
     "metric": "range_read_rows",
     "value": 50
   },
@@ -1971,7 +1215,7 @@
     "size_preset": "small",
     "design": "design_b",
     "metric": "range_read_ms",
-    "value": 5.480432000013025
+    "value": 5.252623999695061
   },
   {
     "workload": "w3_variable_small",
@@ -1985,7 +1229,7 @@
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "range_read_ms",
-    "value": 4.411890000028507
+    "value": 5.426290999821504
   },
   {
     "workload": "w3_variable_small",
@@ -1997,56 +1241,112 @@
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "spatial_temporal_ms",
-    "value": 65.68259699997725
+    "value": 66.38704800025153
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "spatial_temporal_matches",
     "value": 1
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "row_groups_touched",
     "value": 2
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "row_groups_total",
     "value": 2
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "spatial_temporal_ms",
-    "value": 966.77786500004
+    "value": 995.4186049999407
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "spatial_temporal_matches",
     "value": 1
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "row_groups_touched",
     "value": 2
   },
   {
     "workload": "w3_variable_small",
     "size_preset": "small",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
+    "metric": "row_groups_total",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "spatial_temporal_ms",
+    "value": 47.218096000051446
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "row_groups_touched",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2",
+    "metric": "row_groups_total",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 713.34866899997
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 1
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
+    "metric": "row_groups_touched",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_small",
+    "size_preset": "small",
+    "design": "design_a2_nobbox",
     "metric": "row_groups_total",
     "value": 2
   },
@@ -2055,7 +1355,7 @@
     "size_preset": "small",
     "design": "design_b",
     "metric": "spatial_temporal_ms",
-    "value": 6.604870000046503
+    "value": 7.135054000173113
   },
   {
     "workload": "w3_variable_small",
@@ -2083,7 +1383,7 @@
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "spatial_temporal_ms",
-    "value": 4.918438000004244
+    "value": 4.947335999986535
   },
   {
     "workload": "w3_variable_small",
@@ -2118,14 +1418,14 @@
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "write_time_s",
-    "value": 0.13323261300001832
+    "value": 0.13620670099999188
   },
   {
     "workload": "w4_pointcloud_small",
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "write_rows_per_s",
-    "value": 1876.4174504328428
+    "value": 1835.4456731171758
   },
   {
     "workload": "w4_pointcloud_small",
@@ -2139,14 +1439,14 @@
     "size_preset": "small",
     "design": "design_a",
     "metric": "write_time_s",
-    "value": 0.06205255200006832
+    "value": 0.06454988799987404
   },
   {
     "workload": "w4_pointcloud_small",
     "size_preset": "small",
     "design": "design_a",
     "metric": "write_rows_per_s",
-    "value": 4028.843165059912
+    "value": 3872.97341244787
   },
   {
     "workload": "w4_pointcloud_small",
@@ -2160,14 +1460,14 @@
     "size_preset": "small",
     "design": "design_a_nobbox",
     "metric": "write_time_s",
-    "value": 0.05765543899997283
+    "value": 0.0626535250003144
   },
   {
     "workload": "w4_pointcloud_small",
     "size_preset": "small",
     "design": "design_a_nobbox",
     "metric": "write_rows_per_s",
-    "value": 4336.104352620016
+    "value": 3990.1984764423946
   },
   {
     "workload": "w4_pointcloud_small",
@@ -2181,14 +1481,14 @@
     "size_preset": "small",
     "design": "design_b",
     "metric": "write_time_s",
-    "value": 0.11306795399991643
+    "value": 0.1321835500002635
   },
   {
     "workload": "w4_pointcloud_small",
     "size_preset": "small",
     "design": "design_b",
     "metric": "write_rows_per_s",
-    "value": 2211.059731391131
+    "value": 1891.3094708040574
   },
   {
     "workload": "w4_pointcloud_small",
@@ -2216,63 +1516,63 @@
     "size_preset": "small",
     "design": "design_a",
     "metric": "point_in_time_ms",
-    "value": 42.32009960001051
+    "value": 43.94501999995555
   },
   {
     "workload": "w4_pointcloud_small",
     "size_preset": "small",
     "design": "design_a_nobbox",
     "metric": "point_in_time_ms",
-    "value": 42.002911999998105
+    "value": 45.06818859999839
   },
   {
     "workload": "w4_pointcloud_small",
     "size_preset": "small",
     "design": "design_b",
     "metric": "point_in_time_ms",
-    "value": 3.371244599975398
+    "value": 3.9635977999751044
   },
   {
     "workload": "w4_pointcloud_small",
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "point_in_time_ms",
-    "value": 1.939935800010062
+    "value": 2.082675399924483
   },
   {
     "workload": "w4_pointcloud_small",
     "size_preset": "small",
     "design": "design_a",
     "metric": "range_read_ms",
-    "value": 6.7498230000637705
+    "value": 7.858625999688229
   },
   {
     "workload": "w4_pointcloud_small",
     "size_preset": "small",
     "design": "design_a_nobbox",
     "metric": "range_read_ms",
-    "value": 6.381621999935305
+    "value": 7.741195000107837
   },
   {
     "workload": "w4_pointcloud_small",
     "size_preset": "small",
     "design": "design_b",
     "metric": "range_read_ms",
-    "value": 3.0809030001819337
+    "value": 3.1500959998993494
   },
   {
     "workload": "w4_pointcloud_small",
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "range_read_ms",
-    "value": 1.5924720000839443
+    "value": 1.7129329999079346
   },
   {
     "workload": "w4_pointcloud_small",
     "size_preset": "small",
     "design": "design_b",
     "metric": "spatial_temporal_ms",
-    "value": 4.826438000009148
+    "value": 5.354797000109102
   },
   {
     "workload": "w4_pointcloud_small",
@@ -2300,7 +1600,7 @@
     "size_preset": "small",
     "design": "baseline_wkb",
     "metric": "spatial_temporal_ms",
-    "value": 8.5970460002045
+    "value": 9.039973000199097
   },
   {
     "workload": "w4_pointcloud_small",
@@ -2322,6 +1622,1630 @@
     "design": "baseline_wkb",
     "metric": "row_groups_total",
     "value": 1
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 114438
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 0.7406995100000131
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 270015.0294415565
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "storage_bytes",
+    "value": 144106
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "write_time_s",
+    "value": 1.1048929560001852
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "write_rows_per_s",
+    "value": 181013.01027750102
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "storage_bytes",
+    "value": 131126
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "write_time_s",
+    "value": 0.920404483999846
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 217295.76884594304
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "storage_bytes",
+    "value": 681065
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "write_time_s",
+    "value": 3.6727698390000114
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "write_rows_per_s",
+    "value": 54454.81442269037
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "storage_bytes",
+    "value": 668093
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "write_time_s",
+    "value": 3.3894648600003165
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 59006.364798241724
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 1391141
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 1.796648561999973
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 111318.37590840038
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b_plus",
+    "metric": "storage_bytes",
+    "value": 125052
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b_plus",
+    "metric": "write_time_s",
+    "value": 1.2861693700001524
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b_plus",
+    "metric": "write_rows_per_s",
+    "value": 155500.51545697774
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.7941237700026369
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8727330964110855
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.1680280149471783
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.17129052392406446
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.08226197056948217
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b_plus",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9151233087035793
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "point_in_time_ms",
+    "value": 3.943188899999465
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 3.7232807666744825
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "point_in_time_ms",
+    "value": 80.8024782333329
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 82.67733803333309
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 10.590368100004829
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b_plus",
+    "metric": "point_in_time_ms",
+    "value": 3.6556338333411986
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 7.282195199998871
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "range_read_ms",
+    "value": 4.562920000353188
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "range_read_ms",
+    "value": 3.581419000056485
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "range_read_ms",
+    "value": 48.62945499962734
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "range_read_ms",
+    "value": 45.84062399999311
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 30.323026000132813
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_rows",
+    "value": 404000
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 16.897582999717997
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_rows",
+    "value": 20200
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b_plus",
+    "metric": "range_read_ms",
+    "value": 4.6774720003668335
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "spatial_temporal_ms",
+    "value": 14.91434899980959
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "spatial_temporal_matches",
+    "value": 3
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 328.7044959997729
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 3
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "spatial_temporal_ms",
+    "value": 239.16638999980933
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "spatial_temporal_matches",
+    "value": 3
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 14304.632919000142
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 3
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 69.805451999855
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 3
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 30.923938999876555
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 3
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w1_static_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 65954219
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 0.8734101519999058
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 228987.49177811432
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "storage_bytes",
+    "value": 68160766
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "write_time_s",
+    "value": 3.8834242170000834
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "write_rows_per_s",
+    "value": 51500.940619487235
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "storage_bytes",
+    "value": 68147738
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "write_time_s",
+    "value": 3.688131488000181
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 54228.00153701846
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "storage_bytes",
+    "value": 67850567
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "write_time_s",
+    "value": 4.9615627990001485
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "write_rows_per_s",
+    "value": 40309.87979035635
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "storage_bytes",
+    "value": 67837547
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "write_time_s",
+    "value": 4.964594891000161
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 40285.2608100131
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 66778115
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 2.5260527779996664
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 79174.90946423385
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9676273151038238
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9678122992138052
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9720511104940361
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.972237675398257
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.987662185433057
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "point_in_time_ms",
+    "value": 115.32022966666773
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 114.93396420000863
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "point_in_time_ms",
+    "value": 82.41880093332838
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 83.22261626667569
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 15.259041466667139
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 16.31099373333503
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "range_read_ms",
+    "value": 58.794647000013356
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "range_read_ms",
+    "value": 62.91092099991147
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "range_read_ms",
+    "value": 50.544038000225555
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "range_read_ms",
+    "value": 55.040612000084366
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 35.77532999997857
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_rows",
+    "value": 404000
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 27.06233999970209
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_rows",
+    "value": 20200
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "spatial_temporal_ms",
+    "value": 1115.007889000026
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 19605.483436999748
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "spatial_temporal_ms",
+    "value": 790.0219460002518
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 15195.45650100008
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 85.75140399989323
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 68.12457000023642
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w2_fixed_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 56389078
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 0.9037363899997217
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 221303.47102661384
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "storage_bytes",
+    "value": 65138810
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "write_time_s",
+    "value": 3.923791774000165
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "write_rows_per_s",
+    "value": 50971.10436013458
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "storage_bytes",
+    "value": 65125782
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "write_time_s",
+    "value": 3.7512332549999883
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 53315.79947299242
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "storage_bytes",
+    "value": 60229060
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "write_time_s",
+    "value": 6.0526747829999294
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "write_rows_per_s",
+    "value": 33043.2423961944
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "storage_bytes",
+    "value": 60216040
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "write_time_s",
+    "value": 4.989220637000017
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 40086.421217133946
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 59374885
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 2.5441008910001983
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 78613.23452521223
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.86567559339816
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8658487663150056
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9362437003001541
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9364461362786394
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.9497126268118246
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "point_in_time_ms",
+    "value": 116.16658116666562
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 116.2428344666599
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "point_in_time_ms",
+    "value": 86.00403046666543
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 106.72782973333597
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 17.83855983333827
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 20.837924066669682
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "range_read_ms",
+    "value": 64.76870500000587
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "range_read_ms",
+    "value": 57.47847900011038
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "range_read_ms",
+    "value": 62.40226399995663
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "range_read_ms",
+    "value": 61.40135400028157
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "range_read_rows",
+    "value": 200
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 46.749417999762954
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_rows",
+    "value": 403791
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 33.49883300006695
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_rows",
+    "value": 20200
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "spatial_temporal_ms",
+    "value": 726.1627220000264
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "row_groups_touched",
+    "value": 5
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 19536.50743900016
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a1_nobbox",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "spatial_temporal_ms",
+    "value": 504.8797640001794
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "row_groups_touched",
+    "value": 5
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "spatial_temporal_ms",
+    "value": 16246.699166000326
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "row_groups_touched",
+    "value": 7
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_a2_nobbox",
+    "metric": "row_groups_total",
+    "value": 7
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 101.31102500008637
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 88.29259100002673
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 2
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w3_variable_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "storage_bytes",
+    "value": 130021311
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_time_s",
+    "value": 4.357619835999685
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "write_rows_per_s",
+    "value": 458.96615016238064
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "storage_bytes",
+    "value": 149575381
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "write_time_s",
+    "value": 3.121267691000412
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "write_rows_per_s",
+    "value": 640.7652908997917
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "storage_bytes",
+    "value": 149558048
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "write_time_s",
+    "value": 3.102859592999721
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "write_rows_per_s",
+    "value": 644.5667101766857
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "storage_bytes",
+    "value": 119135191
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_time_s",
+    "value": 3.6599829960000534
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "write_rows_per_s",
+    "value": 546.450626187546
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8692694621984617
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 0.8693702060085726
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "compression_ratio_vs_wkb",
+    "value": 1.0913761912716453
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "point_in_time_ms",
+    "value": 340.02620255000693
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "point_in_time_ms",
+    "value": 339.8691618500152
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "point_in_time_ms",
+    "value": 9.9362097500034
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "point_in_time_ms",
+    "value": 3.2507075500006977
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a",
+    "metric": "range_read_ms",
+    "value": 93.28772100025162
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_a_nobbox",
+    "metric": "range_read_ms",
+    "value": 101.11216300037995
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "range_read_ms",
+    "value": 11.79762900028436
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 11.75382300016281
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_ms",
+    "value": 90.3319469998678
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "spatial_temporal_matches",
+    "value": 309
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_touched",
+    "value": 4
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "design_b",
+    "metric": "row_groups_total",
+    "value": 4
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_ms",
+    "value": 251.7298440002378
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "spatial_temporal_matches",
+    "value": 309
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_touched",
+    "value": 20
+  },
+  {
+    "workload": "w4_pointcloud_medium",
+    "size_preset": "medium",
+    "design": "baseline_wkb",
+    "metric": "row_groups_total",
+    "value": 20
   },
   {
     "workload": "w1_static_large",
@@ -2335,56 +3259,56 @@
     "size_preset": "large",
     "design": "baseline_wkb",
     "metric": "write_time_s",
-    "value": 17.883673989999807
+    "value": 18.80546924400005
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
     "design": "baseline_wkb",
     "metric": "write_rows_per_s",
-    "value": 279584.60900125443
+    "value": 265880.09770589834
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "storage_bytes",
     "value": 6746844
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "write_time_s",
-    "value": 27.41648332700015
+    "value": 30.704305148999993
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "write_rows_per_s",
-    "value": 182372.04021990404
+    "value": 162843.61348469873
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "storage_bytes",
     "value": 6685523
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "write_time_s",
-    "value": 23.820508995999944
+    "value": 26.387679081999977
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "write_rows_per_s",
-    "value": 209903.15533726104
+    "value": 189482.3710892667
   },
   {
     "workload": "w1_static_large",
@@ -2398,14 +3322,14 @@
     "size_preset": "large",
     "design": "design_b",
     "metric": "write_time_s",
-    "value": 44.642060451000134
+    "value": 44.86568196200005
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
     "design": "design_b",
     "metric": "write_rows_per_s",
-    "value": 112001.99877620082
+    "value": 111443.75347364288
   },
   {
     "workload": "w1_static_large",
@@ -2419,26 +3343,26 @@
     "size_preset": "large",
     "design": "design_b_plus",
     "metric": "write_time_s",
-    "value": 34.22303818500018
+    "value": 35.41908721500022
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
     "design": "design_b_plus",
     "metric": "write_rows_per_s",
-    "value": 146100.4126217958
+    "value": 141166.82255669386
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "compression_ratio_vs_wkb",
     "value": 1.4192268266466515
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "compression_ratio_vs_wkb",
     "value": 1.4322442686982007
   },
@@ -2459,154 +3383,126 @@
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "point_in_time_ms",
-    "value": 11.93166336666612
+    "value": 12.685559466672203
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "point_in_time_ms",
-    "value": 11.43225433333252
+    "value": 11.997570066660046
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
     "design": "design_b",
     "metric": "point_in_time_ms",
-    "value": 21.15083979999781
+    "value": 22.708156566674614
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
     "design": "design_b_plus",
     "metric": "point_in_time_ms",
-    "value": 8.71894809999958
+    "value": 8.940858100004334
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
     "design": "baseline_wkb",
     "metric": "point_in_time_ms",
-    "value": 14.347247799999725
+    "value": 15.127117699997447
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "range_read_ms",
-    "value": 40.853824999885546
+    "value": 39.21494399992298
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a",
-    "metric": "range_read_rows",
-    "value": 1000
-  },
-  {
-    "workload": "w1_static_large",
-    "size_preset": "large",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "range_read_ms",
-    "value": 32.737793000023885
-  },
-  {
-    "workload": "w1_static_large",
-    "size_preset": "large",
-    "design": "design_a_nobbox",
-    "metric": "range_read_rows",
-    "value": 1000
+    "value": 29.794145000323624
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
     "design": "design_b",
     "metric": "range_read_ms",
-    "value": 641.6820790000202
-  },
-  {
-    "workload": "w1_static_large",
-    "size_preset": "large",
-    "design": "design_b",
-    "metric": "range_read_rows",
-    "value": 10020000
-  },
-  {
-    "workload": "w1_static_large",
-    "size_preset": "large",
-    "design": "baseline_wkb",
-    "metric": "range_read_ms",
-    "value": 261.0410319998664
-  },
-  {
-    "workload": "w1_static_large",
-    "size_preset": "large",
-    "design": "baseline_wkb",
-    "metric": "range_read_rows",
-    "value": 501000
+    "value": 674.2354929997418
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
     "design": "design_b_plus",
     "metric": "range_read_ms",
-    "value": 26.001287999861233
+    "value": 25.91106599993509
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a",
+    "design": "baseline_wkb",
+    "metric": "range_read_ms",
+    "value": 282.5499870000385
+  },
+  {
+    "workload": "w1_static_large",
+    "size_preset": "large",
+    "design": "design_a1",
     "metric": "spatial_temporal_ms",
-    "value": 338.6116140000013
+    "value": 85.64765700020871
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "spatial_temporal_matches",
     "value": 6
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "row_groups_touched",
     "value": 30
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a",
+    "design": "design_a1",
     "metric": "row_groups_total",
     "value": 32
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "spatial_temporal_ms",
-    "value": 7266.438040000139
+    "value": 7192.382176000137
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "spatial_temporal_matches",
     "value": 6
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "row_groups_touched",
     "value": 32
   },
   {
     "workload": "w1_static_large",
     "size_preset": "large",
-    "design": "design_a_nobbox",
+    "design": "design_a1_nobbox",
     "metric": "row_groups_total",
     "value": 32
   },
@@ -2615,7 +3511,7 @@
     "size_preset": "large",
     "design": "design_b",
     "metric": "spatial_temporal_ms",
-    "value": 1078.6747480001395
+    "value": 1304.1483799997877
   },
   {
     "workload": "w1_static_large",
@@ -2643,7 +3539,7 @@
     "size_preset": "large",
     "design": "baseline_wkb",
     "metric": "spatial_temporal_ms",
-    "value": 777.8323880002063
+    "value": 780.9092419997796
   },
   {
     "workload": "w1_static_large",

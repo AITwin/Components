@@ -163,6 +163,53 @@ def spatial_temporal_filter(path: str, bbox: tuple[float, float, float, float],
     return matches, touched, total
 
 
+def materialize_at_time_snapshot(path: str, entity_id: int, t_ms: int) -> list[list[tuple[float, float]]]:
+    """A2 reader: look up the snapshot frame at time t_ms."""
+    table = pq.read_table(path, filters=[("entity_id", "=", entity_id)])
+    if table.num_rows == 0:
+        return []
+    row = table.to_pylist()[0]
+    target = np.datetime64(t_ms, "ms")
+    for f in row["frames"]:
+        if f["t"] == target:
+            return [[(p["x"], p["y"]) for p in ring] for ring in f["rings"]]
+    return []
+
+
+def spatial_temporal_filter_snapshot(path: str, bbox, t_ms: int, with_bbox: bool = True):
+    """A2 spatial-temporal filter with the same honest semantics as A1:
+    bbox sidecar prunes row groups; without it we still scan all frames
+    in Python to find true matches."""
+    xmin, ymin, xmax, ymax = bbox
+    target = np.datetime64(t_ms, "ms")
+    base_filter = [("t_min", "<=", target), ("t_max", ">=", target)]
+    if with_bbox:
+        spatial = [
+            ("bbox_xmax", ">=", xmin), ("bbox_xmin", "<=", xmax),
+            ("bbox_ymax", ">=", ymin), ("bbox_ymin", "<=", ymax),
+        ]
+        full = base_filter + spatial
+    else:
+        full = base_filter
+    touched, total = count_row_groups_touched(path, full)
+    table = pq.read_table(path, filters=full)
+    matches = 0
+    for row in table.to_pylist():
+        for f in row["frames"]:
+            if f["t"] != target:
+                continue
+            hit = False
+            for ring in f["rings"]:
+                for p in ring:
+                    if xmin <= p["x"] <= xmax and ymin <= p["y"] <= ymax:
+                        hit = True; break
+                if hit: break
+            if hit:
+                matches += 1
+            break
+    return matches, touched, total
+
+
 def materialize_points_at_time(path: str, entity_id: int, t_ms: int) -> int:
     """Pointcloud: return count of points at time t (we return count to keep
     benchmark output small)."""
