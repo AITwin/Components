@@ -188,6 +188,14 @@ def run_harvester(
     source_data = retrieve_between_datetime(source_table, start_date, end_date, limit)
 
     if not source_data:
+        # The window is empty. If source data exists past it, this is a genuine
+        # gap in the source (e.g. the upstream collector was down): write an empty
+        # result so latest_date advances and we step over the gap instead of
+        # re-checking the same empty period forever. Without later data there is
+        # simply nothing to harvest yet, so wait.
+        if end_date and retrieve_after_datetime(source_table, end_date, 1):
+            write_result(harvester_config, table, None, end_date)
+            return True
         return False  # No new data to harvest
 
     if limit and harvester_config.source_range_strict and len(source_data) < limit:
