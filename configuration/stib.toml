@@ -123,6 +123,23 @@ DEPENDENCIES_LIMIT = [1]
 OPTIONAL_DEPENDENCIES = ["vehicle_identify"]
 OPTIONAL_DEPENDENCIES_LIMIT = [10]
 
+[harvesters.punctuality]
+
+PATH = "stib.harvesters.punctuality.STIBPunctualityHarvester"
+DATA_FORMAT = "punctuality-parquet"
+DATA_TYPE = "binary"
+SOURCE = "stib.vehicle_distance"
+SOURCE_RANGE = "1d@Europe/Brussels"
+# Only the timetable is declared. `stib.segments` would refine a hop length where
+# the feed has not observed one often enough, but a dependency clamps the
+# backfill to its own first datapoint — segments begins 2024-08-21 where the
+# timetable now reaches back to 2024-04-05, so declaring it would cost four and a
+# half months of history to buy a refinement worth little: the April 2024
+# benchmark, built without segments, still reached 92.9% of trips and 93.8% of
+# stop calls.
+DEPENDENCIES = ["stib.gtfs_parquet"]
+
+
 [handlers]
 
 [handlers.trips]
