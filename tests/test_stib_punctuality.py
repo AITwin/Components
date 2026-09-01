@@ -44,7 +44,7 @@ pytestmark = pytest.mark.skipif(
 
 # Enough lines to exercise tracking, merging and the metro's coarse positions
 # without carrying the whole fleet through the pipeline.
-SAMPLE_LINES = {"1", "5", "92", "71"}
+SAMPLE_LINES = {"1", "5", "92", "71"}   # line numbers as the feed reports them
 FULL_DAY = os.environ.get("STIB_FULL_DAY") == "1"
 
 
@@ -111,8 +111,11 @@ def test_matches_the_reference_on_the_sampled_lines(built, expected):
     assert len(shared) > 500, f"only {len(shared)} shared calls to compare"
     a = built.set_index(key).loc[shared].sort_index()
     b = ref.loc[shared].sort_index()
-    for column in ("stop_id", "route_id"):
+    for column in ("stop_id",):
         assert a[column].equals(b[column]), f"{column} differs"
+    # The reference predates the route_id fix and still carries the snapshot's
+    # own numbering, which is what route_gtfs_id preserves.
+    assert a["route_gtfs_id"].equals(b["route_id"]), "route_gtfs_id differs"
     delta = (a.arrival_delay.astype("Float64") - b.arrival_delay.astype("Float64")).abs()
     assert delta.max(skipna=True) == 0, f"arrival_delay differs by up to {delta.max()}s"
 
@@ -160,3 +163,17 @@ def test_every_row_has_a_time_or_a_reason(built):
 def test_empty_source_is_not_an_error(built):
     from components.stib.harvesters.punctuality import STIBPunctualityHarvester
     assert STIBPunctualityHarvester().run([], None, None) is None
+
+
+def test_route_id_is_the_line_not_the_snapshot_id(built):
+    """route_id must name the line, because the GTFS id does not survive a day.
+
+    STIB renumbers route_id in every publication — id 60 is line 69 in August,
+    66 in October, 71 in December — so an archive that stored it would splice
+    unrelated lines together the moment two days were compared.
+    """
+    lines = set(built.route_id.astype(str))
+    assert {"1", "5", "92", "71"} & lines, f"expected line numbers, got {sorted(lines)[:8]}"
+    # The sampled fixture asks for lines 1, 5, 92 and 71 by name; every row must
+    # belong to one of them, which can only hold if route_id means the line.
+    assert lines <= {"1", "5", "92", "71"}, f"unexpected lines: {sorted(lines - {'1','5','92','71'})}"

@@ -15,6 +15,10 @@ SCHEMA = {
     "start_time": "large_string",
     "stop_sequence": "int32",
     "stop_id": "large_string",
+    # The line as passengers and the timetable name it, not the GTFS route_id:
+    # STIB renumbers route_id in every snapshot, so id 60 is line 69 in August,
+    # 66 in October and 71 in December. Writing it here would make the column
+    # meaningless the moment two days are compared.
     "route_id": "large_string",
     "direction_id": "int32",
     "trip_schedule_relationship": "int32",
@@ -27,7 +31,7 @@ SCHEMA = {
 }
 # Ours, appended after the shared set so nothing that reads the shared columns
 # positionally or by name is disturbed.
-EXTRA = ["journey_id", "match_deviation_minutes", "observed", "inferred",
+EXTRA = ["route_gtfs_id", "journey_id", "match_deviation_minutes", "observed", "inferred",
          "missing_reason"]
 
 
@@ -100,7 +104,7 @@ def emit_rows(calls, schedule, matches, scores, day, merged=None, lost=None):
         "start_time": rows.trip_id.map(starts).map(_clock),
         "stop_sequence": rows.stop_sequence.astype("int32"),
         "stop_id": rows.stop_id.astype(str),
-        "route_id": rows.route_id.astype(str),
+        "route_id": rows.route_short_name.astype(str),
         "direction_id": rows.direction_id.astype("int32"),
         "trip_schedule_relationship": np.int32(0),
         "arrival_time": stamp(rows.actual_arrival),
@@ -109,6 +113,7 @@ def emit_rows(calls, schedule, matches, scores, day, merged=None, lost=None):
         "departure_delay": rows.actual_departure - rows.departure_time,
         "stop_schedule_relationship": np.int32(0),
         "cancelled": False,
+        "route_gtfs_id": rows.route_id.astype(str),
         "journey_id": rows.trip_id.map(by_journey),
         "match_deviation_minutes": rows.trip_id.map(
             {trip: scores[journey] for journey, trip in matches.items()}),
