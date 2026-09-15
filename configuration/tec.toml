@@ -29,6 +29,13 @@ DATA_FORMAT = "gtfs_realtime"
 DATA_TYPE = "binary"
 SCHEDULE = "20s"
 
+[collectors.gtfs_rt_vehicle_position]
+
+PATH = "tec.collectors.gtfs_rt_vehicle_position.TECGTFSRTVehiclePositionCollector"
+DATA_FORMAT = "gtfs_realtime"
+DATA_TYPE = "binary"
+SCHEDULE = "20s"
+
 [harvesters]
 
 [harvesters.gtfs_parquet]
