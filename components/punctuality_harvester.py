@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 _CANCELED = gtfs_realtime_pb2.TripDescriptor.CANCELED
 _SKIPPED = gtfs_realtime_pb2.TripUpdate.StopTimeUpdate.SKIPPED
+_NO_DATA = gtfs_realtime_pb2.TripUpdate.StopTimeUpdate.NO_DATA
 
 _SCHEMA = {
     "trip_id": pl.Utf8,
@@ -63,15 +64,29 @@ def _ingest(feed_bytes: bytes, fallback_ts: int, acc: dict) -> int:
             has_dep = stu.HasField("departure")
             arr = stu.arrival
             dep = stu.departure
-            acc[key] = (
-                trip.route_id,
-                direction_id,
-                trip.schedule_relationship,
+            times = [
                 arr.time if has_arr and arr.time else None,
                 arr.delay if has_arr and arr.HasField("delay") else None,
                 dep.time if has_dep and dep.time else None,
                 dep.delay if has_dep and dep.HasField("delay") else None,
-                stu.schedule_relationship,
+            ]
+            stop_rel = stu.schedule_relationship
+            # Operators stop predicting a stop once the vehicle has passed it and
+            # re-publish it empty (TEC: NO_DATA at the origin after departure).
+            # The latest snapshot winning outright erased the last real value, so
+            # an empty field keeps what an earlier snapshot recorded, and a later
+            # NO_DATA does not demote a stop that had data.
+            if prior is not None:
+                times = [new if new is not None else old
+                         for new, old in zip(times, prior[3:7])]
+                if stop_rel == _NO_DATA and any(v is not None for v in prior[3:7]):
+                    stop_rel = prior[7]
+            acc[key] = (
+                trip.route_id,
+                direction_id,
+                trip.schedule_relationship,
+                *times,
+                stop_rel,
                 ts,
             )
             seen += 1
