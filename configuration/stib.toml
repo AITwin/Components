@@ -88,17 +88,21 @@ PATH = "stib.harvesters.speed.StibSegmentsSpeedHarvester"
 DATA_FORMAT = "json"
 DATA_TYPE = "json"
 SOURCE = "stib.vehicle_distance"
-SOURCE_RANGE = 2
-SOURCE_RANGE_STRICT = true
+# One new snapshot per run; the earlier snapshots come from the optional
+# dependency so consecutive runs overlap. Three of them cover STIB serving the
+# same payload twice in a row, which the harvester skips.
+OPTIONAL_DEPENDENCIES = ["vehicle_distance"]
+OPTIONAL_DEPENDENCIES_LIMIT = [3]
 
 [harvesters.aggregated_speed]
 PATH = "stib.harvesters.aggregated_speed.StibSegmentsAggregatedSpeedHarvester"
 DATA_FORMAT = "json"
 DATA_TYPE = "json"
 SOURCE = "stib.speed"
-SOURCE_RANGE = 30
-SOURCE_RANGE_STRICT = false
-MULTIPLE_RESULTS = false
+# Rolling window: the newest speed snapshot plus the ones before it, trimmed to
+# ten minutes by the harvester. 40 rows cover the window at a 20 s cadence.
+OPTIONAL_DEPENDENCIES = ["speed"]
+OPTIONAL_DEPENDENCIES_LIMIT = [40]
 
 [harvesters.vehicle_position_geometry]
 
