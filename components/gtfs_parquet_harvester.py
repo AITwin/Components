@@ -12,11 +12,28 @@ TIMEOUT_SECONDS = 1800
 
 
 def _convert(gtfs_path, output_path):
-    """Run conversion in a subprocess so it can be hard-killed on timeout."""
-    from gtfs_parquet import parse_gtfs, write_parquet
+    """Run conversion in a subprocess so it can be hard-killed on timeout.
 
-    feed = parse_gtfs(gtfs_path)
-    write_parquet(feed, output_path)
+    One table at a time: parse it, write it into the archive, drop it. Parsing
+    the whole feed first and writing it afterwards held every table in memory
+    at once, and the De Lijn feed (stop_times alone is several GB as typed
+    frames) got the process OOM-killed on the 8 GB harvester VM every night
+    from 2026-08-29 on, leaving the endpoint frozen on the last good file.
+    """
+    from gtfs_parquet.parse import parse_gtfs_file
+    from gtfs_parquet.schema import ALL_SCHEMAS
+    from gtfs_parquet.write import _prepare_table
+
+    with zipfile.ZipFile(gtfs_path) as source, zipfile.ZipFile(output_path, "w", zipfile.ZIP_STORED) as target:
+        names = set(source.namelist())
+        for table_name, schema in ALL_SCHEMAS.items():
+            if schema.file_name not in names:
+                continue
+            with tempfile.TemporaryDirectory() as tmpdir:
+                csv_path = source.extract(schema.file_name, tmpdir)
+                df = parse_gtfs_file(csv_path, schema.file_name)
+            target.writestr(f"{table_name}.parquet", _prepare_table(table_name, df, "zstd", 9))
+            del df
 
 
 class GTFSParquetHarvester(Harvester):
@@ -34,6 +51,7 @@ class GTFSParquetHarvester(Harvester):
             gtfs_path = os.path.join(tmpdir, "gtfs.zip")
             with open(gtfs_path, "wb") as f:
                 f.write(gtfs_bytes)
+            del gtfs_bytes
 
             try:
                 zipfile.ZipFile(gtfs_path).close()

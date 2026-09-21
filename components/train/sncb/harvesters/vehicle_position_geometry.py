@@ -182,7 +182,11 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
         final = final[final["geometry"].notnull()]
 
         if final.empty:
-            return
+            # No train on the network (nightly 01:00-04:00 UTC). An empty
+            # collection is a real observation the API can serve; returning
+            # None stored an empty row the API skips, so it kept serving the
+            # last trains of the evening as the current positions all night.
+            return {"type": "FeatureCollection", "features": []}
 
         # Interpolate point using geometry (linestring) and percentage
         final["geometry"] = final.apply(

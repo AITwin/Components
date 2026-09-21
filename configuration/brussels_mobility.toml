@@ -14,13 +14,8 @@ DATA_FORMAT = "json"
 DATA_TYPE = "json"
 SCHEDULE = "1m"
 
-[collectors.public_parkings]
-
-PATH = "brussels_mobility.collectors.public_parking.BrusselsMobilityPublicParkingCollector"
-DATA_FORMAT = "geojson"
-DATA_TYPE = "json"
-SCHEDULE = "5m"
-
+# public_parkings is not collected any more: its opendata.brussels.be dataset
+# was removed in August 2025 (see collectors/public_parking.py).
 
 [collectors.bike_counts]
 
