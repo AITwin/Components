@@ -288,6 +288,99 @@ def assign_trips(calls: pd.DataFrame, schedule: pd.DataFrame, day):
     return matches, scores
 
 
+# The first assignment aligns every journey against every trip at once, so a
+# pair it liked can still lose to a better use of the same trip. What it leaves
+# behind is a much smaller problem — the journeys with no trip, and the trips
+# with no journey — and among so few candidates a wider tolerance is no longer
+# ambiguous. Measured over six days, this recovers a few dozen journeys a day.
+#
+# The catch is order. Aligning the leftovers among themselves is order-preserving
+# within that subset but says nothing about the pairs already settled, and doing
+# it freely produced hundreds of inversions, some 26 minutes deep: a vehicle
+# handed a trip that had departed before one its predecessor was already on. So
+# a leftover may only take a trip that departs strictly between the trips of the
+# settled journeys on either side of it. That confinement is what makes the pass
+# safe, and it is also what caps its yield.
+LEFTOVER_DEVIATION_MINUTES = 25.0
+
+
+def assign_leftovers(calls: pd.DataFrame, schedule: pd.DataFrame,
+                     matches: dict, scores: dict, day):
+    """Second alignment, over the journeys and trips the first one left.
+
+    Mutates nothing; returns the pairs to add. A journey is only offered trips
+    departing inside the window its settled neighbours leave open, which keeps
+    the no-overtaking guarantee the whole reconstruction rests on.
+    """
+    calls = calls.copy()
+    calls["seconds"] = service_day_seconds(calls.arrival.fillna(calls.departure), day)
+
+    observed = {}
+    for journey, group in calls.groupby("journey", sort=False):
+        good = group.dropna(subset=["seconds"])
+        start = float(np.nanmin(group.seconds)) if len(good) else float("nan")
+        if start != start:
+            continue
+        observed[journey] = (dict(zip(good.point, good.seconds)),
+                             group.line_id.iloc[0], int(group.direction.iloc[0]), start)
+
+    planned, taken = {}, set(matches.values())
+    for trip, group in schedule.groupby("trip_id", sort=False):
+        if trip in taken:
+            continue
+        planned[trip] = (dict(zip(group.point, group.arrival_time)),
+                         str(group.route_short_name.iloc[0]),
+                         int(group.direction_id.iloc[0]),
+                         float(group.departure_time.iloc[0]))
+
+    settled, leftover, free = defaultdict(list), defaultdict(list), defaultdict(list)
+    for journey, (_, line, direction, start) in observed.items():
+        side = settled if journey in matches else leftover
+        side[(line, direction)].append((start, journey))
+    for trip, (_, line, direction, start) in planned.items():
+        free[(line, direction)].append((start, trip))
+
+    found, deviations = {}, {}
+    for group, waiting in leftover.items():
+        offers = sorted(free.get(group, ()))
+        if not offers:
+            continue
+        waiting.sort()
+        # the trip each settled neighbour is on, in journey order
+        anchors = sorted((start, planned_start(schedule, matches[journey]))
+                         for start, journey in settled.get(group, ()))
+        offered = np.array([start for start, _ in offers])
+        costs = np.full((len(waiting), len(offers)), np.inf)
+        for i, (start, journey) in enumerate(waiting):
+            low = max((t for s, t in anchors if s < start), default=-np.inf)
+            high = min((t for s, t in anchors if s > start), default=np.inf)
+            near = np.flatnonzero(np.abs(offered - start) <= WINDOW_MINUTES * 60)
+            for j in near:
+                if not low < offered[j] < high:
+                    continue
+                cost = _deviation(observed[journey][0], planned[offers[j][1]][0])
+                if cost is not None and cost <= LEFTOVER_DEVIATION_MINUTES:
+                    costs[i, j] = cost
+        pairs, _ = align(costs, TRIP_GAP_COST)
+        for i, j in pairs:
+            found[waiting[i][1]] = offers[j][1]
+            deviations[waiting[i][1]] = float(costs[i, j])
+    return found, deviations
+
+
+def planned_start(schedule: pd.DataFrame, trip) -> float:
+    """When the timetable has this trip leave its first stop."""
+    return _starts(schedule).get(trip, float("nan"))
+
+
+def _starts(schedule: pd.DataFrame, _cache={}):
+    key = id(schedule)
+    if key not in _cache:
+        _cache.clear()
+        _cache[key] = schedule.groupby("trip_id").departure_time.min().to_dict()
+    return _cache[key]
+
+
 def _deviation(seen: dict, scheduled: dict):
     """Median |observed - scheduled| in minutes over shared stops, or None."""
     shared = seen.keys() & scheduled.keys()

@@ -43,7 +43,7 @@ import pandas as pd
 from src.components import Harvester
 
 from . import match, network, stopcalls
-from .emit import EXTRA, emit_rows
+from .emit import EXTRA, emit_added, emit_rows
 
 logger = logging.getLogger(__name__)
 
@@ -151,18 +151,29 @@ class STIBPunctualityHarvester(Harvester):
 
         schedule = match.timetable(gtfs, day)
         matches, scores = match.assign_trips(calls, schedule, day)
+        # A second, confined alignment over what the first one left; see
+        # match.assign_leftovers for why it may not roam freely.
+        again, again_scores = match.assign_leftovers(
+            calls, schedule, matches, scores, day)
+        matches.update(again)
+        scores.update(again_scores)
         merged, report, lost = match.merge_fragments(calls, schedule, matches, day)
 
         frame, edges = emit_rows(calls, schedule, matches, scores, day, merged, lost)
+        # The vehicles no trip explains, kept as ADDED rather than dropped.
+        added = emit_added(calls, dict(matches, **merged), day)
+        frame = pd.concat([frame, added], ignore_index=True) if len(added) else frame
         frame = frame.drop(columns=["observed_primary"], errors="ignore")
 
         logger.info(
             "STIB punctuality %s: %d polls, %d observations, %.1f%% placed, "
-            "%d journeys, %d/%d trips matched, %d fragments merged, "
+            "%d journeys, %d/%d trips matched (%d on the second pass), "
+            "%d fragments merged, %d added trips, "
             "%d rows (%.1f%% measured, %.1f%% inferred)",
             day, polls, len(observations), 100 * len(located) / len(observations),
             calls.journey.nunique(), len(matches), schedule.trip_id.nunique(),
-            report["merged"], len(frame),
+            len(again), report["merged"], added.trip_id.nunique() if len(added) else 0,
+            len(frame),
             100 * frame.observed.mean(), 100 * frame.inferred.mean(),
         )
 

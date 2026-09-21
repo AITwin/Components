@@ -44,6 +44,7 @@ from components.stib.harvesters.speed import compute_speeds  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(processName)s %(message)s")
 log = logging.getLogger("backfill")
+logging.getLogger("azure").setLevel(logging.WARNING)
 
 SOURCE_KEEP = 4  # snapshots kept behind the current one when looking for a distinct previous
 

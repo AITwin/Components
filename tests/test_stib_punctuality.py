@@ -151,7 +151,27 @@ def test_observed_and_inferred_are_exclusive(built):
 def test_no_cancellation_is_ever_claimed(built):
     """The feed carries no cancellation signal, so neither may the output."""
     assert not built.cancelled.any()
-    assert (built.trip_schedule_relationship == 0).all()
+    assert set(built.trip_schedule_relationship) <= {0, 1}
+
+
+def test_added_trips_claim_no_punctuality(built):
+    """A trip the timetable never held cannot be early or late.
+
+    Roughly a fifth of the vehicles reconstructed each day match no trip, and
+    the timetable has nowhere near enough unused trips to explain them, so they
+    are published as ADDED. The danger is that a zero delay reads as perfect
+    punctuality, which would flatter the operator with vehicles it never
+    promised. The delays must therefore be null, not zero.
+    """
+    added = built[built.trip_schedule_relationship == 1]
+    if not len(added):
+        return
+    assert added.arrival_delay.isna().all()
+    assert added.departure_delay.isna().all()
+    assert not added.cancelled.any()
+    # and they must not be confusable with a real trip id
+    scheduled = set(built.loc[built.trip_schedule_relationship == 0, "trip_id"])
+    assert not (set(added.trip_id) & scheduled)
 
 
 def test_every_row_has_a_time_or_a_reason(built):
