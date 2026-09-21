@@ -122,7 +122,7 @@ def _collect_streaming(lazy):
     """Collect with the streaming engine on both the polars the VM runs (1.13) and current ones."""
     try:
         return lazy.collect(engine="streaming")
-    except TypeError:
+    except (TypeError, ValueError):  # 1.13 rejects the engine name with ValueError
         return lazy.collect(streaming=True)
 
 
