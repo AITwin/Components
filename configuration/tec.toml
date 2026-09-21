@@ -7,12 +7,10 @@ DATA_FORMAT = "gtfs"
 DATA_TYPE = "binary"
 SCHEDULE = "03:45"
 
-[collectors.gtfs_realtime]
-
-PATH = "tec.collectors.gtfs_realtime.TECGTFSRealtimeCollector"
-DATA_FORMAT = "gtfs_realtime"
-DATA_TYPE = "binary"
-SCHEDULE = "20s"
+# The legacy gtfsrt.tectime.be trips feed (collector tec.collectors.gtfs_realtime)
+# is not polled any more since 2026-09-21: it carried trip updates only, the
+# same ones gtfs_rt_trip_update gets from the Belgian Mobility API, and it
+# rate-limited us at 20 s. The tec_gtfs_realtime table keeps its history.
 
 
 [collectors.gtfs_rt_alert]
@@ -50,5 +48,5 @@ SOURCE = "tec.gtfs"
 PATH = "punctuality_harvester.PunctualityHarvester"
 DATA_FORMAT = "punctuality-parquet"
 DATA_TYPE = "binary"
-SOURCE = "tec.gtfs_realtime"
+SOURCE = "tec.gtfs_rt_trip_update"
 SOURCE_RANGE = "1d@Europe/Brussels"
