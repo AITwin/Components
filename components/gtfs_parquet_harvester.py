@@ -9,7 +9,9 @@ from src.components import Harvester
 
 logger = logging.getLogger(__name__)
 
-TIMEOUT_SECONDS = 1800
+# The De Lijn feed takes 10 to 20 minutes on the harvester VM's two cores and
+# went past 30 minutes on 2026-09-22 while a backfill shared the CPU.
+TIMEOUT_SECONDS = 7200
 
 # Above this CSV size a table is converted with the bounded-memory path.
 LARGE_TABLE_BYTES = 200 * 1024 * 1024
