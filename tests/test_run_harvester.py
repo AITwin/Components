@@ -110,3 +110,38 @@ class PeriodGate(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LatestOnly(unittest.TestCase):
+    """A live harvester with LATEST_ONLY skips the backlog and takes the newest source row."""
+
+    def setUp(self):
+        runner._first_row_date_cache.clear()
+
+    def _run(self, latest_only):
+        cfg, instance = _config(source_range=None)
+        cfg.latest_only = latest_only
+        tables = _tables()
+        last_harvested = _Row(datetime(2026, 9, 22, 7, 37))
+        backlog_next = _Row(datetime(2026, 9, 22, 7, 38))
+        newest = _Row(datetime(2026, 9, 22, 11, 43))
+
+        def latest_row(table, with_null=False):
+            return last_harvested if table is tables["h"] else newest
+
+        with patch.object(runner, "retrieve_latest_row", side_effect=latest_row), \
+             patch.object(runner, "retrieve_between_datetime", return_value=[backlog_next]), \
+             patch.object(runner, "retrieve_after_datetime", return_value=[newest]), \
+             patch.object(runner, "write_result") as write:
+            self.assertTrue(runner.run_harvester(cfg, tables))
+        return instance.run.call_args[0][0], write.call_args[0][3]
+
+    def test_skips_to_newest_source_row(self):
+        source, stored_at = self._run(latest_only=True)
+        self.assertEqual(source.date, datetime(2026, 9, 22, 11, 43))
+        self.assertEqual(stored_at, datetime(2026, 9, 22, 11, 43))
+
+    def test_default_works_through_the_backlog(self):
+        source, stored_at = self._run(latest_only=False)
+        self.assertEqual(source.date, datetime(2026, 9, 22, 7, 38))
+        self.assertEqual(stored_at, datetime(2026, 9, 22, 7, 38))

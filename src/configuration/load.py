@@ -157,6 +157,7 @@ def extract_components(
             ),
             source_range_strict=component.get("SOURCE_RANGE_STRICT", True),
             multiple_results=component.get("MULTIPLE_RESULTS", False),
+            latest_only=component.get("LATEST_ONLY", False),
             query_parameters=component.get("QUERY_PARAMETERS", None),
             optional_dependencies=[],
             optional_dependencies_limit=component.get(

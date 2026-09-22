@@ -204,6 +204,19 @@ def run_harvester(
     if end_date and not retrieve_after_datetime(source_table, end_date, 1):
         return False  # Period not yet elapsed (no source data past end_date)
 
+    if harvester_config.latest_only and limit == 1 and not end_date:
+        # A live harvester that only matters for the present: once behind, the
+        # missed snapshots are worthless and working through them one by one
+        # keeps it behind for good. The SNCB position harvester takes ~30 s per
+        # 20 s snapshot when the CPU is shared, and sat 4 h behind on 2026-09-22.
+        newest = retrieve_latest_row(source_table)
+        if newest is not None and newest.date > source_data[0].date:
+            logger.info(
+                f"Harvester {harvester_config.name} is behind by "
+                f"{(newest.date - source_data[0].date).total_seconds():.0f}s, skipping to the newest source row"
+            )
+            source_data = [newest]
+
     storage_date = end_date or source_data[-1].date
 
     if limit == 1 and not end_date:

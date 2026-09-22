@@ -35,6 +35,9 @@ class ComponentConfiguration:
     query_parameters: Optional[Dict[str, str]] = None
     optional_dependencies: List[Self] = field(default_factory=list)
     optional_dependencies_limit: Optional[List[int]] = None
+    # Live harvesters: when behind, skip to the newest source row instead of
+    # working through every missed one (see run_harvester).
+    latest_only: bool = False
 
     def __hash__(self):
         return hash(self.name)

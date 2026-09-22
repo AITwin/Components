@@ -44,6 +44,9 @@ DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SOURCE = "sncb.gtfs_realtime"
 DEPENDENCIES = ["sncb.gtfs_parquet", "infrabel.segments", "infrabel.operational_points"]
+# Each snapshot takes longer to place on the network than the 20 s between
+# two of them when the CPU is shared, so once behind this never caught up.
+LATEST_ONLY = true
 
 [harvesters.punctuality]
 
