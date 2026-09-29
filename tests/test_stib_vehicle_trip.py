@@ -134,6 +134,36 @@ class Tracker(unittest.TestCase):
         self.assertEqual(vehicle["color"], "#E4B000")
 
 
+class Drawing(unittest.TestCase):
+    """A branch 1001 -> 1002 -> 9001 runs beside the line to 1004, so the merged
+    chain can list 9001 right after 1002."""
+
+    def setUp(self):
+        gtfs = _gtfs()
+        gtfs["trips"] = pd.concat([gtfs["trips"], pd.DataFrame([{
+            "route_id": "R7", "service_id": "S", "trip_id": "B01", "direction_id": 0,
+            "trip_headsign": "BRANCH"}])], ignore_index=True)
+        gtfs["stop_times"] = pd.concat([gtfs["stop_times"], pd.DataFrame([
+            {"trip_id": "B01", "arrival_time": pd.Timedelta(hours=9, minutes=m),
+             "departure_time": pd.Timedelta(hours=9, minutes=m), "stop_id": stop, "stop_sequence": i + 1}
+            for i, (stop, m) in enumerate([("1001", 0), ("1002", 2), ("9001", 9)])])], ignore_index=True)
+        gtfs["stops"] = pd.concat([gtfs["stops"], pd.DataFrame([{
+            "stop_id": "9001", "stop_name": "9001", "stop_lat": 50.90, "stop_lon": 4.35}])],
+            ignore_index=True)
+        self.geometry = LiveTracker(gtfs).geometry
+
+    def test_a_vehicle_heads_to_the_next_stop_of_its_own_pattern(self):
+        lon, lat = self.geometry.position("7", 0, "1002", 250, "1004")
+        self.assertAlmostEqual(lat, 50.85, places=4)
+        self.assertGreater(lon, 4.357)
+        lon, lat = self.geometry.position("7", 0, "1002", 250, "9001")
+        self.assertGreater(lat, 50.86)
+
+    def test_a_vehicle_past_its_terminus_stays_drawn_there(self):
+        self.assertEqual(tuple(self.geometry.position("7", 0, "1004", 120, "1004")),
+                         (4.35 + 0.007 * 3, 50.85))
+
+
 class ServiceDay(unittest.TestCase):
     def test_gtfs_times_count_from_noon_minus_twelve_hours(self):
         from components.stib.harvesters.punctuality.match import service_day_origin

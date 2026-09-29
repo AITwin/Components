@@ -197,9 +197,14 @@ class Timetable:
 class Geometry:
     """Where a vehicle is on the map: `distance` metres past `point` along the hop."""
 
-    def __init__(self, lines: network.LineNetwork, segments: pd.DataFrame = None):
+    def __init__(self, lines: network.LineNetwork, segments: pd.DataFrame = None, gtfs: dict = None):
         self.lines = lines
         self.shapes = {}
+        # The stop a vehicle is heading to is the next one on its own pattern.
+        # The line's chain merges every pattern, so on a branching line the stop
+        # after a point in the chain can be on another branch, kilometres away,
+        # and the vehicle was drawn racing towards it.
+        self.following, self.usual = _successors(gtfs) if gtfs is not None else ({}, {})
         if segments is not None and len(segments):
             for row in segments.itertuples():
                 line = row.geometry
@@ -210,15 +215,22 @@ class Geometry:
                            network.normalise_stop(row.end))
                     self.shapes.setdefault(key, line)
 
-    def position(self, line, direction, point, distance):
-        chain = self.lines.chains.get((line, direction))
-        index = self.lines.index.get((line, direction), {}).get(point)
+    def position(self, line, direction, point, distance, destination=None):
         here = self.lines.coords.get(point)
-        if chain is None or index is None or here is None:
+        if here is None:
             return here
-        if index + 1 >= len(chain):
+        following = (self.following.get((line, direction, destination, point))
+                     or self.usual.get((line, direction, point)))
+        if following is None and self.usual:
+            # The last stop of every pattern: a vehicle past it is turning or
+            # heading for the depot, not towards whatever the chain lists next.
             return here
-        following = chain[index + 1]
+        if following is None:
+            chain = self.lines.chains.get((line, direction))
+            index = self.lines.index.get((line, direction), {}).get(point)
+            if chain is None or index is None or index + 1 >= len(chain):
+                return here
+            following = chain[index + 1]
         shape = self.shapes.get((line, point, following))
         if shape is None:
             there = self.lines.coords.get(following)
@@ -227,6 +239,31 @@ class Geometry:
             shape = [here, there]
         hop = self.lines.hop_length.get((line, direction, point), 400.0)
         return _along(shape, min(max(distance, 0) / hop, 1.0) if hop else 0.0)
+
+
+def _successors(gtfs):
+    """(line, direction, last point, point) -> the next point on the patterns
+    ending there, and (line, direction, point) -> the most common next point."""
+    routes = gtfs["routes"][["route_id", "route_short_name"]].astype({"route_short_name": str})
+    trips = gtfs["trips"][["trip_id", "route_id", "direction_id"]].merge(routes, on="route_id")
+    times = gtfs["stop_times"][["trip_id", "stop_id", "stop_sequence"]].sort_values(["trip_id", "stop_sequence"])
+    trip_ids = np.asarray(times.trip_id.astype(str), dtype=object)
+    points = np.asarray(times.stop_id.astype(str).map(network.normalise_stop), dtype=object)
+    starts = np.flatnonzero(np.r_[True, trip_ids[1:] != trip_ids[:-1]]) if len(times) else []
+    ends = np.r_[starts[1:], len(times)] if len(times) else []
+    owner = {str(t): (str(l), int(d)) for t, l, d in
+             zip(trips.trip_id, trips.route_short_name, trips.direction_id)}
+    counts = defaultdict(lambda: defaultdict(int))
+    for pattern, key in {(tuple(points[a:b]), owner.get(trip_ids[a])) for a, b in zip(starts, ends)}:
+        if key is None:
+            continue
+        for a, b in zip(pattern, pattern[1:]):
+            if a != b:
+                counts[key + (pattern[-1], a)][b] += 1
+                counts[key + (a,)][b] += 1
+    following = {k: max(v, key=lambda b: (v[b], b)) for k, v in counts.items() if len(k) == 4}
+    usual = {k: max(v, key=lambda b: (v[b], b)) for k, v in counts.items() if len(k) == 3}
+    return following, usual
 
 
 def _along(line, fraction):
@@ -251,7 +288,7 @@ class LiveTracker:
     def __init__(self, gtfs: dict, segments: pd.DataFrame = None, observations: pd.DataFrame = None):
         self.lines = network.LineNetwork.from_gtfs(gtfs, segments, observations)
         self.timetable = Timetable(gtfs)
-        self.geometry = Geometry(self.lines, segments)
+        self.geometry = Geometry(self.lines, segments, gtfs)
         self.live = defaultdict(list)       # (line, direction, destination) -> [_Journey]
         self.last_ts = None
         self.seed = 0
@@ -464,7 +501,8 @@ class LiveTracker:
             if stop is not None:
                 out["stopId"], out["stopSequence"] = str(run["stops"][stop]), int(run["sequence"][stop])
         out["geometry"] = self.geometry.position(journey.line, journey.direction,
-                                                 journey.point[-1], journey.distance[-1])
+                                                 journey.point[-1], journey.distance[-1],
+                                                 network.normalise_stop(journey.destination))
         return out
 
 
