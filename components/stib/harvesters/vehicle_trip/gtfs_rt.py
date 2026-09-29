@@ -140,13 +140,27 @@ def trip_updates(payload, stib_gtfs_parquet) -> bytes:
         update.vehicle.label = str(vehicle["lineId"])
         update.timestamp = int(vehicle["timestamp"])
         update.delay = delay
+        # The delay measured at the last stop called at, carried forward, but
+        # never before the moment of the poll: a vehicle held up since its last
+        # call cannot reach a stop ahead, or leave the one it stands at, in the
+        # past. Only the arrival at the stop it stands at is behind it.
+        now = int(vehicle["timestamp"])
+        standing = vehicle.get("status") == "STOPPED_AT"
+        floor = now
         for i in range(first, b):
+            scheduled_arrival = int(midnight + table.arrival[i])
+            scheduled_departure = int(midnight + table.departure[i])
+            arrival = scheduled_arrival + delay
+            if not (standing and i == first):
+                arrival = max(arrival, floor)
+            departure = max(scheduled_departure + delay, arrival, floor)
+            floor = departure
             stop = update.stop_time_update.add()
             stop.stop_sequence = int(table.sequence[i])
             stop.stop_id = table.stop[i]
-            stop.arrival.delay = delay
-            stop.arrival.time = int(midnight + table.arrival[i] + delay)
-            stop.departure.delay = delay
-            stop.departure.time = int(midnight + table.departure[i] + delay)
+            stop.arrival.delay = arrival - scheduled_arrival
+            stop.arrival.time = arrival
+            stop.departure.delay = departure - scheduled_departure
+            stop.departure.time = departure
             stop.schedule_relationship = gtfs_realtime_pb2.TripUpdate.StopTimeUpdate.SCHEDULED
     return feed.SerializeToString() if feed.entity else None

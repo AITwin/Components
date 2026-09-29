@@ -285,6 +285,26 @@ class GTFSRT(unittest.TestCase):
         self.assertEqual(update.stop_time_update[0].arrival.time, int(scheduled) + 120)
         self.assertEqual(update.stop_time_update[0].arrival.delay, 120)
 
+    def test_no_stop_ahead_is_predicted_in_the_past(self):
+        # Heading to stop 3 (08:34 + 2 min) but it is already 08:40: held up.
+        gtfs_row = _Row(datetime(2026, 9, 29, 2, 20), _zip(_gtfs()))
+        at = _utc(8, 40).replace(tzinfo=timezone.utc).timestamp()
+        update = gtfs_realtime_pb2.FeedMessage.FromString(
+            trip_updates(_vehicle_trip_payload(timestamp=at), gtfs_row)).entity[0].trip_update
+        times = [(s.arrival.time, s.departure.time) for s in update.stop_time_update]
+        self.assertTrue(all(a >= at and d >= a for a, d in times))
+        self.assertEqual(update.stop_time_update[0].arrival.delay, int(at) - int(
+            pd.Timestamp("2026-09-29 08:34", tz="Europe/Brussels").timestamp()))
+
+    def test_standing_vehicle_arrived_in_the_past_but_has_not_left(self):
+        gtfs_row = _Row(datetime(2026, 9, 29, 2, 20), _zip(_gtfs()))
+        at = _utc(8, 40).replace(tzinfo=timezone.utc).timestamp()
+        update = gtfs_realtime_pb2.FeedMessage.FromString(trip_updates(
+            _vehicle_trip_payload(timestamp=at, status="STOPPED_AT"), gtfs_row)).entity[0].trip_update
+        here = update.stop_time_update[0]
+        self.assertLess(here.arrival.time, at)
+        self.assertEqual(here.departure.time, int(at))
+
     def test_no_trip_update_without_a_delay(self):
         gtfs_row = _Row(datetime(2026, 9, 29, 2, 20), _zip(_gtfs()))
         payload = _vehicle_trip_payload(delay=None)

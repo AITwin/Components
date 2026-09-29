@@ -88,17 +88,23 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_error(400, "Bad Request")
             return
 
-        self.send_response(200)
-
         logger.debug(
             f"Executing handler {handler_name} with parameters {query_parameters}"
         )
 
-        # Execute handler
-        result = handler_config.component(self.tables).run(**query_parameters)
+        # Execute handler, and only then choose the status: sent first, a 200
+        # carried an error page as its body whenever there was no data.
+        try:
+            result = handler_config.component(self.tables).run(**query_parameters)
+        except Exception:
+            logger.exception(f"Handler {handler_name} failed")
+            self.send_error(500, "Handler failed")
+            return
         if result is None:
             self.send_error(404, "No data found for this specific query")
             return
+
+        self.send_response(200)
 
         if handler_config.data_type == "json":
             self.send_header("Content-type", "text/json")
