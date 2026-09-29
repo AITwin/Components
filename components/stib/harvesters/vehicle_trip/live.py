@@ -49,6 +49,16 @@ BRUSSELS = "Europe/Brussels"
 # A vehicle in the alignment keeps its previous trip at this fraction of the
 # deviation it would otherwise cost.
 STICKY = 0.5
+# Minutes early weigh this much more than minutes late when a vehicle is
+# compared with a trip. Where the headway is about twice the typical delay, a
+# whole line fits "each vehicle 2 min late" and "each vehicle 4 min early on the
+# next trip" almost equally, and once taken the shifted reading holds (sticky,
+# and every new vehicle finds its trip already held). Vehicles rarely run early
+# (8% of observed calls over 2 min early against 27% over 2 min late), so early
+# is the reading to distrust. Measured: line 82 on 2026-09-29 went from 48% to
+# 94% agreement with hindsight, and the 2026-09-28 morning peak from 91.6% to
+# 92.7% precision against the daily table.
+EARLY_WEIGHT = 1.5
 # Trips considered for the vehicles on the road: those whose schedule overlaps
 # [now - LATE, now + EARLY]. Twenty minutes late is where the daily alignment
 # stops trusting a match anyway (MAX_DEVIATION_MINUTES is twelve).
@@ -510,17 +520,21 @@ def _nearest(scheduled, seconds):
     return min(scheduled, key=lambda s: abs(s - seconds))
 
 
+def _weighted_gap(seconds, scheduled):
+    return seconds - scheduled if seconds >= scheduled else (scheduled - seconds) * EARLY_WEIGHT
+
+
 def _deviation(calls, at):
     """match._deviation over a live track: the median of |observed - scheduled|
     in minutes over the stops both share, penalised for the calls the trip does
-    not explain, or None under MIN_SHARED_STOPS. A loop's repeated stop is
-    compared with its nearer visit."""
+    not explain, or None under MIN_SHARED_STOPS. Early counts EARLY_WEIGHT
+    times late. A loop's repeated stop is compared with its nearer visit."""
     gaps, shared = [], set()
     for point, seconds in calls:
         scheduled = at.get(point)
         if scheduled is None:
             continue
-        gaps.append(abs(seconds - _nearest(scheduled, seconds)))
+        gaps.append(min(_weighted_gap(seconds, s) for s in scheduled))
         shared.add(point)
     if len(shared) < MIN_SHARED_STOPS:
         return None

@@ -22,7 +22,7 @@ from components.stib.harvesters.vehicle_trip import (  # noqa: E402
     STIBGTFSRTTripUpdateHarvester, STIBGTFSRTVehiclePositionHarvester,
     STIBVehicleTripHarvester, harvester as harvester_module,
 )
-from components.stib.harvesters.vehicle_trip.live import LiveTracker, _pair  # noqa: E402
+from components.stib.harvesters.vehicle_trip.live import LiveTracker, _deviation, _pair  # noqa: E402
 
 DAY = "20260929"
 STOPS = ["1001", "1002", "1003", "1004"]
@@ -103,6 +103,14 @@ class Pairing(unittest.TestCase):
         # Vehicle 0 fits trip 1 best and vehicle 1 fits trip 0 best.
         costs = np.array([[5.0, 0.5], [0.5, 5.0]])
         self.assertEqual(sorted(_pair(costs, 7.0)), [(0, 1), (1, 0)])
+
+
+    def test_running_early_costs_more_than_running_late(self):
+        calls = [("A", 1000), ("B", 1100)]
+        late = _deviation(calls, {"A": [880], "B": [980]})    # 2 min late
+        early = _deviation(calls, {"A": [1120], "B": [1220]})  # 2 min early
+        self.assertAlmostEqual(late, 2.0)
+        self.assertGreater(early, late)
 
 
 class Tracker(unittest.TestCase):
