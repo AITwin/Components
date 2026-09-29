@@ -181,15 +181,24 @@ WINDOW_MINUTES = 25.0        # never even compare a journey and a trip further a
 BRUSSELS = "Europe/Brussels"
 
 
-def service_day_seconds(stamps: pd.Series, day) -> np.ndarray:
-    """Seconds since the service day's local midnight.
+def service_day_origin(day) -> pd.Timestamp:
+    """The instant a service day's GTFS times count from.
 
-    GTFS counts a service day from local midnight and lets it run past 24:00, so
-    a night bus at 01:30 is 25:30. Observations are converted the same way, which
-    is what makes the two comparable at all.
+    GTFS times are measured from "noon minus 12h" of the service date, not from
+    midnight, and run past 24:00 (a night bus at 01:30 is 25:30). The two are the
+    same except on the two days a year the clocks change, when midnight is an
+    hour off noon minus 12h and every time of the day would be read an hour out:
+    on 2026-10-25, 08:00:00 is 07:00 on the clock, and on 2027-03-28 it is 09:00.
     """
-    midnight = pd.Timestamp(day).tz_localize(BRUSSELS)
-    return (stamps.dt.tz_convert(BRUSSELS) - midnight).dt.total_seconds().values
+    noon = pd.Timestamp(day).replace(hour=12).tz_localize(BRUSSELS)
+    return noon - pd.Timedelta(hours=12)
+
+
+def service_day_seconds(stamps: pd.Series, day) -> np.ndarray:
+    """Seconds since the service day's origin (see service_day_origin), the
+    scale GTFS times are on. Observations are converted to it, which is what
+    makes the two comparable at all."""
+    return (stamps.dt.tz_convert(BRUSSELS) - service_day_origin(day)).dt.total_seconds().values
 
 
 def timetable(gtfs: dict, day) -> pd.DataFrame:

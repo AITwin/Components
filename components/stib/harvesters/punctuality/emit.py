@@ -88,7 +88,7 @@ def emit_rows(calls, schedule, matches, scores, day, merged=None, lost=None):
     rows["missing_reason"] = stopcalls.missing_reasons(
         rows, rows.measured.to_numpy(dtype=bool) | inferred, lost or {})
 
-    midnight = pd.Timestamp(day).tz_localize(match.BRUSSELS)
+    midnight = match.service_day_origin(day)
 
     def stamp(seconds):
         # The published archives hold microseconds. Interpolating between polls
@@ -171,7 +171,7 @@ def emit_added(calls, matches, day, minimum_stops=3):
         return pd.DataFrame(columns=list(SCHEMA) + EXTRA + ["observed_primary"])
     first = left.groupby("journey").arrival_s.transform("min")
 
-    midnight = pd.Timestamp(day).tz_localize(match.BRUSSELS)
+    midnight = match.service_day_origin(day)
 
     def stamp(seconds):
         out = midnight + pd.to_timedelta(seconds, unit="s")

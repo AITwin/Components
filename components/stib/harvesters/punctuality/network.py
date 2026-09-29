@@ -131,7 +131,14 @@ class LineNetwork:
                             on="trip_id")
         times = times.sort_values(["trip_id", "stop_sequence"])
 
-        patterns = times.groupby("trip_id").p.apply(tuple)
+        # One tuple of points per trip, split off the sorted arrays: a groupby
+        # apply over twenty thousand trips took most of a minute.
+        trip_ids = np.asarray(times.trip_id, dtype=object)
+        points = np.asarray(times.p, dtype=object)
+        starts = np.flatnonzero(np.r_[True, trip_ids[1:] != trip_ids[:-1]]) if len(times) else []
+        ends = np.r_[starts[1:], len(times)] if len(times) else []
+        patterns = pd.Series({trip_ids[a]: tuple(points[a:b]) for a, b in zip(starts, ends)},
+                             dtype=object)
         owner = trips.set_index("trip_id")[["route_short_name", "direction_id"]]
         frame = pd.DataFrame({"pattern": patterns}).join(owner)
 

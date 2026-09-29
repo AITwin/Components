@@ -127,6 +127,40 @@ DEPENDENCIES_LIMIT = [1]
 OPTIONAL_DEPENDENCIES = ["vehicle_identify"]
 OPTIONAL_DEPENDENCIES_LIMIT = [10]
 
+[harvesters.vehicle_trip]
+
+# Every vehicle with the GTFS trip it runs, live (components/stib/harvesters/
+# vehicle_trip). The tracker keeps its state in the process between runs and
+# rebuilds it from the last hour of polls (180 at 20 s) after a restart, a gap
+# or a new timetable; the previous snapshot carries identities across it.
+# LATEST_ONLY: a missed poll is worthless live, and a first run must not start
+# from the beginning of the vehicle_distance archive.
+PATH = "stib.harvesters.vehicle_trip.STIBVehicleTripHarvester"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SOURCE = "stib.vehicle_distance"
+LATEST_ONLY = true
+DEPENDENCIES = ["gtfs_parquet", "segments"]
+OPTIONAL_DEPENDENCIES = ["vehicle_distance", "vehicle_trip"]
+OPTIONAL_DEPENDENCIES_LIMIT = [180, 1]
+
+[harvesters.gtfs_rt_vehicle_position]
+
+PATH = "stib.harvesters.vehicle_trip.STIBGTFSRTVehiclePositionHarvester"
+DATA_FORMAT = "gtfs_realtime"
+DATA_TYPE = "binary"
+SOURCE = "stib.vehicle_trip"
+LATEST_ONLY = true
+
+[harvesters.gtfs_rt_trip_update]
+
+PATH = "stib.harvesters.vehicle_trip.STIBGTFSRTTripUpdateHarvester"
+DATA_FORMAT = "gtfs_realtime"
+DATA_TYPE = "binary"
+SOURCE = "stib.vehicle_trip"
+LATEST_ONLY = true
+DEPENDENCIES = ["gtfs_parquet"]
+
 [harvesters.punctuality]
 
 PATH = "stib.harvesters.punctuality.STIBPunctualityHarvester"
