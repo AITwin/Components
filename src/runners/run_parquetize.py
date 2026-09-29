@@ -334,6 +334,21 @@ def fetch_data(row):
     return data, row[1]
 
 
+def _rows(data):
+    """A snapshot as a list of flat rows: a GeoJSON FeatureCollection becomes
+    one row per feature, its properties plus the point's lon and lat."""
+    if isinstance(data, dict) and data.get("type") == "FeatureCollection":
+        rows = []
+        for feature in data.get("features") or []:
+            row = dict(feature.get("properties") or {})
+            geometry = feature.get("geometry") or {}
+            if geometry.get("type") == "Point":
+                row["lon"], row["lat"] = geometry["coordinates"][:2]
+            rows.append(row)
+        return rows
+    return data
+
+
 def _generate_batch(
     component_config, connection, parquet_table, period_end, period_start, source
 ):
@@ -360,6 +375,7 @@ def _generate_batch(
     validate_schema = component_config.parquetize.schema
 
     for data, date in datas:
+        data = _rows(data)
         try:
             # Validate data once, without creating new structures for now
             validate(data, validate_schema)

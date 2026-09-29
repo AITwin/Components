@@ -1,5 +1,4 @@
 from .harvester import STIBVehicleTripHarvester
-from .gtfs_rt import STIBGTFSRTTripUpdateHarvester, STIBGTFSRTVehiclePositionHarvester
+from .gtfs_rt import trip_updates, vehicle_positions
 
-__all__ = ["STIBVehicleTripHarvester", "STIBGTFSRTVehiclePositionHarvester",
-           "STIBGTFSRTTripUpdateHarvester"]
+__all__ = ["STIBVehicleTripHarvester", "trip_updates", "vehicle_positions"]

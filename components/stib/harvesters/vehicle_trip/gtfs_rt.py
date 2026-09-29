@@ -1,5 +1,8 @@
 """GTFS-RT feeds for STIB, which publishes none, built from `stib.vehicle_trip`.
 
+Built on request by the handlers in stib/handlers/gtfs_rt.py, not stored: each
+feed is a pure function of a `vehicle_trip` snapshot and the timetable.
+
 VehiclePositions carries every tracked vehicle: with its trip where one was
 established, and with only its route and direction where not (both are valid
 GTFS-RT). TripUpdates carries one update per trip that has a vehicle on it: the
@@ -14,8 +17,6 @@ import numpy as np
 import pandas as pd
 from google.transit import gtfs_realtime_pb2
 
-from src.components import Harvester
-
 from ..punctuality import match
 from .harvester import _tables
 
@@ -26,8 +27,7 @@ _STATUS = {
 }
 
 
-def _vehicles(source):
-    payload = source.data
+def _vehicles(payload):
     if isinstance(payload, (bytes, bytearray, str)):
         payload = json.loads(payload)
     for feature in (payload or {}).get("features", ()):
@@ -56,30 +56,29 @@ def _trip(descriptor, vehicle):
         descriptor.direction_id = int(vehicle["direction"])
 
 
-class STIBGTFSRTVehiclePositionHarvester(Harvester):
-
-    def run(self, source):
-        vehicles = list(_vehicles(source))
-        if not vehicles:
-            return None
-        feed = _feed(max(v["timestamp"] for v in vehicles))
-        for vehicle in vehicles:
-            if not vehicle.get("coordinates"):
-                continue
-            entity = feed.entity.add()
-            entity.id = vehicle["uuid"]
-            position = entity.vehicle
-            _trip(position.trip, vehicle)
-            position.vehicle.id = vehicle["uuid"]
-            position.vehicle.label = str(vehicle["lineId"])
-            position.position.longitude, position.position.latitude = vehicle["coordinates"]
-            if vehicle.get("stopId"):
-                position.stop_id = vehicle["stopId"]
-                position.current_stop_sequence = int(vehicle["stopSequence"])
-            if vehicle.get("status"):
-                position.current_status = _STATUS[vehicle["status"]]
-            position.timestamp = int(vehicle["timestamp"])
-        return feed.SerializeToString()
+def vehicle_positions(payload) -> bytes:
+    """A VehiclePositions feed from a `vehicle_trip` snapshot, or None."""
+    vehicles = list(_vehicles(payload))
+    if not vehicles:
+        return None
+    feed = _feed(max(v["timestamp"] for v in vehicles))
+    for vehicle in vehicles:
+        if not vehicle.get("coordinates"):
+            continue
+        entity = feed.entity.add()
+        entity.id = vehicle["uuid"]
+        position = entity.vehicle
+        _trip(position.trip, vehicle)
+        position.vehicle.id = vehicle["uuid"]
+        position.vehicle.label = str(vehicle["lineId"])
+        position.position.longitude, position.position.latitude = vehicle["coordinates"]
+        if vehicle.get("stopId"):
+            position.stop_id = vehicle["stopId"]
+            position.current_stop_sequence = int(vehicle["stopSequence"])
+        if vehicle.get("status"):
+            position.current_status = _STATUS[vehicle["status"]]
+        position.timestamp = int(vehicle["timestamp"])
+    return feed.SerializeToString()
 
 
 class _StopTimes:
@@ -105,49 +104,49 @@ def _midnight(service_date: str) -> float:
     return match.service_day_origin(datetime.strptime(service_date, "%Y%m%d")).timestamp()
 
 
-class STIBGTFSRTTripUpdateHarvester(Harvester):
+def trip_updates(payload, stib_gtfs_parquet) -> bytes:
+    """A TripUpdates feed from a `vehicle_trip` snapshot and the `gtfs_parquet`
+    row in force at that moment, or None."""
+    if _stop_times["date"] != stib_gtfs_parquet.date:
+        _stop_times["table"] = _StopTimes(_tables(stib_gtfs_parquet.data))
+        _stop_times["date"] = stib_gtfs_parquet.date
+    table = _stop_times["table"]
 
-    def run(self, source, stib_gtfs_parquet):
-        if _stop_times["date"] != stib_gtfs_parquet.date:
-            _stop_times["table"] = _StopTimes(_tables(stib_gtfs_parquet.data))
-            _stop_times["date"] = stib_gtfs_parquet.date
-        table = _stop_times["table"]
-
-        vehicles = [v for v in _vehicles(source) if v.get("tripId") and v.get("delay") is not None]
-        if not vehicles:
-            return None
-        feed = _feed(max(v["timestamp"] for v in vehicles))
-        for vehicle in vehicles:
-            span = table.index.get(vehicle["tripId"])
-            if span is None:
-                continue
-            a, b = span
-            # From the stop the vehicle is at or heading to; with none known,
-            # from the first stop scheduled after the moment of the poll.
-            midnight = _midnight(vehicle["startDate"])
-            if vehicle.get("stopSequence") is not None:
-                first = a + int(np.searchsorted(table.sequence[a:b], int(vehicle["stopSequence"])))
-            else:
-                first = a + int(np.searchsorted(table.arrival[a:b] + midnight + vehicle["delay"],
-                                                vehicle["timestamp"]))
-            if first >= b:
-                continue
-            delay = int(vehicle["delay"])
-            entity = feed.entity.add()
-            entity.id = f"{vehicle['tripId']}-{vehicle['startDate']}"
-            update = entity.trip_update
-            _trip(update.trip, vehicle)
-            update.vehicle.id = vehicle["uuid"]
-            update.vehicle.label = str(vehicle["lineId"])
-            update.timestamp = int(vehicle["timestamp"])
-            update.delay = delay
-            for i in range(first, b):
-                stop = update.stop_time_update.add()
-                stop.stop_sequence = int(table.sequence[i])
-                stop.stop_id = table.stop[i]
-                stop.arrival.delay = delay
-                stop.arrival.time = int(midnight + table.arrival[i] + delay)
-                stop.departure.delay = delay
-                stop.departure.time = int(midnight + table.departure[i] + delay)
-                stop.schedule_relationship = gtfs_realtime_pb2.TripUpdate.StopTimeUpdate.SCHEDULED
-        return feed.SerializeToString() if feed.entity else None
+    vehicles = [v for v in _vehicles(payload) if v.get("tripId") and v.get("delay") is not None]
+    if not vehicles:
+        return None
+    feed = _feed(max(v["timestamp"] for v in vehicles))
+    for vehicle in vehicles:
+        span = table.index.get(vehicle["tripId"])
+        if span is None:
+            continue
+        a, b = span
+        # From the stop the vehicle is at or heading to; with none known,
+        # from the first stop scheduled after the moment of the poll.
+        midnight = _midnight(vehicle["startDate"])
+        if vehicle.get("stopSequence") is not None:
+            first = a + int(np.searchsorted(table.sequence[a:b], int(vehicle["stopSequence"])))
+        else:
+            first = a + int(np.searchsorted(table.arrival[a:b] + midnight + vehicle["delay"],
+                                            vehicle["timestamp"]))
+        if first >= b:
+            continue
+        delay = int(vehicle["delay"])
+        entity = feed.entity.add()
+        entity.id = f"{vehicle['tripId']}-{vehicle['startDate']}"
+        update = entity.trip_update
+        _trip(update.trip, vehicle)
+        update.vehicle.id = vehicle["uuid"]
+        update.vehicle.label = str(vehicle["lineId"])
+        update.timestamp = int(vehicle["timestamp"])
+        update.delay = delay
+        for i in range(first, b):
+            stop = update.stop_time_update.add()
+            stop.stop_sequence = int(table.sequence[i])
+            stop.stop_id = table.stop[i]
+            stop.arrival.delay = delay
+            stop.arrival.time = int(midnight + table.arrival[i] + delay)
+            stop.departure.delay = delay
+            stop.departure.time = int(midnight + table.departure[i] + delay)
+            stop.schedule_relationship = gtfs_realtime_pb2.TripUpdate.StopTimeUpdate.SCHEDULED
+    return feed.SerializeToString() if feed.entity else None

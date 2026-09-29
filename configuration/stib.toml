@@ -143,23 +143,8 @@ LATEST_ONLY = true
 DEPENDENCIES = ["gtfs_parquet", "segments"]
 OPTIONAL_DEPENDENCIES = ["vehicle_distance", "vehicle_trip"]
 OPTIONAL_DEPENDENCIES_LIMIT = [180, 1]
-
-[harvesters.gtfs_rt_vehicle_position]
-
-PATH = "stib.harvesters.vehicle_trip.STIBGTFSRTVehiclePositionHarvester"
-DATA_FORMAT = "gtfs_realtime"
-DATA_TYPE = "binary"
-SOURCE = "stib.vehicle_trip"
-LATEST_ONLY = true
-
-[harvesters.gtfs_rt_trip_update]
-
-PATH = "stib.harvesters.vehicle_trip.STIBGTFSRTTripUpdateHarvester"
-DATA_FORMAT = "gtfs_realtime"
-DATA_TYPE = "binary"
-SOURCE = "stib.vehicle_trip"
-LATEST_ONLY = true
-DEPENDENCIES = ["gtfs_parquet"]
+# One row per vehicle and poll: its properties plus lon/lat (run_parquetize._rows).
+PARQUETIZE = { BATCH = "1h", GROUPS = [{GROUP="1d"},{GROUP="1w", KEYS=["lineId"]},], SCHEMA = { type = "array", items = { type = "object", required = ["uuid", "lineId"], properties = { uuid = { type = "string" }, lineId = { type = "string" }, directionId = { type = "string" }, pointId = { type = "string" }, distanceFromPoint = { type = "integer" }, tripId = { type = ["string", "null"] }, startDate = { type = ["string", "null"] }, delay = { type = ["integer", "null"] }, lon = { type = "number" }, lat = { type = "number" } } } } }
 
 [harvesters.punctuality]
 
@@ -179,6 +164,20 @@ DEPENDENCIES = ["stib.gtfs_parquet"]
 
 
 [handlers]
+
+[handlers.gtfs_rt_vehicle_position]
+
+PATH = "stib.handlers.gtfs_rt.STIBGTFSRTVehiclePositionHandler"
+DATA_FORMAT = "gtfs_realtime"
+DATA_TYPE = "binary"
+QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }
+
+[handlers.gtfs_rt_trip_update]
+
+PATH = "stib.handlers.gtfs_rt.STIBGTFSRTTripUpdateHandler"
+DATA_FORMAT = "gtfs_realtime"
+DATA_TYPE = "binary"
+QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }
 
 [handlers.trips]
 

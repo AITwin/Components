@@ -8,7 +8,7 @@ import os
 import sys
 import unittest
 import zipfile
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 
@@ -19,8 +19,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from google.transit import gtfs_realtime_pb2  # noqa: E402
 
 from components.stib.harvesters.vehicle_trip import (  # noqa: E402
-    STIBGTFSRTTripUpdateHarvester, STIBGTFSRTVehiclePositionHarvester,
-    STIBVehicleTripHarvester, harvester as harvester_module,
+    STIBVehicleTripHarvester, trip_updates, vehicle_positions, harvester as harvester_module,
 )
 from components.stib.harvesters.vehicle_trip.live import LiveTracker, _deviation, _pair  # noqa: E402
 
@@ -257,7 +256,7 @@ def _vehicle_trip_payload(**overrides):
 
 class GTFSRT(unittest.TestCase):
     def test_vehicle_position(self):
-        blob = STIBGTFSRTVehiclePositionHarvester().run(_Row(_utc(8, 35), _vehicle_trip_payload()))
+        blob = vehicle_positions(_vehicle_trip_payload())
         feed = gtfs_realtime_pb2.FeedMessage.FromString(blob)
         vp = feed.entity[0].vehicle
         self.assertEqual(vp.trip.trip_id, "T03")
@@ -272,13 +271,13 @@ class GTFSRT(unittest.TestCase):
         payload = _vehicle_trip_payload(tripId=None, startDate=None, startTime=None,
                                         delay=None, stopId=None, stopSequence=None)
         feed = gtfs_realtime_pb2.FeedMessage.FromString(
-            STIBGTFSRTVehiclePositionHarvester().run(_Row(_utc(8, 35), payload)))
+            vehicle_positions(payload))
         trip = feed.entity[0].vehicle.trip
         self.assertEqual((trip.trip_id, trip.route_id, trip.direction_id), ("", "R7", 0))
 
     def test_trip_update_carries_delay_to_the_stops_ahead(self):
         gtfs_row = _Row(datetime(2026, 9, 29, 2, 20), _zip(_gtfs()))
-        blob = STIBGTFSRTTripUpdateHarvester().run(_Row(_utc(8, 35), _vehicle_trip_payload()), gtfs_row)
+        blob = trip_updates(_vehicle_trip_payload(), gtfs_row)
         update = gtfs_realtime_pb2.FeedMessage.FromString(blob).entity[0].trip_update
         self.assertEqual(update.trip.trip_id, "T03")
         self.assertEqual([s.stop_sequence for s in update.stop_time_update], [3, 4])
@@ -289,8 +288,42 @@ class GTFSRT(unittest.TestCase):
     def test_no_trip_update_without_a_delay(self):
         gtfs_row = _Row(datetime(2026, 9, 29, 2, 20), _zip(_gtfs()))
         payload = _vehicle_trip_payload(delay=None)
-        self.assertIsNone(STIBGTFSRTTripUpdateHarvester().run(_Row(_utc(8, 35), payload), gtfs_row))
+        self.assertIsNone(trip_updates(payload, gtfs_row))
 
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Handlers(unittest.TestCase):
+    """The feeds are built on request from the snapshot in force."""
+
+    def _handler(self, cls, rows):
+        from components.stib.handlers import gtfs_rt as module
+
+        class _Stub(cls):
+            def get_table_by_name(self, name):
+                return name
+
+        def latest(table, date, limit):
+            found = sorted((r for r in rows[table] if r.date < date), key=lambda r: r.date)
+            return found[-1:]
+        original, module.retrieve_latest_rows_before_datetime = module.retrieve_latest_rows_before_datetime, latest
+        self.addCleanup(setattr, module, "retrieve_latest_rows_before_datetime", original)
+        return _Stub({})
+
+    def _rows(self):
+        return {"stib_vehicle_trip": [_Row(_utc(8, 35), _vehicle_trip_payload())],
+                "stib_gtfs_parquet": [_Row(datetime(2026, 9, 29, 2, 20), _zip(_gtfs()))]}
+
+    def test_trip_updates_from_the_snapshot_in_force(self):
+        from components.stib.handlers.gtfs_rt import STIBGTFSRTTripUpdateHandler
+        at = _utc(8, 35, 10).replace(tzinfo=timezone.utc).timestamp()
+        blob = self._handler(STIBGTFSRTTripUpdateHandler, self._rows()).run(at - 3600, at)
+        feed = gtfs_realtime_pb2.FeedMessage.FromString(blob)
+        self.assertEqual(feed.entity[0].trip_update.trip.trip_id, "T03")
+
+    def test_no_feed_from_a_stale_snapshot(self):
+        from components.stib.handlers.gtfs_rt import STIBGTFSRTVehiclePositionHandler
+        at = _utc(8, 45).replace(tzinfo=timezone.utc).timestamp()
+        self.assertIsNone(self._handler(STIBGTFSRTVehiclePositionHandler, self._rows()).run(at - 3600, at))
