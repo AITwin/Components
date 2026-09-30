@@ -9,6 +9,15 @@ strictly before that date. The result overwrites the day's blob under the same
 name and the row's hash is updated, so the endpoint keeps serving every day
 throughout. Rows without data (days with no polls) are left alone.
 
+With `--lines`, only those lines are rebuilt, from their own observations, and
+their rows replace theirs in the stored file; the other lines' rows are kept as
+they are. Tracking, matching and merging all run per line, so this gives the
+same rows as a whole-day run (checked on 2026-08-27 for metro lines 1 and 5:
+16,443 rows, every column identical) at a fraction of the memory and time. The
+spliced rows take the stored file's columns and types, which vary with the
+version of the pipeline that wrote it.
+
+    python scripts/recompute_stib_punctuality.py --lines 1,2,5,6 --start 2024-04-05
     python scripts/recompute_stib_punctuality.py --start 2024-04-05 --workers 1
     python scripts/recompute_stib_punctuality.py --start 2026-09-29 --end 2026-09-30 --dry-run
 
@@ -70,13 +79,39 @@ def _period(end):
     return local_start.astimezone(UTC).replace(tzinfo=None), end
 
 
-def _read_json(url):
+def _read_json(url, lines=None):
     raw = _storage().read(url)
-    return json.loads(raw) if raw else None
+    payload = json.loads(raw) if raw else None
+    if payload and lines:
+        payload = [v for v in payload if str(v.get("lineId")) in lines]
+    return payload
+
+
+def _splice(stored: bytes, rebuilt: bytes, lines) -> bytes:
+    """The stored day with the rows of `lines` replaced by the rebuilt ones."""
+    import pandas as pd
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    old = pq.read_table(io.BytesIO(stored))
+    new = pd.read_parquet(io.BytesIO(rebuilt))
+    kept = old.to_pandas()
+    kept = kept[~kept.route_id.astype(str).isin(lines)]
+    for column in old.schema.names:
+        if column not in new.columns:
+            new[column] = None
+    new = new[old.schema.names]
+    table = pa.concat_tables([
+        pa.Table.from_pandas(kept, schema=old.schema, preserve_index=False),
+        pa.Table.from_pandas(new, schema=old.schema, preserve_index=False),
+    ])
+    buf = io.BytesIO()
+    pq.write_table(table, buf, compression="zstd")
+    return buf.getvalue()
 
 
 def day(args):
-    row_id, end, url, dry_run = args
+    row_id, end, url, dry_run, lines = args
     from components.stib.harvesters.punctuality import STIBPunctualityHarvester
 
     started = time.time()
@@ -94,7 +129,7 @@ def day(args):
             where t.date < :e and (t.copy_id is not null or t.hash is not null)
             order by t.date desc limit 1"""), {"e": end}).scalar()
     with ThreadPoolExecutor(16) as pool:
-        payloads = list(pool.map(_read_json, [u for _, u in polls]))
+        payloads = list(pool.map(lambda u: _read_json(u, lines), [u for _, u in polls]))
     source = [_Row(d, p) for (d, _), p in zip(polls, payloads)]
     timetable = _Row(None, _storage().read(gtfs))
 
@@ -102,6 +137,8 @@ def day(args):
     if result is None:
         log.warning("%s: no result, row left as is", end)
         return end, None
+    if lines:
+        result = _splice(_storage().read(url), result, lines)
     if not dry_run:
         name = f"{TABLE}/{end.strftime('%Y-%m-%d_%H-%M-%S')}"
         new_url = _storage().write(name, result)
@@ -118,6 +155,7 @@ def main():
     p.add_argument("--start", default="2024-04-05", help="first row date to recompute (naive UTC)")
     p.add_argument("--end", default=None, help="row dates strictly before this (naive UTC), default all")
     p.add_argument("--workers", type=int, default=1)
+    p.add_argument("--lines", default=None, help="comma-separated line numbers to rebuild and splice in")
     p.add_argument("--done", default="recompute_stib_punctuality.done")
     p.add_argument("--dry-run", action="store_true")
     a = p.parse_args()
@@ -132,7 +170,8 @@ def main():
             order by date asc"""),
             {"s": datetime.fromisoformat(a.start),
              "e": datetime.fromisoformat(a.end) if a.end else datetime.max}).fetchall()
-    work = [(r[0], r[1], r[2], a.dry_run) for r in rows if r[1].isoformat() not in done]
+    lines = set(a.lines.split(",")) if a.lines else None
+    work = [(r[0], r[1], r[2], a.dry_run, lines) for r in rows if r[1].isoformat() not in done]
     log.info("%s%d day(s) to recompute (%d already done) with %d worker(s)",
              "(dry run) " if a.dry_run else "", len(work), len(rows) - len(work), a.workers)
     with get_context("spawn").Pool(a.workers, maxtasksperchild=1) as pool:
