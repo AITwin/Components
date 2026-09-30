@@ -1,6 +1,6 @@
 import logging
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import schedule
 from sqlalchemy import Table
@@ -13,21 +13,59 @@ from src.runners._utils import schedule_string_to_function, schedule_string_to_t
 logger = logging.getLogger("Collector")
 
 
-def _is_overdue(collector_config: ComponentConfiguration, table: Table) -> bool:
-    """Whether the last collected row is older than the schedule interval.
+def _last_due(schedule_string: str, now: datetime) -> datetime:
+    """The latest moment a time-of-day schedule ("04:20") was due, at or before `now`."""
+    hour, minute = (int(x) for x in schedule_string.split(":")[:2])
+    due = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+    return due if due <= now else due - timedelta(days=1)
+
+
+def _is_overdue(collector_config: ComponentConfiguration, table: Table, now: datetime = None) -> bool:
+    """Whether the last run the schedule called for left no row.
 
     An interval schedule ("7d", "1h") first fires one full interval after the
     process starts, so a process that restarts more often than that never
     fires it: the weekly TMC event codes collector last ran in April 2026.
-    Running once at startup when the table is already stale closes that hole.
-    Time-of-day schedules ("04:00") are left alone.
+    A time-of-day schedule ("04:20") fires once a day, so one failed run (on
+    2026-09-23 the database refused connections at 00:06) cost a whole day of
+    STIB stops and SNCB timetable. Either way the process restarts hourly, so
+    running once at startup when the due run left no row closes the hole.
     """
-    if ":" in collector_config.schedule:
-        return False
+    now = now or datetime.now()
     latest = retrieve_latest_row(table)
     if latest is None:
         return True
-    return datetime.now() - latest.date > schedule_string_to_time_delta(collector_config.schedule)
+    if ":" in collector_config.schedule:
+        return latest.date < _last_due(collector_config.schedule, now)
+    return now - latest.date > schedule_string_to_time_delta(collector_config.schedule)
+
+
+# Schedules at least this far apart retry a failed run instead of waiting for
+# the next one: every RETRY_EVERY, RETRY_TIMES times.
+RETRY_FROM = timedelta(hours=1)
+RETRY_EVERY_MINUTES = 15
+RETRY_TIMES = 4
+
+
+def _period(schedule_string: str) -> timedelta:
+    return timedelta(days=1) if ":" in schedule_string else schedule_string_to_time_delta(schedule_string)
+
+
+def _run_or_retry(collector_config: ComponentConfiguration, table: Table, fail_on_error: bool):
+    if run_collector(collector_config, table, fail_on_error) is not _FAILED:
+        return
+    if _period(collector_config.schedule) < RETRY_FROM:
+        return
+    attempts = {"left": RETRY_TIMES}
+
+    def retry():
+        attempts["left"] -= 1
+        failed = run_collector(collector_config, table, fail_on_error) is _FAILED
+        if not failed or attempts["left"] <= 0:
+            return schedule.CancelJob
+
+    logger.info(f"Collector {collector_config.name} failed, retrying every {RETRY_EVERY_MINUTES} min")
+    schedule.every(RETRY_EVERY_MINUTES).minutes.do(retry)
 
 
 def run_collector_on_schedule(
@@ -46,15 +84,18 @@ def run_collector_on_schedule(
 
     job = schedule_string_to_function(collector_config.schedule)
 
-    job.do(run_collector, collector_config, table, fail_on_error)
+    job.do(_run_or_retry, collector_config, table, fail_on_error)
 
     if _is_overdue(collector_config, table):
         logger.info(f"Collector {collector_config.name} is overdue, running it now")
-        run_collector(collector_config, table, fail_on_error)
+        _run_or_retry(collector_config, table, fail_on_error)
 
     while True:
         schedule.run_pending()
         time.sleep(1)
+
+
+_FAILED = object()
 
 
 def run_collector(
@@ -81,5 +122,6 @@ def run_collector(
         logger.exception(f"Error running collector {collector_config.name}, stopped with error: {e}")
         if fail_on_error:
             raise e
+        return _FAILED
 
 
