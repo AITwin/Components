@@ -73,6 +73,13 @@ class STIBVehicleTripHarvester(Harvester):
             or tracker.last_ts is None
             or not 0 < now - tracker.last_ts <= match.TRACK_TIMEOUT
         )
+        if stale and tracker is not None and _state["timetable"] == stib_gtfs_parquet.date \
+                and tracker.last_ts is not None and 0 < now - tracker.last_ts <= BOOTSTRAP_SECONDS:
+            # Behind, not lost: replay the polls missed since the last one. A
+            # full rebuild takes minutes on a busy machine, the runner then skips
+            # to the newest poll, which is again too far ahead, and the harvester
+            # wrote one snapshot every ten minutes (2026-09-30 12:49-14:10 UTC).
+            stale = not self._catch_up(tracker, now, stib_vehicle_distance or [])
         if stale:
             tracker = self._rebuild(now, stib_gtfs_parquet, stib_segments, stib_vehicle_distance or [],
                                     stib_vehicle_trip)
@@ -85,6 +92,24 @@ class STIBVehicleTripHarvester(Harvester):
             "type": "FeatureCollection",
             "features": [_feature(vehicle) for vehicle in vehicles if vehicle["geometry"]],
         }
+
+    @staticmethod
+    def _catch_up(tracker, now, history_rows) -> bool:
+        """Step `tracker` through the polls between its last one and `now`.
+
+        False when those polls are not all at hand, so a rebuild is needed.
+        """
+        missed = sorted((row for row in history_rows if tracker.last_ts < _epoch(row.date) < now),
+                        key=lambda row: row.date)
+        if not missed or _epoch(missed[0].date) - tracker.last_ts > match.TRACK_TIMEOUT:
+            return False
+        started = time.time()
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            polls = list(pool.map(lambda row: _poll(row.data), missed))
+        for poll, row in zip(polls, missed):
+            tracker.step(poll, _epoch(row.date), assign=False)
+        logger.info("STIB vehicle trips: caught up %d polls in %.1fs", len(polls), time.time() - started)
+        return 0 < now - tracker.last_ts <= match.TRACK_TIMEOUT
 
     @staticmethod
     def _rebuild(now, gtfs_row, segments_row, history_rows, previous=None):

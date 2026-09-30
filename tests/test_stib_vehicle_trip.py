@@ -269,6 +269,15 @@ class Harvester(unittest.TestCase):
         self._run(polls[-1][0] + timedelta(minutes=10), polls[-1][1], [])
         self.assertIsNot(harvester_module._state["tracker"], first)
 
+    def test_behind_with_the_missed_polls_catches_up_instead(self):
+        polls = list(_polls(_utc(8, 31), _utc(8, 37)))
+        self._run(polls[5][0], polls[5][1], [_Row(t, r) for t, r in reversed(polls[:5])])
+        first = harvester_module._state["tracker"]
+        # 260 s later, past a track's timeout, with the missed polls at hand.
+        out = self._run(polls[-1][0], polls[-1][1], [_Row(t, r) for t, r in reversed(polls[:-1])])
+        self.assertIs(harvester_module._state["tracker"], first)
+        self.assertEqual(out["features"][0]["properties"]["tripId"], "T03")
+
 
 def _vehicle_trip_payload(**overrides):
     properties = {
