@@ -1,13 +1,27 @@
 import json
+from datetime import datetime, time, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 import geopandas as gpd
 import pandas as pd
+from shapely.geometry import Point
 
 from src.components import Harvester
-from src.utilities.gtfs import (
-    load_gtfs_realtime_from_bytes_to_df,
-    load_gtfs_parquet_feed,
-)
+from src.utilities.gtfs import load_gtfs_parquet_feed
+
+
+BRUSSELS = ZoneInfo("Europe/Brussels")
+
+
+def _service_clock(date: datetime):
+    """The service day and the GTFS clock (seconds since noon minus 12 h, local)
+    of a stored date, which is naive UTC. GTFS times are Brussels local: read
+    against the UTC clock, trains were placed where the timetable had them two
+    hours earlier in summer, one in winter."""
+    moment = date.replace(tzinfo=timezone.utc) if date.tzinfo is None else date
+    day = moment.astimezone(BRUSSELS).date()
+    origin = datetime.combine(day, time(12), BRUSSELS) - timedelta(hours=12)
+    return day, (moment - origin).total_seconds()
 
 
 class _CachedStopTimes:
@@ -35,18 +49,13 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
         segments = gpd.GeoDataFrame.from_features(infrabel_segments.data["features"])
 
         gtfs_static = load_gtfs_parquet_feed(sncb_gtfs_parquet.data)
-        gtfs_rt = load_gtfs_realtime_from_bytes_to_df(source.data)
 
-        current_date = source.date.date()
+        # Positions come from the timetable. The realtime feed's trip ids match
+        # the published GTFS for only about half the trips, so its delays are
+        # not applied; the poll only sets the moment.
+        current_date, fetch_time_in_seconds = _service_clock(source.date)
 
-        stop_times = _cached_stop_times(gtfs_static, current_date)
-
-        stop_times["arrival_delay"] = 0
-
-        # Only update arrival_delay from realtime data to avoid type clash
-        # between timedelta64 (arrival_time) and float64 columns in gtfs_rt
-        if "arrival_delay" in gtfs_rt.columns:
-            stop_times.update(gtfs_rt[["arrival_delay"]])
+        stop_times = _cached_stop_times(gtfs_static, current_date).copy()
 
         stop_times["next_stop_sequence"] = stop_times["stop_sequence"] + 1
 
@@ -64,9 +73,6 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
         stop_times["end_seconds"] = stop_times["arrival_time_next"].apply(
             lambda x: pd.to_timedelta(x).total_seconds()
         )
-
-        fetch_time_in_seconds = source.date.time().strftime("%H:%M:%S")
-        fetch_time_in_seconds = pd.to_timedelta(fetch_time_in_seconds).total_seconds()
 
         # Filter where fetch_time_in_seconds is between start_seconds and end_seconds
         stop_times = stop_times[
@@ -141,7 +147,7 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
         stop_names_clean = pd.DataFrame(rows).drop_duplicates()
 
         work = stop_times[
-            ["trip_id", "stop_name_start", "stop_name_end", "percentage"]
+            ["trip_id", "stop_name_start", "stop_name_end", "percentage", "stop_lon_start", "stop_lat_start"]
         ].copy()
         # Convert both to uppercase
         work["stop_name_start"] = work["stop_name_start"].apply(lambda x: x.upper())
@@ -188,11 +194,12 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
             # last trains of the evening as the current positions all night.
             return {"type": "FeatureCollection", "features": []}
 
-        # Interpolate point using geometry (linestring) and percentage
-        final["geometry"] = final.apply(
-            lambda row: row["geometry"].interpolate(row["percentage"], normalized=True),
-            axis=1,
-        )
+        # Interpolate point using geometry (linestring) and percentage. Infrabel
+        # does not orient a segment from stationfrom to stationto (about half
+        # run the other way), so a train is measured from whichever end lies
+        # nearer the station it left; otherwise it ran backwards, and jumped
+        # kilometres at the next segment.
+        final["geometry"] = final.apply(_position, axis=1)
 
         # Merge with trips to get trip_headsign
         trips_df = gtfs_static.trips.to_pandas()[["trip_id", "trip_headsign"]]
@@ -211,3 +218,12 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
         ]
 
         return json.loads(final.to_json())
+
+
+def _position(row):
+    line, share = row["geometry"], row["percentage"]
+    departure = Point(row["stop_lon_start"], row["stop_lat_start"])
+    first, last = Point(line.coords[0]), Point(line.coords[-1])
+    if departure.distance(last) < departure.distance(first):
+        share = 1.0 - share
+    return line.interpolate(share, normalized=True)
