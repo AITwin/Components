@@ -69,5 +69,19 @@ class Enrichment(unittest.TestCase):
         self.assertTrue(out.direction_id.isna().all())
 
 
+
+class ServiceDay(unittest.TestCase):
+    def test_trips_announced_for_later_days_are_left_to_those_days(self):
+        feed = gtfs_realtime_pb2.FeedMessage(); feed.header.gtfs_realtime_version = "2.0"; feed.header.timestamp = 1
+        for trip_id, start_date in (("OVERNIGHT", "20260929"), ("TODAY", "20260930"), ("AHEAD", "20261002")):
+            e = feed.entity.add(); e.id = trip_id
+            e.trip_update.trip.trip_id = trip_id; e.trip_update.trip.start_date = start_date
+            e.trip_update.trip.schedule_relationship = gtfs_realtime_pb2.TripDescriptor.CANCELED
+        # 22:05 UTC on the 29th is 00:05 on the 30th in Brussels.
+        row = SimpleNamespace(date=datetime(2026, 9, 29, 22, 5), data=feed.SerializeToString())
+        out = pd.read_parquet(io.BytesIO(PunctualityHarvester().run([row])))
+        self.assertEqual(sorted(out.trip_id), ["OVERNIGHT", "TODAY"])
+
+
 if __name__ == "__main__":
     unittest.main()

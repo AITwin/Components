@@ -1,6 +1,8 @@
 import io
 import logging
 import zipfile
+from datetime import timezone
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 import polars as pl
@@ -9,6 +11,8 @@ from google.transit import gtfs_realtime_pb2
 from src.components import Harvester
 
 logger = logging.getLogger(__name__)
+
+BRUSSELS = ZoneInfo("Europe/Brussels")
 
 _CANCELED = gtfs_realtime_pb2.TripDescriptor.CANCELED
 _SKIPPED = gtfs_realtime_pb2.TripUpdate.StopTimeUpdate.SKIPPED
@@ -93,6 +97,15 @@ def _ingest(feed_bytes: bytes, fallback_ts: int, acc: dict) -> int:
             )
             seen += 1
     return seen
+
+
+def _service_day(source) -> str:
+    """YYYYMMDD of the Brussels day the source range covers (its first snapshot;
+    stored dates are naive UTC)."""
+    first = min(snapshot.date for snapshot in source)
+    if first.tzinfo is None:
+        first = first.replace(tzinfo=timezone.utc)
+    return first.astimezone(BRUSSELS).strftime("%Y%m%d")
 
 
 def _variants(trip_id: str):
@@ -182,11 +195,19 @@ class PunctualityHarvester(Harvester):
             except Exception as exc:
                 logger.warning("Failed snapshot %s: %s", snapshot.date, exc)
 
+        # Operators announce cancellations days ahead (De Lijn up to three), and
+        # those trips would be filed under every day that saw the announcement.
+        # A day keeps the trips that started on it or before it (overnight runs).
+        day = _service_day(source)
+        future = [k for k in acc if k[1] and k[1] > day]
+        for k in future:
+            del acc[k]
+
         if not acc:
             return None
 
-        logger.info("Punctuality: %d snapshots, %d rows from %d updates",
-                    snapshots, len(acc), updates)
+        logger.info("Punctuality: %d snapshots, %d rows from %d updates, %d future rows dropped",
+                    snapshots, len(acc), updates, len(future))
 
         cols = {name: [None] * len(acc) for name in _SCHEMA}
         i = 0

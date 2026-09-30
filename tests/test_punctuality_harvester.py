@@ -29,7 +29,7 @@ def snapshot(ts, stops, trip_rel=gtfs_realtime_pb2.TripDescriptor.SCHEDULED):
     feed.header.gtfs_realtime_version = "2.0"
     feed.header.timestamp = ts
     tu = feed.entity.add(id="e1").trip_update
-    tu.trip.trip_id, tu.trip.start_date, tu.trip.start_time = "T1", "20260910", "08:00:00"
+    tu.trip.trip_id, tu.trip.start_date, tu.trip.start_time = "T1", "20260829", "08:00:00"
     tu.trip.schedule_relationship = trip_rel
     tu.timestamp = ts
     for seq, stop_id, delay, rel in stops:
