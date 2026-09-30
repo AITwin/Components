@@ -368,7 +368,9 @@ def _generate_batch(
             future.result() for future in concurrent.futures.as_completed(future_to_row)
         ]
 
-        datas = [(json.loads(data), date) for data, date in responses]
+        # A harvester that produced nothing (STIB vehicle_trip at night) leaves
+        # a row with an empty blob; there is nothing to parquetize in it.
+        datas = [(json.loads(data), date) for data, date in responses if data]
 
     not_skipped = 0
     validated_datas = []
