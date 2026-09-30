@@ -163,6 +163,36 @@ class Drawing(unittest.TestCase):
                          (4.35 + 0.007 * 3, 50.85))
 
 
+class Relabelled(unittest.TestCase):
+    """STIB relabels a metro train's destination mid-run (another platform id of
+    the same terminus, or a short working); on such lines the train must keep
+    its identity."""
+
+    def _uuids(self, merged):
+        from components.stib.harvesters.vehicle_trip import live
+        original = live.ANY_DESTINATION_LINES
+        live.ANY_DESTINATION_LINES = frozenset({"7"}) if merged else frozenset()
+        self.addCleanup(setattr, live, "ANY_DESTINATION_LINES", original)
+        tracker = LiveTracker(_gtfs())
+        uuids = set()
+        for n, (when, rows) in enumerate(_polls(_utc(8, 31), _utc(8, 35))):
+            for row in rows:
+                row["directionId"] = STOPS[-1] if n < 6 else STOPS[-2]   # relabelled at the 7th poll
+            stamp = when.replace(tzinfo=timezone.utc).timestamp()
+            frame = pd.DataFrame([{"line_id": r["lineId"], "direction_id": r["directionId"],
+                                   "point_id": r["pointId"], "distance_from_point": r["distanceFromPoint"]}
+                                  for r in rows], columns=["line_id", "direction_id", "point_id", "distance_from_point"])
+            for vehicle in tracker.step(frame, stamp) or []:
+                uuids.add(vehicle["uuid"])
+        return uuids
+
+    def test_a_relabelled_train_keeps_its_identity(self):
+        self.assertEqual(len(self._uuids(merged=True)), 1)
+
+    def test_lines_keyed_by_destination_start_a_new_track(self):
+        self.assertEqual(len(self._uuids(merged=False)), 2)
+
+
 class ServiceDay(unittest.TestCase):
     def test_gtfs_times_count_from_noon_minus_twelve_hours(self):
         from components.stib.harvesters.punctuality.match import service_day_origin

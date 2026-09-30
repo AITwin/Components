@@ -71,6 +71,16 @@ AT_STOP_METRES = stopcalls.AT_STOP_METRES
 # The four metro lines report stations, not metres (stopcalls.COARSE_METRES).
 # Live there is no day of observations to measure that from, so they are named.
 COARSE_LINES = frozenset({"1", "2", "5", "6"})
+# Lines tracked per (line, direction) rather than per (line, direction,
+# destination). A metro train cannot overtake, and STIB names one terminus by
+# two stop ids (Erasme 8641/8642, Stockel 8161/8162, Herrmann-Debroux 8261/8262)
+# and switches between them, and to short workings, mid-run. Keyed by
+# destination, one direction's trains were split into groups that each saw only
+# some of them, and a track whose train left its group grabbed another train
+# stations away. Replayed on 2026-09-29: jumps 433 -> 244, trains lost while
+# still in the feed 263 -> 54, metro tracks 1,206 -> 752 (median life 24 -> 35
+# min, a full run). Buses keep the destination: on a street one can pass another.
+ANY_DESTINATION_LINES = COARSE_LINES
 
 _METRES_PER_DEGREE_LAT = 111320.0
 
@@ -315,10 +325,12 @@ class LiveTracker:
                 [float(v) for v in located.progress.tolist()],
                 [float(v) for v in located.point_metres.tolist()],
                 [float(v) for v in located.distance_from_point.tolist()],
+                destination,
             ))
             groups = defaultdict(list)
             for i in range(len(rows)):
-                groups[(line[i], direction[i], destination[i])].append(i)
+                grouped = None if line[i] in ANY_DESTINATION_LINES else destination[i]
+                groups[(line[i], direction[i], grouped)].append(i)
             for key, members in groups.items():
                 members.sort(key=lambda i: rows[i][2])
                 seen.extend(self._track(key, [rows[i] for i in members], now))
@@ -334,9 +346,10 @@ class LiveTracker:
         return [self._describe(j, now) for j in seen]
 
     def _track(self, key, rows, now):
-        """`rows` are (point, point_id, progress, point_metres, distance) of one
-        (line, direction, destination) group, by progress."""
-        line, direction, destination = key
+        """`rows` are (point, point_id, progress, point_metres, distance,
+        destination) of one (line, direction, destination) group, by progress;
+        the group's destination is None on ANY_DESTINATION_LINES."""
+        line, direction, _ = key
         live = sorted((j for j in self.live[key] if now - j.ts[-1] <= match.TRACK_TIMEOUT),
                       key=lambda j: j.progress[-1])
         here = np.array([row[2] for row in rows])
@@ -357,9 +370,10 @@ class LiveTracker:
             journey = owner.get(index)
             if journey is None:
                 self.seed += 1
-                journey = _Journey(f"{line}-{direction}-{destination}-{self.seed:06d}",
-                                   line, direction, destination)
+                journey = _Journey(f"{line}-{direction}-{row[5]}-{self.seed:06d}",
+                                   line, direction, row[5])
                 self.live[key].append(journey)
+            journey.destination = row[5]
             self._observe(journey, row, now)
             seen.append(journey)
         return seen
@@ -373,7 +387,7 @@ class LiveTracker:
         two polls either side; a stop the track began at is dated by when the
         vehicle left it.
         """
-        point, point_id, progress, point_metres, distance = row
+        point, point_id, progress, point_metres, distance = row[:5]
         count = len(journey.ts)
         moved_on = count == 0 or journey.point[-1] != point
         was_standing = count > 0 and journey.distance[-1] <= AT_STOP_METRES
