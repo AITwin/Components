@@ -100,17 +100,26 @@ def track_journeys(located: pd.DataFrame, coarse=()) -> pd.DataFrame:
     starts back the other way leaves this group and appears in the opposite one,
     which is exactly where one journey should end and the next begin.
     """
-    located = located.sort_values(["line_id", "direction", "destination", "ts", "progress"])
+    # Vehicles are tracked per (line, direction, destination), except on coarse
+    # (metro) lines, tracked per (line, direction) only: a train cannot overtake,
+    # and STIB names one metro terminus by two stop ids and relabels destinations
+    # mid-run, so keyed by destination one direction's trains were split across
+    # groups and journeys were stitched from different trains (on 2026-09-29,
+    # 67 jumps of 5+ stations in the published trips).
+    located = located.assign(_group=[
+        "" if line in coarse else destination
+        for line, destination in zip(located.line_id, located.destination)])
+    located = located.sort_values(["line_id", "direction", "_group", "ts", "progress"])
     journey_ids = np.empty(len(located), dtype=object)
     seed = [0]
 
     offset = 0
-    for key, group in located.groupby(["line_id", "direction", "destination"], sort=False):
+    for key, group in located.groupby(["line_id", "direction", "_group"], sort=False):
         slack = COARSE_SLACK if key[0] in coarse else ADVANCE_SLACK
         journey_ids[offset:offset + len(group)] = _track_group(group, key, seed, slack)
         offset += len(group)
 
-    out = located.copy()
+    out = located.drop(columns="_group")
     out["journey"] = journey_ids
     counts = out.groupby("journey").point.nunique()
     keep = set(counts.index[counts >= MIN_TRACK_CALLS])
