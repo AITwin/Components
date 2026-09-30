@@ -87,6 +87,16 @@ def _read_json(url, lines=None):
     return payload
 
 
+def _has_lines(stored: bytes, lines) -> bool:
+    """Whether the stored day has rows of `lines`: early days whose timetable had
+    no trips were stored empty, without typed columns, and have nothing to correct."""
+    import pyarrow.parquet as pq
+    if not stored:
+        return False
+    routes = pq.read_table(io.BytesIO(stored), columns=["route_id"]).column(0).to_pylist()
+    return any(str(r) in lines for r in routes)
+
+
 def _splice(stored: bytes, rebuilt: bytes, lines) -> bytes:
     """The stored day with the rows of `lines` replaced by the rebuilt ones."""
     import pandas as pd
@@ -94,13 +104,16 @@ def _splice(stored: bytes, rebuilt: bytes, lines) -> bytes:
     import pyarrow.parquet as pq
 
     old = pq.read_table(io.BytesIO(stored))
-    new = pd.read_parquet(io.BytesIO(rebuilt))
     kept = old.to_pandas()
+    new = pd.read_parquet(io.BytesIO(rebuilt))
     kept = kept[~kept.route_id.astype(str).isin(lines)]
     for column in old.schema.names:
         if column not in new.columns:
             new[column] = None
     new = new[old.schema.names]
+    for field in old.schema:
+        if pa.types.is_null(field.type):   # a column that was all null in the stored file
+            new[field.name] = None
     table = pa.concat_tables([
         pa.Table.from_pandas(kept, schema=old.schema, preserve_index=False),
         pa.Table.from_pandas(new, schema=old.schema, preserve_index=False),
@@ -111,10 +124,23 @@ def _splice(stored: bytes, rebuilt: bytes, lines) -> bytes:
 
 
 def day(args):
-    row_id, end, url, dry_run, lines = args
+    try:
+        return _day(*args)
+    except Exception:
+        log.exception("%s: failed, row left as is", args[1])
+        return args[1], None
+
+
+def _day(row_id, end, url, dry_run, lines):
     from components.stib.harvesters.punctuality import STIBPunctualityHarvester
 
     started = time.time()
+    stored = None
+    if lines:
+        stored = _storage().read(url)
+        if not _has_lines(stored, lines):
+            log.info("%s: no rows of lines %s stored, left as is", end, ",".join(sorted(lines)))
+            return end, 0
     start, end = _period(end)
     with _engine().connect() as conn:
         # As retrieve_between_datetime: strictly inside the period, copies followed.
@@ -128,7 +154,7 @@ def day(args):
             left join {GTFS} t2 on t.copy_id = t2.id
             where t.date < :e and (t.copy_id is not null or t.hash is not null)
             order by t.date desc limit 1"""), {"e": end}).scalar()
-    with ThreadPoolExecutor(16) as pool:
+    with ThreadPoolExecutor(10) as pool:   # the blob client's pool size
         payloads = list(pool.map(lambda u: _read_json(u, lines), [u for _, u in polls]))
     source = [_Row(d, p) for (d, _), p in zip(polls, payloads)]
     timetable = _Row(None, _storage().read(gtfs))
@@ -138,7 +164,7 @@ def day(args):
         log.warning("%s: no result, row left as is", end)
         return end, None
     if lines:
-        result = _splice(_storage().read(url), result, lines)
+        result = _splice(stored, result, lines)
     if not dry_run:
         name = f"{TABLE}/{end.strftime('%Y-%m-%d_%H-%M-%S')}"
         new_url = _storage().write(name, result)
