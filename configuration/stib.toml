@@ -89,10 +89,11 @@ DATA_FORMAT = "json"
 DATA_TYPE = "json"
 SOURCE = "stib.vehicle_distance"
 # One new snapshot per run; the earlier snapshots come from the optional
-# dependency so consecutive runs overlap. Three of them cover STIB serving the
-# same payload twice in a row, which the harvester skips.
+# dependency so consecutive runs overlap. Eight of them (160 s) show when each
+# vehicle's current and previous distance first appeared, which is what a move
+# is timed by (see speed.py).
 OPTIONAL_DEPENDENCIES = ["vehicle_distance"]
-OPTIONAL_DEPENDENCIES_LIMIT = [3]
+OPTIONAL_DEPENDENCIES_LIMIT = [8]
 
 [harvesters.aggregated_speed]
 PATH = "stib.harvesters.aggregated_speed.StibSegmentsAggregatedSpeedHarvester"

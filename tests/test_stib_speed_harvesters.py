@@ -26,25 +26,50 @@ def _distance(*metres):
     return [{"pointId": "1", "lineId": "71", "directionId": "A", "distanceFromPoint": m} for m in metres]
 
 
+def _polls(*metres, every=20):
+    """Snapshots of one vehicle's distance every `every` seconds, newest first
+    (None: only another vehicle is reported)."""
+    elsewhere = [{"pointId": "9", "lineId": "71", "directionId": "A", "distanceFromPoint": 0}]
+    rows = [_Row(T0 + timedelta(seconds=every * i), _distance(m) if m is not None else elsewhere)
+            for i, m in enumerate(metres)]
+    return rows[-1], list(reversed(rows[:-1]))
+
+
 class Speed(unittest.TestCase):
-    def test_speed_between_consecutive_snapshots(self):
-        current = _Row(T0 + timedelta(seconds=20), _distance(300))
-        previous = _Row(T0, _distance(100))
-        out = StibSegmentsSpeedHarvester().run(current, [previous])
-        self.assertEqual(out, [{"pointId": "1", "lineId": "71", "directionId": "A", "speed": 36.0}])
+    def test_move_timed_from_when_each_distance_first_appeared(self):
+        # STIB refreshed the distance every 40 s: 100 stood for two polls, then 300.
+        # The 200 m took 40 s (18 km/h), not the 20 s between the last two polls.
+        current, earlier = _polls(None, 100, 100, 300)
+        out = StibSegmentsSpeedHarvester().run(current, earlier)
+        self.assertEqual(out, [{"pointId": "1", "lineId": "71", "directionId": "A", "speed": 18.0}])
 
-    def test_duplicate_source_snapshot_is_skipped(self):
-        # STIB served the same payload twice: measure against the last distinct one.
-        current = _Row(T0 + timedelta(seconds=40), _distance(300))
-        duplicate = _Row(T0 + timedelta(seconds=20), _distance(300))
-        previous = _Row(T0, _distance(100))
-        out = StibSegmentsSpeedHarvester().run(current, [duplicate, previous])
-        self.assertEqual(out[0]["speed"], 18.0)
+    def test_consecutive_changes_are_timed_by_the_poll_interval(self):
+        current, earlier = _polls(None, 100, 300)
+        self.assertEqual(StibSegmentsSpeedHarvester().run(current, earlier)[0]["speed"], 36.0)
 
-    def test_no_distinct_previous_yields_none(self):
-        current = _Row(T0, _distance(300))
-        self.assertIsNone(StibSegmentsSpeedHarvester().run(current, [_Row(T0 - timedelta(seconds=20), _distance(300))]))
-        self.assertIsNone(StibSegmentsSpeedHarvester().run(current, None))
+    def test_a_repeated_payload_repeats_the_last_move(self):
+        current, earlier = _polls(None, 100, 100, 300, 300)
+        self.assertEqual(StibSegmentsSpeedHarvester().run(current, earlier)[0]["speed"], 18.0)
+
+    def test_a_value_whose_start_is_out_of_sight_is_not_measured(self):
+        current, earlier = _polls(100, 300)
+        self.assertEqual(StibSegmentsSpeedHarvester().run(current, earlier), [])
+
+    def test_a_long_standstill_is_not_averaged_into_a_speed(self):
+        current, earlier = _polls(None, 100, 100, 100, 100, 100, 300)
+        self.assertEqual(StibSegmentsSpeedHarvester().run(current, earlier), [])
+
+    def test_implausible_speed_is_dropped(self):
+        current, earlier = _polls(None, 0, 800)        # 800 m in 20 s = 144 km/h
+        self.assertEqual(StibSegmentsSpeedHarvester().run(current, earlier), [])
+
+    def test_two_vehicles_on_one_key_are_not_paired(self):
+        current, earlier = _polls(None, 100, 300)
+        current.data = current.data + _distance(50)
+        self.assertEqual(StibSegmentsSpeedHarvester().run(current, earlier), [])
+
+    def test_no_earlier_snapshot_yields_none(self):
+        self.assertIsNone(StibSegmentsSpeedHarvester().run(_Row(T0, _distance(300)), None))
 
 
 def _speed(v):

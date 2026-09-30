@@ -46,7 +46,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(processName)s %(me
 log = logging.getLogger("backfill")
 logging.getLogger("azure").setLevel(logging.WARNING)
 
-SOURCE_KEEP = 4  # snapshots kept behind the current one when looking for a distinct previous
+SOURCE_KEEP = 8  # snapshots kept behind the current one, as the harvester's OPTIONAL_DEPENDENCIES_LIMIT
 
 
 def _engine():
@@ -110,14 +110,13 @@ def speed_day(args):
             left join stib_vehicle_distance t2 on t.copy_id = t2.id
             where t.date < :s and (t.copy_id is not null or t.hash is not null)
             order by t.date desc limit :n"""), {"s": start, "n": SOURCE_KEEP}).fetchall()
-        window = deque(maxlen=SOURCE_KEEP + 1)
+        window = deque(maxlen=SOURCE_KEEP)
         for date, url in reversed(warmup):
             window.append((date, _read_json(url)))
         existing = _existing(conn, "stib_speed", start, end)
         for date, url, _ in _rows(conn, "stib_vehicle_distance", start, end):
             current = _read_json(url)
-            previous = next(((d, data) for d, data in reversed(window) if data != current), None)
-            result = None if previous is None else compute_speeds(previous[1], previous[0], current, date)
+            result = compute_speeds([(date, current)] + list(reversed(window)))
             counts[_write(conn, "stib_speed", date, result, existing, dry_run)] += 1
             window.append((date, current))
         conn.commit()
