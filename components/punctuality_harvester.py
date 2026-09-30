@@ -1,6 +1,8 @@
 import io
 import logging
+import zipfile
 
+import pandas as pd
 import polars as pl
 from google.transit import gtfs_realtime_pb2
 
@@ -93,6 +95,59 @@ def _ingest(feed_bytes: bytes, fallback_ts: int, acc: dict) -> int:
     return seen
 
 
+def _variants(trip_id: str):
+    """The forms a trip id takes across an operator's feeds, most specific first:
+    as is, without the `gt:<agency>:` prefix the published GTFS adds (De Lijn,
+    SNCB), and without the last `:` component, which SNCB's realtime feed and
+    timetable fill with different validity dates."""
+    yield trip_id
+    bare = trip_id.split(":", 2)[2] if trip_id.startswith("gt:") and trip_id.count(":") >= 2 else trip_id
+    if bare != trip_id:
+        yield bare
+    if ":" in bare:
+        yield bare.rsplit(":", 1)[0]
+
+
+class _Trips:
+    """route_id and direction_id of the timetable's trips, under every variant
+    of their id; a variant two trips share with different values is dropped."""
+
+    def __init__(self, gtfs_zip: bytes):
+        with zipfile.ZipFile(io.BytesIO(gtfs_zip)) as zf:
+            trips = pd.read_parquet(io.BytesIO(zf.read("trips.parquet")))
+        direction = trips["direction_id"] if "direction_id" in trips else pd.Series(None, index=trips.index)
+        self.lookup = {}
+        clash = set()
+        for trip_id, route_id, direction_id in zip(trips.trip_id.astype(str), trips.route_id, direction):
+            value = (None if pd.isna(route_id) or route_id == "" else str(route_id),
+                     None if pd.isna(direction_id) or direction_id == "" else int(direction_id))
+            for key in _variants(trip_id):
+                if self.lookup.setdefault(key, value) != value:
+                    clash.add(key)
+        for key in clash:
+            del self.lookup[key]
+
+    def get(self, trip_id):
+        for key in _variants(trip_id):
+            if key in self.lookup:
+                return self.lookup[key]
+        return None, None
+
+
+_trips_cache = {"key": None, "trips": None}
+
+
+def _timetable(dependencies):
+    """The operator's timetable among the optional dependencies, if declared."""
+    name, row = next(((k, v) for k, v in dependencies.items()
+                      if k.endswith("gtfs_parquet") and v is not None), (None, None))
+    if row is None:
+        return None
+    if _trips_cache["key"] != (name, row.date):
+        _trips_cache.update(key=(name, row.date), trips=_Trips(row.data))
+    return _trips_cache["trips"]
+
+
 class PunctualityHarvester(Harvester):
     """Build a daily punctuality parquet from GTFS-RT trip-update snapshots.
 
@@ -104,11 +159,16 @@ class PunctualityHarvester(Harvester):
 
     Cancelled trips that arrive with no stop_time_update entries are kept as
     a single synthetic row per trip-instance with null stop fields.
+
+    With the operator's `gtfs_parquet` as an optional dependency, route_id and
+    direction_id the feed leaves out are filled from the timetable (De Lijn and
+    SNCB send neither; SNCB's timetable has no direction either).
     """
 
-    def run(self, source):
+    def run(self, source, **dependencies):
         if not source:
             return None
+        timetable = _timetable(dependencies)
 
         acc = {}
         snapshots = updates = 0
@@ -142,6 +202,10 @@ class PunctualityHarvester(Harvester):
             cols["start_time"][i] = start_time
             cols["stop_sequence"][i] = stop_sequence
             cols["stop_id"][i] = stop_id
+            if timetable is not None and (not route_id or direction_id is None):
+                known_route, known_direction = timetable.get(trip_id)
+                route_id = route_id or known_route
+                direction_id = direction_id if direction_id is not None else known_direction
             cols["route_id"][i] = route_id
             cols["direction_id"][i] = direction_id
             cols["trip_schedule_relationship"][i] = trip_schedule_relationship

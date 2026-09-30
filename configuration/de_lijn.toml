@@ -44,3 +44,6 @@ DATA_FORMAT = "punctuality-parquet"
 DATA_TYPE = "binary"
 SOURCE = "de_lijn.gtfs_realtime"
 SOURCE_RANGE = "1d@Europe/Brussels"
+# The timetable fills route_id and direction_id, which the realtime feed omits.
+# Optional: a dependency would clamp a rebuild of history to its first row.
+OPTIONAL_DEPENDENCIES = ["de_lijn.gtfs_parquet"]
