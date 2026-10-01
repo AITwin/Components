@@ -1,4 +1,5 @@
 import json
+from datetime import timedelta
 
 import geopandas as gpd
 import pandas as pd
@@ -29,6 +30,20 @@ def _key(props):
     return ("cs", cs)
 
 
+# airplanes.live is polled every minute; a snapshot older than this, next to
+# the OpenSky one, is a feed that stopped. Its planes are left out rather than
+# merged: since airplanes.live started refusing requests (403, 2026-08-12),
+# its last snapshot added the same 51 planes to every unified one.
+MAX_FEED_AGE = timedelta(minutes=5)
+
+
+def _is_recent(row, source) -> bool:
+    row_date, source_date = getattr(row, "date", None), getattr(source, "date", None)
+    if row_date is None or source_date is None:
+        return True
+    return source_date - row_date <= MAX_FEED_AGE
+
+
 class AirplaneUnifiedPositionHarvester(Harvester):
     """Union of airplane position snapshots from multiple feeds.
 
@@ -44,7 +59,7 @@ class AirplaneUnifiedPositionHarvester(Harvester):
         opensky_feats = _features(getattr(source, "data", source))
         live_feats = _features(getattr(
             airplane_airplanes_live_position, "data", airplane_airplanes_live_position
-        ))
+        )) if _is_recent(airplane_airplanes_live_position, source) else []
 
         merged = {}
 
