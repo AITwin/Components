@@ -19,7 +19,8 @@ SCHEDULE = "01:15"
 PATH = "train.infrabel.collectors.punctuality.InfrabelPunctualityCollector"
 DATA_FORMAT = "json"
 DATA_TYPE = "json"
-SCHEDULE = "01:30"
+# After Infrabel replaces its D-1 dataset (around 04:00 UTC).
+SCHEDULE = "06:00"
 
 [collectors.segments]
 
