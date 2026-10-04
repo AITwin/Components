@@ -28,7 +28,10 @@ def _sources(source, live):
 class UnifiedPosition(unittest.TestCase):
     def test_a_current_feed_is_merged(self):
         self.assertEqual(_sources(_row(NOW, "a", "b"), _row(NOW - timedelta(minutes=1), "b", "c")),
-                         {"a": ["opensky"], "b": ["airplanes.live", "opensky"], "c": ["airplanes.live"]})
+                         {"a": ["opensky"], "b": ["adsb.lol", "opensky"], "c": ["adsb.lol"]})
+
+    def test_no_second_feed_yet(self):
+        self.assertEqual(_sources(_row(NOW, "a"), None), {"a": ["opensky"]})
 
     def test_a_stopped_feed_is_left_out(self):
         self.assertEqual(_sources(_row(NOW, "a"), _row(NOW - timedelta(days=49), "b")), {"a": ["opensky"]})

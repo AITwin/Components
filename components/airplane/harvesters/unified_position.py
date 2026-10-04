@@ -30,10 +30,11 @@ def _key(props):
     return ("cs", cs)
 
 
-# airplanes.live is polled every minute; a snapshot older than this, next to
-# the OpenSky one, is a feed that stopped. Its planes are left out rather than
-# merged: since airplanes.live started refusing requests (403, 2026-08-12),
-# its last snapshot added the same 51 planes to every unified one.
+# adsb.lol is polled every minute; a snapshot older than this, next to the
+# OpenSky one, is a feed that stopped. Its planes are left out rather than
+# merged: when airplanes.live (the earlier second feed) started refusing
+# requests on 2026-08-12, its last snapshot added the same 51 planes to every
+# unified one.
 MAX_FEED_AGE = timedelta(minutes=5)
 
 
@@ -47,23 +48,23 @@ def _is_recent(row, source) -> bool:
 class AirplaneUnifiedPositionHarvester(Harvester):
     """Union of airplane position snapshots from multiple feeds.
 
-    Takes the OpenSky feed as ``source`` and the airplanes.live feed via
-    the ``airplane_airplanes_live_position`` dependency, merges aircraft
+    Takes the OpenSky feed as ``source`` and the adsb.lol feed via the
+    ``airplane_adsb_lol_position`` optional dependency, merges aircraft
     by ICAO24 (callsign fallback), and emits a single GeoJSON
     FeatureCollection. Each output feature carries a ``sources`` list
-    showing which feeds saw it; airplanes.live position wins on conflict
+    showing which feeds saw it; the adsb.lol position wins on conflict
     because it is generally more recent and complete.
     """
 
-    def run(self, source, airplane_airplanes_live_position):
+    def run(self, source, airplane_adsb_lol_position=None):
         opensky_feats = _features(getattr(source, "data", source))
         live_feats = _features(getattr(
-            airplane_airplanes_live_position, "data", airplane_airplanes_live_position
-        )) if _is_recent(airplane_airplanes_live_position, source) else []
+            airplane_adsb_lol_position, "data", airplane_adsb_lol_position
+        )) if _is_recent(airplane_adsb_lol_position, source) else []
 
         merged = {}
 
-        # Seed with OpenSky first so airplanes.live values overwrite on key collision.
+        # Seed with OpenSky first so adsb.lol values overwrite on key collision.
         for feat in opensky_feats:
             props = dict(feat.get("properties") or {})
             geom = feat.get("geometry")
@@ -82,16 +83,16 @@ class AirplaneUnifiedPositionHarvester(Harvester):
                 continue
             existing = merged.get(k)
             if existing is None:
-                props["sources"] = ["airplanes.live"]
+                props["sources"] = ["adsb.lol"]
                 merged[k] = {"properties": props, "geometry": geom}
             else:
-                # Merge: airplanes.live overwrites populated fields, but we
+                # Merge: adsb.lol overwrites populated fields, but we
                 # preserve OpenSky-only fields (e.g. origin_country).
                 base = dict(existing["properties"])
                 for field, value in props.items():
                     if value is not None and value != "":
                         base[field] = value
-                base["sources"] = sorted(set(existing["properties"].get("sources", []) + ["airplanes.live"]))
+                base["sources"] = sorted(set(existing["properties"].get("sources", []) + ["adsb.lol"]))
                 merged[k] = {"properties": base, "geometry": geom}  # prefer live geometry
 
         if not merged:

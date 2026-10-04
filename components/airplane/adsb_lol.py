@@ -1,4 +1,5 @@
 import json
+import time
 
 import geopandas as gpd
 import pandas as pd
@@ -7,7 +8,7 @@ import shapely
 
 from src.components import Collector
 
-# airplanes.live category codes (subset of ADS-B emitter categories)
+# ADS-B emitter category codes
 CATEGORY = {
     "A0": "No information",
     "A1": "Light (< 15500 lbs)",
@@ -44,15 +45,16 @@ def _alt(v):
         return None
 
 
-class AirplanesLivePositionCollector(Collector):
-    """Snapshot of aircraft over a Belgian-centred radius from airplanes.live.
+class AdsbLolPositionCollector(Collector):
+    """Snapshot of aircraft over a Belgian-centred radius from adsb.lol (ODbL).
 
     No API key required. Returns the same GeoJSON shape as
-    :class:`OpenSkyPositionCollector` so the two feeds can be unioned.
+    :class:`OpenSkyPositionCollector` so the two feeds can be unioned. Replaces
+    airplanes.live, whose API has been open to feeders only since 2026-08-12.
     """
 
     def run(self):
-        # Centre/radius for the airplanes.live point query. Defaults cover
+        # Centre/radius for the point query. Defaults cover
         # Belgium and a thin border margin; tighten via settings if needed.
         lat = self.settings.get("lat", 50.85)
         lon = self.settings.get("lon", 4.7)
@@ -65,10 +67,14 @@ class AirplanesLivePositionCollector(Collector):
         lamax = self.settings.get("lamax", 51.4750237087)
         lomax = self.settings.get("lomax", 6.15665815596)
 
-        endpoint = f"https://api.airplanes.live/v2/point/{lat}/{lon}/{radius_nm}"
+        endpoint = f"https://api.adsb.lol/v2/point/{lat}/{lon}/{radius_nm}"
         response = requests.get(endpoint, headers={"User-Agent": "CoDE-airplanes/1.0"}, timeout=20)
         response.raise_for_status()
-        ac_list = response.json().get("ac") or []
+        body = response.json()
+        ac_list = body.get("ac") or []
+        # `seen` and `seen_pos` are seconds before the response; OpenSky gives
+        # epoch seconds, so convert to match.
+        now = body.get("now", time.time() * 1000) / 1000
 
         if not ac_list:
             return {"type": "FeatureCollection", "features": []}
@@ -85,8 +91,8 @@ class AirplanesLivePositionCollector(Collector):
                 "icao24": (a.get("hex") or "").lower(),
                 "callsign": (a.get("flight") or "").strip(),
                 "origin_country": None,
-                "time_position": a.get("seen_pos"),
-                "last_contact": a.get("seen"),
+                "time_position": round(now - a["seen_pos"]) if a.get("seen_pos") is not None else None,
+                "last_contact": round(now - a.get("seen", 0)),
                 "longitude": lon_v,
                 "latitude": lat_v,
                 "baro_altitude": _alt(a.get("alt_baro")),
@@ -102,7 +108,7 @@ class AirplanesLivePositionCollector(Collector):
                 "category": CATEGORY.get(a.get("category")),
                 "registration": a.get("r"),
                 "aircraft_type": a.get("t"),
-                "source_feed": "airplanes.live",
+                "source_feed": "adsb.lol",
             })
 
         df = pd.DataFrame(rows)
