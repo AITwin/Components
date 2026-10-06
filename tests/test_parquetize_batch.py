@@ -48,5 +48,47 @@ class EmptySnapshots(unittest.TestCase):
         self.assertEqual((values["count"], values["skipped"]), (1, 1))
 
 
+class DayGroupBoundary(unittest.TestCase):
+    def test_batch_starting_at_midnight_stays_out_of_the_previous_day(self):
+        import io
+
+        import pyarrow as pa
+        import pyarrow.parquet as pq
+        from sqlalchemy import create_engine, select
+
+        meta = MetaData()
+        parquet = Table("stib_vehicle_trip_parquetize", meta, Column("id", Integer, primary_key=True),
+                        *(Column(c, t) for c, t in (
+                            ("start_date", DateTime), ("end_date", DateTime), ("data", String),
+                            ("count", Integer), ("skipped", Integer), ("schema", JSON),
+                            ("aggregation", String), ("original_size", Integer),
+                            ("compressed_size", Integer))))
+        engine = create_engine("sqlite://")
+        meta.create_all(engine)
+        starts = {"23": datetime(2026, 10, 5, 23), "00": datetime(2026, 10, 6)}
+        blobs, written = {}, {}
+        for name, start in starts.items():
+            out = io.BytesIO()
+            pq.write_table(pa.Table.from_pylist([{"lineId": "7", "date": start}]), out)
+            blobs[name] = out.getvalue()
+        with engine.connect() as connection:
+            for name, start in starts.items():
+                connection.execute(parquet.insert().values(
+                    start_date=start, end_date=start.replace(hour=(start.hour + 1) % 24), data=name,
+                    count=1, skipped=0, aggregation="1h", original_size=1, compressed_size=1))
+            with mock.patch.object(run_parquetize.storage_manager, "read", lambda url: blobs[url]), \
+                    mock.patch.object(run_parquetize.storage_manager, "write",
+                                      lambda name, data: written.setdefault(name, data) and name), \
+                    mock.patch.object(run_parquetize.storage_manager, "delete", lambda url: None):
+                run_parquetize._generate_group(
+                    "stib_vehicle_trip_parquetize", SimpleNamespace(group="1h"),
+                    SimpleNamespace(group="1d", keys=None), {}, connection, parquet,
+                    datetime(2026, 10, 5), datetime(2026, 10, 6))
+            left = connection.execute(select(parquet.c.aggregation, parquet.c.data)).fetchall()
+        day = pq.read_table(io.BytesIO(next(iter(written.values())))).to_pylist()
+        self.assertEqual([r["date"] for r in day], [datetime(2026, 10, 5, 23)])
+        self.assertIn(("1h", "00"), left)
+
+
 if __name__ == "__main__":
     unittest.main()

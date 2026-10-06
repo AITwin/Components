@@ -196,7 +196,8 @@ def _generate_group(
     group_start,
     group_end,
 ):
-    # Fetch data from the database within the specified date range
+    # Half-open range: a batch starting at group_end belongs to the next group.
+    # With between(), after an outage the next day's first hour went into both days.
     data_query = (
         select(
             parquet_table.c.data,
@@ -206,7 +207,8 @@ def _generate_group(
             parquet_table.c.original_size,
         )
         .where(
-            parquet_table.c.start_date.between(group_start, group_end)
+            (parquet_table.c.start_date >= group_start)
+            & (parquet_table.c.start_date < group_end)
             & (column("aggregation") == previous_group.group)
         )
         .order_by(parquet_table.c.start_date.asc())
@@ -316,7 +318,8 @@ def _generate_group(
         # Delete the processed data (period and batch)
         connection.execute(
             parquet_table.delete().where(
-                parquet_table.c.start_date.between(group_start, group_end)
+                (parquet_table.c.start_date >= group_start)
+            & (parquet_table.c.start_date < group_end)
                 & (column("aggregation") == previous_group.group)
             )
         )
@@ -354,7 +357,7 @@ def _generate_batch(
 ):
     # Fetch data from the database within the specified date range
     data_query = select(source.c.data, source.c.date).where(
-        source.c.date.between(period_start, period_end)
+        (source.c.date >= period_start) & (source.c.date < period_end)
     )
     data_rows = connection.execute(data_query).fetchall()
 
