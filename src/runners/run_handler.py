@@ -1,6 +1,7 @@
 import http.server
 import json
 import logging
+import threading
 from socketserver import ThreadingMixIn
 from typing import Dict, List
 
@@ -9,6 +10,11 @@ from sqlalchemy import Table
 from src.configuration.model import ComponentConfiguration
 
 logger = logging.getLogger("Handler")
+
+# Handlers load up to hours of snapshots in memory. Six in parallel on the 4 GB
+# API host got the process OOM-killed (2026-10-09); extra requests now wait.
+MAX_CONCURRENT_HANDLERS = 2
+_running = threading.BoundedSemaphore(MAX_CONCURRENT_HANDLERS)
 
 
 def _treat_query_parameters(
@@ -95,7 +101,8 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         # Execute handler, and only then choose the status: sent first, a 200
         # carried an error page as its body whenever there was no data.
         try:
-            result = handler_config.component(self.tables).run(**query_parameters)
+            with _running:
+                result = handler_config.component(self.tables).run(**query_parameters)
         except Exception:
             logger.exception(f"Handler {handler_name} failed")
             self.send_error(500, "Handler failed")
