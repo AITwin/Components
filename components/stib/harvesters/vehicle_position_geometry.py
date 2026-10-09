@@ -386,12 +386,13 @@ class STIBVehiclePositionGeometryHarvester(Harvester):
         # Remove rows where line_id is null
         realtime_data = realtime_data.dropna(subset=["line_id"]).copy()
 
-        # Convert line_id to string, strip whitespace, and remove ".0" and "T"
+        # Convert line_id to string, strip whitespace, and remove a trailing ".0"
+        # and "T". Unescaped, ".0" matched "10", "20", "50"... and erased those lines.
         realtime_data["line_id"] = (
             realtime_data["line_id"]
             .astype(str)
             .str.strip()
-            .str.replace(".0|T", "", regex=True)
+            .str.replace(r"\.0$|T", "", regex=True)
         )
 
         # Remove rows with empty line_id
