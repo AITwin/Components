@@ -17,14 +17,17 @@ class _SegmentCache:
 
     segments_gdf: gpd.GeoDataFrame = None
     segments_gdf_be_crs: gpd.GeoDataFrame = None
-    init_count = 0
+    segments_date = None
 
     def __init__(self, segments):
-        _SegmentCache.init_count += 1
         self.segments = segments
 
-        if _SegmentCache.init_count > 1e4:
-            _SegmentCache.init_count = 0
+        # Rebuild when a new segments snapshot arrives. A call counter used to
+        # reset it every ~55 h, and never cleared `cache` at all.
+        date = getattr(segments, "date", None)
+        if date != _SegmentCache.segments_date:
+            _SegmentCache.segments_date = date
+            _SegmentCache.cache = {}
             _SegmentCache.be_cache = {}
             _SegmentCache.segments_gdf = None
             _SegmentCache.segments_gdf_be_crs = None
