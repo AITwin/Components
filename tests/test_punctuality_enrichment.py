@@ -41,6 +41,11 @@ class Variants(unittest.TestCase):
         self.assertEqual(list(_variants("gt:nmbssncb:88:007::1:2:3:1644:20260216")),
                          ["gt:nmbssncb:88:007::1:2:3:1644:20260216", "88:007::1:2:3:1644:20260216", "88:007::1:2:3:1644"])
 
+    def test_sncb_feed_and_timetable_differ_in_validity_date_and_suffix(self):
+        trips = _Trips(_gtfs_zip([{"trip_id": "gt:nmbssncb:88____:007::8885001:8885704:3:1054:20261004:1",
+                                   "route_id": "R10", "direction_id": None}]))
+        self.assertEqual(trips.get("88____:007::8885001:8885704:3:1054:20271210"), ("R10", None))
+
     def test_an_ambiguous_variant_is_dropped(self):
         trips = _Trips(_gtfs_zip([{"trip_id": "gt:x:A:1", "route_id": "R1", "direction_id": 0},
                                   {"trip_id": "gt:x:A:2", "route_id": "R2", "direction_id": 0}]))
@@ -62,6 +67,11 @@ class Enrichment(unittest.TestCase):
     def test_what_the_feed_says_is_kept(self):
         out = self._run([{"trip_id": "gt:delijn:T1", "route_id": "gr:delijn:7", "direction_id": 1}], [("T1", "FEED")])
         self.assertEqual(out.loc["T1", "route_id"], "FEED")
+
+    def test_fields_the_feed_leaves_out_are_null_not_empty(self):
+        now = datetime(2026, 9, 30, 8)
+        out = pd.read_parquet(io.BytesIO(PunctualityHarvester().run([SimpleNamespace(date=now, data=_feed([("T1", "")]))])))
+        self.assertTrue(out.start_time.isna().all() and out.start_date.isna().all() and out.route_id.isna().all())
 
     def test_without_the_dependency_nothing_changes(self):
         now = datetime(2026, 9, 30, 8)

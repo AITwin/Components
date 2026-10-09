@@ -111,14 +111,21 @@ def _service_day(source) -> str:
 def _variants(trip_id: str):
     """The forms a trip id takes across an operator's feeds, most specific first:
     as is, without the `gt:<agency>:` prefix the published GTFS adds (De Lijn,
-    SNCB), and without the last `:` component, which SNCB's realtime feed and
-    timetable fill with different validity dates."""
+    SNCB), without the last `:` component, and without the validity date
+    (YYYYMMDD) and what follows it: SNCB's realtime feed and timetable fill that
+    date differently, and the timetable appends a `:<n>` to most trips
+    (`...:1054:20261004:1` against the feed's `...:1054:20271210`)."""
     yield trip_id
     bare = trip_id.split(":", 2)[2] if trip_id.startswith("gt:") and trip_id.count(":") >= 2 else trip_id
     if bare != trip_id:
         yield bare
     if ":" in bare:
         yield bare.rsplit(":", 1)[0]
+    parts = bare.split(":")
+    dated = next((i for i in range(len(parts) - 1, 0, -1)
+                  if len(parts[i]) == 8 and parts[i].isdigit()), None)
+    if dated is not None and dated < len(parts) - 1:
+        yield ":".join(parts[:dated])
 
 
 class _Trips:
@@ -219,15 +226,17 @@ class PunctualityHarvester(Harvester):
              departure_time, departure_delay,
              stop_schedule_relationship, _ts) = v
             cols["trip_id"][i] = trip_id
-            cols["start_date"][i] = start_date
-            cols["start_time"][i] = start_time
+            # Protobuf reads an absent field as "": a feed that never sends it
+            # (De Lijn start_time) gets null, not an empty string.
+            cols["start_date"][i] = start_date or None
+            cols["start_time"][i] = start_time or None
             cols["stop_sequence"][i] = stop_sequence
             cols["stop_id"][i] = stop_id
             if timetable is not None and (not route_id or direction_id is None):
                 known_route, known_direction = timetable.get(trip_id)
                 route_id = route_id or known_route
                 direction_id = direction_id if direction_id is not None else known_direction
-            cols["route_id"][i] = route_id
+            cols["route_id"][i] = route_id or None
             cols["direction_id"][i] = direction_id
             cols["trip_schedule_relationship"][i] = trip_schedule_relationship
             cols["arrival_time"][i] = arrival_time
