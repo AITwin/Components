@@ -12,7 +12,8 @@ SCHEDULE = "5m"
 PATH = "airplane.adsb_lol.AdsbLolPositionCollector"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
-SCHEDULE = "1m"
+# Every minute drew HTTP 429s from adsb.lol on 2026-10-20 and 21 (about 890 a day).
+SCHEDULE = "2m"
 
 [harvesters]
 
