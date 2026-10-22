@@ -42,6 +42,8 @@ load_dotenv(os.path.join(ROOT, ".env"))
 
 from sqlalchemy import text  # noqa: E402
 
+from _db_retry import run_with_retry  # noqa: E402
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(processName)s %(message)s")
 log = logging.getLogger("backfill")
 logging.getLogger("azure").setLevel(logging.WARNING)
@@ -108,7 +110,7 @@ def _write(conn, date, result):
                  {"d": date, "u": url, "h": hashlib.md5(data_bytes).hexdigest()})
 
 
-def chunk(args):
+def _chunk(args):
     start, end, dry_run, dump = args
     from components.stib.harvesters.vehicle_trip import STIBVehicleTripHarvester
     from components.stib.harvesters.vehicle_trip import harvester as module
@@ -152,6 +154,10 @@ def chunk(args):
         conn.commit()
     log.info("%s -> %s: %s in %.0f s", start, end, counts, time.time() - started)
     return counts
+
+
+def chunk(args):
+    return run_with_retry(_engine(), _chunk, args)
 
 
 def _chunks(start, end, days):

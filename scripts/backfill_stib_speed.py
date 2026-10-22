@@ -41,6 +41,7 @@ from sqlalchemy import text  # noqa: E402
 
 from components.stib.harvesters.aggregated_speed import WINDOW, aggregate  # noqa: E402
 from components.stib.harvesters.speed import compute_speeds  # noqa: E402
+from _db_retry import run_with_retry  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(processName)s %(message)s")
 log = logging.getLogger("backfill")
@@ -101,7 +102,7 @@ def _write(conn, table, date, result, existing, dry_run):
     return outcome
 
 
-def speed_day(args):
+def _speed_day(args):
     start, end, dry_run = args
     counts = {"same": 0, "updated": 0, "inserted": 0}
     with _engine().connect() as conn:
@@ -124,7 +125,7 @@ def speed_day(args):
     return counts
 
 
-def aggregated_day(args):
+def _aggregated_day(args):
     start, end, dry_run = args
     counts = {"same": 0, "updated": 0, "inserted": 0}
     with _engine().connect() as conn:
@@ -141,6 +142,14 @@ def aggregated_day(args):
         conn.commit()
     log.info("aggregated %s: %s", start.date(), counts)
     return counts
+
+
+def speed_day(args):
+    return run_with_retry(_engine(), _speed_day, args)
+
+
+def aggregated_day(args):
+    return run_with_retry(_engine(), _aggregated_day, args)
 
 
 def _days(start, end):
