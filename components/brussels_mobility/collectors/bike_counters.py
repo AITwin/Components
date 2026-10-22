@@ -1,7 +1,7 @@
 import requests
 
 from src.components import Collector
-from .bike_counts import RT_COUNTING_URL
+from .bike_counts import RT_COUNTING_URL, request_date
 
 COUNT_FIELDS = ("hour_cnt", "day_cnt", "year_cnt", "cnt_time")
 
@@ -23,4 +23,5 @@ class BrusselsMobilityBikeCountersCollector(Collector):
             properties["picture_2"] = properties.pop("pic_b", None)
             properties["active"] = True
 
+        data["requestDate"] = request_date()
         return data

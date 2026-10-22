@@ -23,6 +23,11 @@ def _old_cnt_time(value):
     return utc.astimezone(BRUSSELS).strftime("%Y/%m/%d %H:%M:%S")
 
 
+def request_date():
+    """The old API's requestDate, in Brussels time like cnt_time."""
+    return datetime.now(BRUSSELS).strftime("%Y/%m/%d %H:%M:%S")
+
+
 class BrusselsMobilityBikeCountsCollector(Collector):
     def run(self):
         response = requests.get(RT_COUNTING_URL, timeout=30)
@@ -30,6 +35,7 @@ class BrusselsMobilityBikeCountsCollector(Collector):
 
         # Keep the shape of the old live API: counts keyed by device name
         return {
+            "requestDate": request_date(),
             "data": {
                 feature["properties"]["device_name"]: {
                     "hour_cnt": feature["properties"]["hour_cnt"],
