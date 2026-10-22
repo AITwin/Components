@@ -12,8 +12,9 @@ SCHEDULE = "5m"
 PATH = "airplane.adsb_lol.AdsbLolPositionCollector"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
-# Every minute drew HTTP 429s from adsb.lol on 2026-10-20 and 21 (about 890 a day).
-SCHEDULE = "2m"
+# adsb.lol allows 500 requests a day per IP (x-ratelimit-limit header): every
+# 2 minutes still ran out by 09:00 UTC on 2026-10-22, every 4 is 360 a day.
+SCHEDULE = "4m"
 
 [harvesters]
 

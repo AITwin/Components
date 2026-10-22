@@ -30,7 +30,7 @@ def _key(props):
     return ("cs", cs)
 
 
-# adsb.lol is polled every two minutes; a snapshot older than this, next to the
+# adsb.lol is polled every four minutes; a snapshot older than this, next to the
 # OpenSky one, is a feed that stopped. Its planes are left out rather than
 # merged: when airplanes.live (the earlier second feed) started refusing
 # requests on 2026-08-12, its last snapshot added the same 51 planes to every
