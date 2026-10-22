@@ -14,8 +14,15 @@ DATA_FORMAT = "json"
 DATA_TYPE = "json"
 SCHEDULE = "1m"
 
-# public_parkings is not collected any more: its opendata.brussels.be dataset
-# was removed in August 2025 (see collectors/public_parking.py).
+# The old public_parkings table holds the opendata.brussels.be dataset removed
+# in August 2025, car_parks is its geoserver replacement.
+
+[collectors.car_parks]
+
+PATH = "brussels_mobility.collectors.public_parking.BrusselsMobilityPublicParkingCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "04:10"
 
 [collectors.bike_counts]
 
@@ -51,3 +58,17 @@ PATH = "brussels_mobility.collectors.villo.BrusselsMobilityVilloCollector"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "5m"
+
+[collectors.pmv_display]
+
+PATH = "brussels_mobility.collectors.pmv.BrusselsMobilityPMVDisplayCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "1m"
+
+[collectors.pmv_locations]
+
+PATH = "brussels_mobility.collectors.pmv.BrusselsMobilityPMVLocationsCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "04:20"
