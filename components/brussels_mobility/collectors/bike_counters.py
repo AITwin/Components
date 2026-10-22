@@ -15,8 +15,12 @@ class BrusselsMobilityBikeCountersCollector(Collector):
         # The layer only lists counters that are reporting, and carries the
         # live counts, which belong to bike_counts
         for feature in data["features"]:
-            for field in COUNT_FIELDS:
-                feature["properties"].pop(field, None)
-            feature["properties"]["active"] = True
+            properties = feature["properties"]
+            for field in COUNT_FIELDS + ("id",):
+                properties.pop(field, None)
+            # Same pictures as the old API, renamed
+            properties["picture_1"] = properties.pop("pic_a", None)
+            properties["picture_2"] = properties.pop("pic_b", None)
+            properties["active"] = True
 
         return data
