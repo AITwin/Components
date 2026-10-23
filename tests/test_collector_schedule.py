@@ -3,7 +3,7 @@ import importlib
 import os
 import sys
 import unittest
-from datetime import datetime
+from datetime import datetime, timedelta
 from types import SimpleNamespace
 from unittest import mock
 
@@ -39,6 +39,42 @@ class Overdue(unittest.TestCase):
     def test_interval_schedules_unchanged(self):
         self.assertTrue(self._overdue("7d", datetime(2026, 9, 1), datetime(2026, 9, 23)))
         self.assertFalse(self._overdue("7d", datetime(2026, 9, 20), datetime(2026, 9, 23)))
+
+
+class Startup(unittest.TestCase):
+    """A restart carries on the cadence instead of waiting a full interval."""
+
+    def _start(self, sched, latest_age_s):
+        latest = SimpleNamespace(date=datetime.now() - timedelta(seconds=latest_age_s))
+        runs, sleeps = [], []
+
+        def sleep(seconds):
+            if seconds == 1:  # the scheduler loop: stop here
+                raise StopIteration
+            sleeps.append(seconds)
+
+        schedule.clear()
+        self.addCleanup(schedule.clear)
+        with mock.patch.object(rc, "retrieve_latest_row", lambda table: latest), \
+                mock.patch.object(rc, "_run_or_retry", lambda *a: runs.append(1)), \
+                mock.patch.object(rc.time, "sleep", sleep):
+            with self.assertRaises(StopIteration):
+                rc.run_collector_on_schedule(_config(sched), None)
+        return runs, sleeps
+
+    def test_five_minute_collector_runs_when_the_last_row_is_five_minutes_old(self):
+        runs, sleeps = self._start("5m", 270)
+        self.assertEqual(len(runs), 1)
+        self.assertAlmostEqual(sleeps[0], 30, delta=2)
+        self.assertEqual(len(schedule.jobs), 1)
+
+    def test_overdue_collector_runs_at_once(self):
+        runs, sleeps = self._start("5m", 400)
+        self.assertEqual((len(runs), sleeps), (1, []))
+
+    def test_hourly_and_longer_schedules_do_not_wait(self):
+        runs, sleeps = self._start("7d", 3600)
+        self.assertEqual((runs, sleeps), ([], []))
 
 
 class Retry(unittest.TestCase):

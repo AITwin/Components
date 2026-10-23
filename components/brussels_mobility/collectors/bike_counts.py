@@ -18,7 +18,10 @@ BRUSSELS = ZoneInfo("Europe/Brussels")
 
 def _old_cnt_time(value):
     """The layer gives UTC ("2026-10-22T12:08:02Z"), the old API gave Brussels
-    local time as "2026/10/22 14:08:02"."""
+    local time as "2026/10/22 14:08:02". The layer sometimes has none
+    (one run failed on it at 23:32 UTC on 2026-10-22)."""
+    if value is None:
+        return None
     utc = datetime.fromisoformat(value.replace("Z", "+00:00"))
     return utc.astimezone(BRUSSELS).strftime("%Y/%m/%d %H:%M:%S")
 

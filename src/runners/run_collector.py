@@ -51,6 +51,15 @@ def _period(schedule_string: str) -> timedelta:
     return timedelta(days=1) if ":" in schedule_string else schedule_string_to_time_delta(schedule_string)
 
 
+def _until_due(collector_config: ComponentConfiguration, table: Table) -> float:
+    """Seconds until one interval after the latest row."""
+    latest = retrieve_latest_row(table)
+    if latest is None:
+        return 0
+    due = latest.date + schedule_string_to_time_delta(collector_config.schedule)
+    return (due - datetime.now()).total_seconds()
+
+
 def _run_or_retry(collector_config: ComponentConfiguration, table: Table, fail_on_error: bool):
     if run_collector(collector_config, table, fail_on_error) is not _FAILED:
         return
@@ -82,13 +91,20 @@ def run_collector_on_schedule(
         f"Running collector {collector_config.name} on schedule: {collector_config.schedule}"
     )
 
-    job = schedule_string_to_function(collector_config.schedule)
-
-    job.do(_run_or_retry, collector_config, table, fail_on_error)
-
     if _is_overdue(collector_config, table):
         logger.info(f"Collector {collector_config.name} is overdue, running it now")
         _run_or_retry(collector_config, table, fail_on_error)
+    elif _period(collector_config.schedule) < RETRY_FROM:
+        # Carry on the previous process's cadence: waiting a full interval from
+        # the hourly restart lost one 5-minute snapshot an hour (264 a day, not 288).
+        wait = _until_due(collector_config, table)
+        if wait > 0:
+            time.sleep(wait)
+        _run_or_retry(collector_config, table, fail_on_error)
+
+    # Registered after the startup run, so the next one is an interval later
+    job = schedule_string_to_function(collector_config.schedule)
+    job.do(_run_or_retry, collector_config, table, fail_on_error)
 
     while True:
         schedule.run_pending()

@@ -36,7 +36,9 @@ def bmc_request(path: str, params: dict = None) -> requests.Response:
 
 # BMC relayed the same De Lijn trip-update feed from 2026-10-22 14:20 UTC to
 # the next morning, header and trips frozen, and every 20 s poll stored it.
-MAX_REALTIME_FEED_AGE = 30 * 60  # seconds
+# At night the SNCB and TEC feeds legitimately stand still for up to 4 h (week
+# of 2026-10-16), so only a feed frozen longer than that is refused.
+MAX_REALTIME_FEED_AGE = 6 * 3600  # seconds
 
 
 def bmc_realtime_feed(path: str) -> bytes:
