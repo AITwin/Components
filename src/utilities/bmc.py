@@ -1,6 +1,8 @@
 import random
+import time
 
 import requests
+from google.transit import gtfs_realtime_pb2
 
 from src.utilities.tokens import get_all_tokens
 
@@ -30,6 +32,22 @@ def bmc_request(path: str, params: dict = None) -> requests.Response:
 
 
     raise ValueError(f"BMC API error ({response.status_code}): {response.text}")
+
+
+# BMC relayed the same De Lijn trip-update feed from 2026-10-22 14:20 UTC to
+# the next morning, header and trips frozen, and every 20 s poll stored it.
+MAX_REALTIME_FEED_AGE = 30 * 60  # seconds
+
+
+def bmc_realtime_feed(path: str) -> bytes:
+    """A GTFS-RT feed from BMC, refused when its header is too old to be live."""
+    content = bmc_request(path, params=dict(format="protobuf")).content
+    feed = gtfs_realtime_pb2.FeedMessage()
+    feed.ParseFromString(content)
+    age = time.time() - feed.header.timestamp
+    if age > MAX_REALTIME_FEED_AGE:
+        raise ValueError(f"BMC feed {path} is frozen: header is {age / 3600:.1f} h old")
+    return content
 
 
 def bmc_request_all(

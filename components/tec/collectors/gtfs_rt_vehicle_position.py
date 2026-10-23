@@ -1,8 +1,7 @@
 from src.components import Collector
-from src.utilities.bmc import bmc_request
+from src.utilities.bmc import bmc_realtime_feed
 
 
 class TECGTFSRTVehiclePositionCollector(Collector):
     def run(self):
-        response = bmc_request("/api/gtfs/feed/tec/rt/vehicle-position", params = dict(format="protobuf"))
-        return response.content
+        return bmc_realtime_feed("/api/gtfs/feed/tec/rt/vehicle-position")
