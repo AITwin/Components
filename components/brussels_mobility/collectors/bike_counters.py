@@ -22,6 +22,11 @@ class BrusselsMobilityBikeCountersCollector(Collector):
             properties["picture_1"] = properties.pop("pic_a", None)
             properties["picture_2"] = properties.pop("pic_b", None)
             properties["active"] = True
+            # The old API's feature id and geometry_name placement
+            feature["id"] = f"device.{properties['device_name']}"
+            feature["geometry"]["geometry_name"] = feature.pop("geometry_name", "geom")
 
+        # geoserver gives "unknown" here, the old API the number of counters
+        data["totalFeatures"] = len(data["features"])
         data["requestDate"] = request_date()
         return data
