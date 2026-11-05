@@ -53,7 +53,10 @@ def bmc_realtime_feed(path: str) -> bytes:
 
 
 def bmc_request_all(
-    path: str, params: dict = None, page_size: int = BMC_PAGE_SIZE
+    path: str,
+    params: dict = None,
+    page_size: int = BMC_PAGE_SIZE,
+    min_records: int = 0,
 ) -> list:
     """Walk a paginated BMC opendatasoft endpoint and return every record.
 
@@ -61,6 +64,9 @@ def bmc_request_all(
     `bmc_request` only sees the first page. Step through limit/offset until
     `total_count` is reached, or until a short page signals the tail when
     the server omits `total_count`.
+
+    Fewer than `min_records` records raises, so the collector stores nothing:
+    the previous snapshot stays the latest and the failed run is retried.
     """
     base_params = dict(params or {})
     records = []
@@ -83,4 +89,8 @@ def bmc_request_all(
 
         offset += page_size
 
+    if len(records) < min_records:
+        raise ValueError(
+            f"BMC {path} returned {len(records)} records, expected at least {min_records}"
+        )
     return records
