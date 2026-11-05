@@ -68,6 +68,14 @@ class WithFeed(unittest.TestCase):
             result = VoiVehiclePositionCollector().run()
         self.assertEqual(result["features"][0]["properties"]["vehicle_id"], "x")
 
+    def test_station_only_vehicles_are_skipped(self):
+        docked = {"data": {"bikes": [{"bike_id": "s", "station_id": "st1"}, BIKES["data"]["bikes"][0]]}}
+        only_docked = {"data": {"bikes": [{"bike_id": "s", "station_id": "st1"}]}}
+        for feed, count in ((docked, 1), (only_docked, 0)):
+            pages = {"https://voi.test/gbfs.json": DISCOVERY_V2, "https://voi.test/free_bike_status": feed}
+            with mock.patch.object(gbfs, "_get", _server(pages)):
+                self.assertEqual(len(VoiVehiclePositionCollector().run()["features"]), count)
+
     def test_geofences(self):
         pages = {"https://voi.test/gbfs.json": DISCOVERY_V2, "https://voi.test/geofencing_zones": ZONES}
         with mock.patch.object(gbfs, "_get", _server(pages)):

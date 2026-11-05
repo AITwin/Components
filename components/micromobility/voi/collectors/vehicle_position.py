@@ -11,6 +11,8 @@ from src.components import Collector
 def bikes_to_geojson(feed: dict) -> dict:
     data = feed["data"]
     bikes = data.get("bikes", data.get("vehicles", []))
+    # GBFS lets docked vehicles give only a station_id; they have no position of their own
+    bikes = [bike for bike in bikes if bike.get("lat") is not None and bike.get("lon") is not None]
     response_df = pd.json_normalize(bikes)
     if response_df.empty:
         return {"type": "FeatureCollection", "features": []}
