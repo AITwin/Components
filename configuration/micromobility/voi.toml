@@ -1,0 +1,26 @@
+[collectors]
+
+# Needs VOI_GBFS_URL (and VOI_GBFS_TOKEN if Voi requires one); stores nothing until set
+
+[collectors.geofence]
+
+PATH = "micromobility.voi.collectors.geofence.VoiGeofenceCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "01:50"
+
+
+[collectors.vehicles_position]
+
+PATH = "micromobility.voi.collectors.vehicle_position.VoiVehiclePositionCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+
+
+[collectors.vehicle_type]
+
+PATH = "micromobility.voi.collectors.vehicle_type.VoiVehicleTypeCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "02:10"
